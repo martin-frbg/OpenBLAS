@@ -1,9 +1,15 @@
-node {
-        stage('Checkout') {
-            checkout
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                make
+            }
         }
 
+node {
         stage('Build') {
-            sh("make")
+            make
         }
 }
