@@ -67,7 +67,7 @@ endif ()
 
 if (${CMAKE_C_COMPILER_ID} STREQUAL "NVHPC")
   if (POWER)
-    set(CCOMMON_OPT "${CCOMMON_OPT} -tp pwr9")
+    set(CCOMMON_OPT "${CCOMMON_OPT} -tp pwr8")
   else ()
     set(CCOMMON_OPT "${CCOMMON_OPT} -tp px")
   endif ()
