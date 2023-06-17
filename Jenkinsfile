@@ -1,5 +1,5 @@
 pipeline {
-    agent dockerfile osuosl/ubuntu-s390x
+    agent docker
 
     stages {
         stage('Build') {
