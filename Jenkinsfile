@@ -17,4 +17,5 @@ node {
         stage('Build') {
             make
         }
+    }
 }
