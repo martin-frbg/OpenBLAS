@@ -12,7 +12,7 @@ pipeline {
                 make
             }
         }
-
+    }
 node {
         stage('Build') {
             make
