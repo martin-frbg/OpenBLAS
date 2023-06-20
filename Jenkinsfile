@@ -9,13 +9,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                make
+                sh 'make'
             }
-        }
-    }
-node {
-        stage('Build') {
-            make
         }
     }
 }
