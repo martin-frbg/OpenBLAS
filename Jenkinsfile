@@ -1,7 +1,6 @@
 pipeline {
     agent { 
         docker {
-            alwaysPull true
             image 'osuosl/ubuntu-s390x'
         }
     }
