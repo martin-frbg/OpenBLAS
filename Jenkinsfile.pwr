@@ -1,0 +1,14 @@
+pipeline {
+    agent { 
+        docker {
+            image 'osuosl/centos-ppc64le'
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make'
+            }
+        }
+    }
+}
