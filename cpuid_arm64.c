@@ -698,6 +698,8 @@ void get_cpuconfig(void)
 	    case CPU_VORTEX:
 		printf("#define VORTEX			      \n");
 #ifdef __APPLE__
+		sysctlbyname("hw.cpufamily",&value64,&length64,NULL,0);
+		if (value64 == 1867590060) printf("#define HAVE_SME 1\n");; //M4  
 		sysctlbyname("hw.l1icachesize",&value64,&length64,NULL,0);
 		printf("#define L1_CODE_SIZE	     %lld       \n",value64);
 		sysctlbyname("hw.cachelinesize",&value64,&length64,NULL,0);
