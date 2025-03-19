@@ -4,13 +4,13 @@
 *
 *  The program must be driven by a short data file. The first 13 records
 *  of the file are read using list-directed input, the last 9 records
-*  are read using the format ( A12,L2 ). An annotated example of a data
+*  are read using the format ( A13,L2 ). An annotated example of a data
 *  file can be obtained by deleting the first 3 characters from the
 *  following 22 lines:
 *  'CBLAT3.SNAP'     NAME OF SNAPSHOT OUTPUT FILE
 *  -1                UNIT NUMBER OF SNAPSHOT FILE (NOT USED IF .LT. 0)
 *  F        LOGICAL FLAG, T TO REWIND SNAPSHOT FILE AFTER EACH RECORD.
-*  F        LOGICAL FLAG, T TO ERROR STOP ON FAILURES.
+*  F        LOGICAL FLAG, T TO STOP ON FAILURES.
 *  T        LOGICAL FLAG, T TO TEST ERROR EXITS.
 *  2        0 TO TEST COLUMN-MAJOR, 1 TO TEST ROW-MAJOR, 2 TO TEST BOTH
 *  16.0     THRESHOLD VALUE OF TEST RATIO
@@ -20,16 +20,17 @@
 *  (0.0,0.0) (1.0,0.0) (0.7,-0.9)       VALUES OF ALPHA
 *  3                 NUMBER OF VALUES OF BETA
 *  (0.0,0.0) (1.0,0.0) (1.3,-1.1)       VALUES OF BETA
-*  ZGEMM  T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZHEMM  T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZSYMM  T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZTRMM  T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZTRSM  T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZHERK  T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZSYRK  T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZHER2K T PUT F FOR NO TEST. SAME COLUMNS.
-*  ZSYR2K T PUT F FOR NO TEST. SAME COLUMNS.
-*
+*  cblas_zgemm   T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_zhemm   T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_zsymm   T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_ztrmm   T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_ztrsm   T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_zherk   T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_zsyrk   T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_zher2k  T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_zsyr2k  T PUT F FOR NO TEST. SAME COLUMNS.
+*  cblas_zgemmtr T PUT F FOR NO TEST. SAME COLUMNS.
+
 *  See:
 *
 *     Dongarra J. J., Du Croz J. J., Duff I. S. and Hammarling S.
@@ -49,7 +50,7 @@
       INTEGER            NIN, NOUT
       PARAMETER          ( NIN = 5, NOUT = 6 )
       INTEGER            NSUBS
-      PARAMETER          ( NSUBS = 9 )
+      PARAMETER          ( NSUBS = 10 )
       COMPLEX*16         ZERO, ONE
       PARAMETER          ( ZERO = ( 0.0D0, 0.0D0 ),
      $                   ONE = ( 1.0D0, 0.0D0 ) )
@@ -66,7 +67,7 @@
       LOGICAL            FATAL, LTESTT, REWI, SAME, SFATAL, TRACE,
      $                   TSTERR, CORDER, RORDER
       CHARACTER*1        TRANSA, TRANSB
-      CHARACTER*12       SNAMET
+      CHARACTER*13       SNAMET
       CHARACTER*32       SNAPS
 *     .. Local Arrays ..
       COMPLEX*16         AA( NMAX*NMAX ), AB( NMAX, 2*NMAX ),
@@ -78,19 +79,19 @@
       DOUBLE PRECISION   G( NMAX )
       INTEGER            IDIM( NIDMAX )
       LOGICAL            LTEST( NSUBS )
-      CHARACTER*12       SNAMES( NSUBS )
+      CHARACTER*13       SNAMES( NSUBS )
 *     .. External Functions ..
       DOUBLE PRECISION   DDIFF
       LOGICAL            LZE
       EXTERNAL           DDIFF, LZE
 *     .. External Subroutines ..
-      EXTERNAL           ZCHK1, ZCHK2, ZCHK3, ZCHK4, ZCHK5,ZMMCH
+      EXTERNAL           ZCHK1, ZCHK2, ZCHK3, ZCHK4, ZCHK5, ZCHK6, ZMMCH
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN
 *     .. Scalars in Common ..
       INTEGER            INFOT, NOUTC
       LOGICAL            LERR, OK
-      CHARACTER*12       SRNAMT
+      CHARACTER*13       SRNAMT
 *     .. Common blocks ..
       COMMON             /INFOC/INFOT, NOUTC, OK, LERR
       COMMON             /SRNAMC/SRNAMT
@@ -98,7 +99,7 @@
       DATA               SNAMES/'cblas_zgemm ', 'cblas_zhemm ',
      $                   'cblas_zsymm ', 'cblas_ztrmm ', 'cblas_ztrsm ',
      $                   'cblas_zherk ', 'cblas_zsyrk ', 'cblas_zher2k',
-     $                   'cblas_zsyr2k'/
+     $                   'cblas_zsyr2k', 'cblas_zgemmtr'/
 *     .. Executable Statements ..
 *
       NOUTC = NOUT
@@ -195,7 +196,7 @@
      $      GO TO 50
    40 CONTINUE
       WRITE( NOUT, FMT = 9990 )SNAMET
-      ERROR STOP
+      STOP
    50 LTEST( I ) = LTESTT
       GO TO 30
 *
@@ -238,7 +239,7 @@
       SAME = LZE( CC, CT, N )
       IF( .NOT.SAME.OR.ERR.NE.RZERO )THEN
          WRITE( NOUT, FMT = 9989 )TRANSA, TRANSB, SAME, ERR
-         ERROR STOP
+         STOP
       END IF
       TRANSB = 'C'
       CALL ZMMCH( TRANSA, TRANSB, N, 1, N, ONE, AB, NMAX,
@@ -247,7 +248,7 @@
       SAME = LZE( CC, CT, N )
       IF( .NOT.SAME.OR.ERR.NE.RZERO )THEN
          WRITE( NOUT, FMT = 9989 )TRANSA, TRANSB, SAME, ERR
-         ERROR STOP
+         STOP
       END IF
       DO 120 J = 1, N
          AB( J, NMAX + 1 ) = N - J + 1
@@ -265,7 +266,7 @@
       SAME = LZE( CC, CT, N )
       IF( .NOT.SAME.OR.ERR.NE.RZERO )THEN
          WRITE( NOUT, FMT = 9989 )TRANSA, TRANSB, SAME, ERR
-         ERROR STOP
+         STOP
       END IF
       TRANSB = 'C'
       CALL ZMMCH( TRANSA, TRANSB, N, 1, N, ONE, AB, NMAX,
@@ -274,7 +275,7 @@
       SAME = LZE( CC, CT, N )
       IF( .NOT.SAME.OR.ERR.NE.RZERO )THEN
          WRITE( NOUT, FMT = 9989 )TRANSA, TRANSB, SAME, ERR
-         ERROR STOP
+         STOP
       END IF
 *
 *     Test each subroutine in turn.
@@ -296,7 +297,7 @@
             OK = .TRUE.
             FATAL = .FALSE.
             GO TO ( 140, 150, 150, 160, 160, 170, 170,
-     $              180, 180 )ISNUM
+     $              180, 180, 185) ISNUM
 *           Test ZGEMM, 01.
   140       IF (CORDER) THEN
             CALL ZCHK1(SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
@@ -330,13 +331,13 @@
             CALL ZCHK3(SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
      $                 REWI, FATAL, NIDIM, IDIM, NALF, ALF, NMAX, AB,
      $                 AA, AS, AB( 1, NMAX + 1 ), BB, BS, CT, G, C,
-     $                 0 )
+     $             0 )
             END IF
             IF (RORDER) THEN
             CALL ZCHK3(SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
      $                 REWI, FATAL, NIDIM, IDIM, NALF, ALF, NMAX, AB,
      $                 AA, AS, AB( 1, NMAX + 1 ), BB, BS, CT, G, C,
-     $                 1 )
+     $             1 )
             END IF
             GO TO 190
 *           Test ZHERK, 06, ZSYRK, 07.
@@ -358,13 +359,27 @@
             CALL ZCHK5(SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
      $                 REWI, FATAL, NIDIM, IDIM, NALF, ALF, NBET, BET,
      $                 NMAX, AB, AA, AS, BB, BS, C, CC, CS, CT, G, W,
-     $                 0 )
+     $             0 )
             END IF
             IF (RORDER) THEN
             CALL ZCHK5(SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
      $                 REWI, FATAL, NIDIM, IDIM, NALF, ALF, NBET, BET,
      $                 NMAX, AB, AA, AS, BB, BS, C, CC, CS, CT, G, W,
-     $                 1 )
+     $             1 )
+            END IF
+            GO TO 190
+*           Test ZGEMMTR, 10
+  185       IF (CORDER) THEN
+            CALL ZCHK6(SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
+     $                 REWI, FATAL, NIDIM, IDIM, NALF, ALF, NBET, BET,
+     $                 NMAX, AB, AA, AS, AB( 1, NMAX + 1 ), BB, BS, C,
+     $                 CC, CS, CT, G, 0 )
+            END IF
+            IF (RORDER) THEN
+            CALL ZCHK6(SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
+     $                 REWI, FATAL, NIDIM, IDIM, NALF, ALF, NBET, BET,
+     $                 NMAX, AB, AA, AS, AB( 1, NMAX + 1 ), BB, BS, C,
+     $                 CC, CS, CT, G, 1 )
             END IF
             GO TO 190
 *
@@ -386,9 +401,7 @@
       IF( TRACE )
      $   CLOSE ( NTRA )
       CLOSE ( NOUT )
-      IF( FATAL ) THEN
-         ERROR STOP
-      END IF
+      STOP
 *
 10002 FORMAT( ' COLUMN-MAJOR AND ROW-MAJOR DATA LAYOUTS ARE TESTED' )
 10001 FORMAT(' ROW-MAJOR DATA LAYOUT IS TESTED' )
@@ -408,7 +421,7 @@
      $      7( '(', F4.1, ',', F4.1, ')  ', : ) )
  9991 FORMAT( ' AMEND DATA FILE OR INCREASE ARRAY SIZES IN PROGRAM',
      $      /' ******* TESTS ABANDONED *******' )
- 9990 FORMAT(' SUBPROGRAM NAME ', A12,' NOT RECOGNIZED', /' ******* T',
+ 9990 FORMAT(' SUBPROGRAM NAME ', A13,' NOT RECOGNIZED', /' ******* T',
      $      'ESTS ABANDONED *******' )
  9989 FORMAT(' ERROR IN ZMMCH -  IN-LINE DOT PRODUCTS ARE BEING EVALU',
      $      'ATED WRONGLY.', /' ZMMCH WAS CALLED WITH TRANSA = ', A1,
@@ -416,8 +429,8 @@
      $    ' ERR = ', F12.3, '.', /' THIS MAY BE DUE TO FAULTS IN THE ',
      $     'ARITHMETIC OR THE COMPILER.', /' ******* TESTS ABANDONED ',
      $      '*******' )
- 9988 FORMAT( A12,L2 )
- 9987 FORMAT( 1X, A12,' WAS NOT TESTED' )
+ 9988 FORMAT( A13,L2 )
+ 9987 FORMAT( 1X, A13,' WAS NOT TESTED' )
  9986 FORMAT( /' END OF TESTS' )
  9985 FORMAT( /' ******* FATAL ERROR - TESTS ABANDONED *******' )
  9984 FORMAT( ' ERROR-EXITS WILL NOT BE TESTED' )
@@ -449,7 +462,7 @@
       DOUBLE PRECISION   EPS, THRESH
       INTEGER            NALF, NBET, NIDIM, NMAX, NOUT, NTRA, IORDER
       LOGICAL            FATAL, REWI, TRACE
-      CHARACTER*12       SNAME
+      CHARACTER*13       SNAME
 *     .. Array Arguments ..
       COMPLEX*16         A( NMAX, NMAX ), AA( NMAX*NMAX ), ALF( NALF ),
      $                   AS( NMAX*NMAX ), B( NMAX, NMAX ),
@@ -697,22 +710,22 @@
   130 CONTINUE
       RETURN
 *
-10003 FORMAT( ' ', A12,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
+10003 FORMAT( ' ', A13,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10002 FORMAT( ' ', A12,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
+10002 FORMAT( ' ', A13,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10001 FORMAT( ' ', A12,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
+10001 FORMAT( ' ', A13,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
-10000 FORMAT( ' ', A12,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
+10000 FORMAT( ' ', A13,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
  9998 FORMAT(' ******* FATAL ERROR - PARAMETER NUMBER ', I2, ' WAS CH',
      $      'ANGED INCORRECTLY *******' )
- 9996 FORMAT( ' ******* ', A12,' FAILED ON CALL NUMBER:' )
-C 9995 FORMAT( 1X, I6, ': ', A12,'(''', A1, ''',''', A1, ''',',
-C     $     3( I3, ',' ), '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3,
-C     $     ',(', F4.1, ',', F4.1, '), C,', I3, ').' )
+ 9996 FORMAT( ' ******* ', A13,' FAILED ON CALL NUMBER:' )
+ 9995 FORMAT( 1X, I6, ': ', A13,'(''', A1, ''',''', A1, ''',',
+     $     3( I3, ',' ), '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3,
+     $     ',(', F4.1, ',', F4.1, '), C,', I3, ').' )
  9994 FORMAT(' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
@@ -725,7 +738,7 @@ C     $     ',(', F4.1, ',', F4.1, '), C,', I3, ').' )
       INTEGER          NOUT, NC, IORDER, M, N, K, LDA, LDB, LDC
       DOUBLE COMPLEX   ALPHA, BETA
       CHARACTER*1      TRANSA, TRANSB
-      CHARACTER*12     SNAME
+      CHARACTER*13     SNAME
       CHARACTER*14     CRC, CTA,CTB
 
       IF (TRANSA.EQ.'N')THEN
@@ -750,7 +763,7 @@ C     $     ',(', F4.1, ',', F4.1, '), C,', I3, ').' )
       WRITE(NOUT, FMT = 9995)NC,SNAME,CRC, CTA,CTB
       WRITE(NOUT, FMT = 9994)M, N, K, ALPHA, LDA, LDB, BETA, LDC
 
- 9995 FORMAT( 1X, I6, ': ', A12,'(', A14, ',', A14, ',', A14, ',')
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', A14, ',', A14, ',', A14, ',')
  9994 FORMAT( 10X, 3( I3, ',' ) ,' (', F4.1,',',F4.1,') , A,',
      $ I3, ', B,', I3, ', (', F4.1,',',F4.1,') , C,', I3, ').' )
       END
@@ -779,7 +792,7 @@ C     $     ',(', F4.1, ',', F4.1, '), C,', I3, ').' )
       DOUBLE PRECISION   EPS, THRESH
       INTEGER            NALF, NBET, NIDIM, NMAX, NOUT, NTRA, IORDER
       LOGICAL            FATAL, REWI, TRACE
-      CHARACTER*12       SNAME
+      CHARACTER*13       SNAME
 *     .. Array Arguments ..
       COMPLEX*16         A( NMAX, NMAX ), AA( NMAX*NMAX ), ALF( NALF ),
      $                   AS( NMAX*NMAX ), B( NMAX, NMAX ),
@@ -1023,22 +1036,22 @@ C     $     ',(', F4.1, ',', F4.1, '), C,', I3, ').' )
   120 CONTINUE
       RETURN
 *
-10003 FORMAT( ' ', A12,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
+10003 FORMAT( ' ', A13,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10002 FORMAT( ' ', A12,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
+10002 FORMAT( ' ', A13,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10001 FORMAT( ' ', A12,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
+10001 FORMAT( ' ', A13,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
-10000 FORMAT( ' ', A12,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
+10000 FORMAT( ' ', A13,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
  9998 FORMAT(' ******* FATAL ERROR - PARAMETER NUMBER ', I2, ' WAS CH',
      $      'ANGED INCORRECTLY *******' )
- 9996 FORMAT( ' ******* ', A12,' FAILED ON CALL NUMBER:' )
-C 9995 FORMAT(1X, I6, ': ', A12,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
-C     $      '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ',(', F4.1,
-C     $      ',', F4.1, '), C,', I3, ')    .' )
+ 9996 FORMAT( ' ******* ', A13,' FAILED ON CALL NUMBER:' )
+ 9995 FORMAT(1X, I6, ': ', A13,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
+     $      '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ',(', F4.1,
+     $      ',', F4.1, '), C,', I3, ')    .' )
  9994 FORMAT(' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
@@ -1051,7 +1064,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
       INTEGER          NOUT, NC, IORDER, M, N, LDA, LDB, LDC
       DOUBLE COMPLEX   ALPHA, BETA
       CHARACTER*1      SIDE, UPLO
-      CHARACTER*12     SNAME
+      CHARACTER*13     SNAME
       CHARACTER*14     CRC, CS,CU
 
       IF (SIDE.EQ.'L')THEN
@@ -1072,7 +1085,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
       WRITE(NOUT, FMT = 9995)NC,SNAME,CRC, CS,CU
       WRITE(NOUT, FMT = 9994)M, N, ALPHA, LDA, LDB, BETA, LDC
 
- 9995 FORMAT( 1X, I6, ': ', A12,'(', A14, ',', A14, ',', A14, ',')
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', A14, ',', A14, ',', A14, ',')
  9994 FORMAT( 10X, 2( I3, ',' ),' (',F4.1,',',F4.1, '), A,', I3,
      $ ', B,', I3, ', (',F4.1,',',F4.1, '), ', 'C,', I3, ').' )
       END
@@ -1100,7 +1113,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
       DOUBLE PRECISION   EPS, THRESH
       INTEGER            NALF, NIDIM, NMAX, NOUT, NTRA, IORDER
       LOGICAL            FATAL, REWI, TRACE
-      CHARACTER*12       SNAME
+      CHARACTER*13       SNAME
 *     .. Array Arguments ..
       COMPLEX*16         A( NMAX, NMAX ), AA( NMAX*NMAX ), ALF( NALF ),
      $                   AS( NMAX*NMAX ), B( NMAX, NMAX ),
@@ -1375,22 +1388,22 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
   160 CONTINUE
       RETURN
 *
-10003 FORMAT( ' ', A12,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
+10003 FORMAT( ' ', A13,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10002 FORMAT( ' ', A12,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
+10002 FORMAT( ' ', A13,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10001 FORMAT( ' ', A12,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
+10001 FORMAT( ' ', A13,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
-10000 FORMAT( ' ', A12,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
+10000 FORMAT( ' ', A13,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
  9998 FORMAT(' ******* FATAL ERROR - PARAMETER NUMBER ', I2, ' WAS CH',
      $      'ANGED INCORRECTLY *******' )
- 9996 FORMAT(' ******* ', A12,' FAILED ON CALL NUMBER:' )
-C 9995 FORMAT(1X, I6, ': ', A12,'(', 4( '''', A1, ''',' ), 2( I3, ',' ),
-C     $     '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ')         ',
-C     $      '      .' )
+ 9996 FORMAT(' ******* ', A13,' FAILED ON CALL NUMBER:' )
+ 9995 FORMAT(1X, I6, ': ', A13,'(', 4( '''', A1, ''',' ), 2( I3, ',' ),
+     $     '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ')         ',
+     $      '      .' )
  9994 FORMAT(' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
@@ -1403,7 +1416,7 @@ C     $      '      .' )
       INTEGER          NOUT, NC, IORDER, M, N, LDA, LDB
       DOUBLE COMPLEX   ALPHA
       CHARACTER*1      SIDE, UPLO, TRANSA, DIAG
-      CHARACTER*12     SNAME
+      CHARACTER*13     SNAME
       CHARACTER*14     CRC, CS, CU, CA, CD
 
       IF (SIDE.EQ.'L')THEN
@@ -1436,7 +1449,7 @@ C     $      '      .' )
       WRITE(NOUT, FMT = 9995)NC,SNAME,CRC, CS,CU
       WRITE(NOUT, FMT = 9994)CA, CD, M, N, ALPHA, LDA, LDB
 
- 9995 FORMAT( 1X, I6, ': ', A12,'(', A14, ',', A14, ',', A14, ',')
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', A14, ',', A14, ',', A14, ',')
  9994 FORMAT( 10X, 2( A14, ',') , 2( I3, ',' ), ' (', F4.1, ',',
      $    F4.1, '), A,', I3, ', B,', I3, ').' )
       END
@@ -1465,7 +1478,7 @@ C     $      '      .' )
       DOUBLE PRECISION   EPS, THRESH
       INTEGER            NALF, NBET, NIDIM, NMAX, NOUT, NTRA, IORDER
       LOGICAL            FATAL, REWI, TRACE
-      CHARACTER*12       SNAME
+      CHARACTER*13       SNAME
 *     .. Array Arguments ..
       COMPLEX*16         A( NMAX, NMAX ), AA( NMAX*NMAX ), ALF( NALF ),
      $                   AS( NMAX*NMAX ), B( NMAX, NMAX ),
@@ -1506,8 +1519,6 @@ C     $      '      .' )
       NC = 0
       RESET = .TRUE.
       ERRMAX = RZERO
-      RALS = RONE
-      RBETS = RONE
 *
       DO 100 IN = 1, NIDIM
          N = IDIM( IN )
@@ -1759,26 +1770,26 @@ C     $      '      .' )
   130 CONTINUE
       RETURN
 *
-10003 FORMAT( ' ', A12,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
+10003 FORMAT( ' ', A13,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10002 FORMAT( ' ', A12,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
+10002 FORMAT( ' ', A13,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10001 FORMAT( ' ', A12,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
+10001 FORMAT( ' ', A13,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
-10000 FORMAT( ' ', A12,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
+10000 FORMAT( ' ', A13,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
  9998 FORMAT(' ******* FATAL ERROR - PARAMETER NUMBER ', I2, ' WAS CH',
      $      'ANGED INCORRECTLY *******' )
- 9996 FORMAT( ' ******* ', A12,' FAILED ON CALL NUMBER:' )
+ 9996 FORMAT( ' ******* ', A13,' FAILED ON CALL NUMBER:' )
  9995 FORMAT( '      THESE ARE THE RESULTS FOR COLUMN ', I3 )
-C 9994 FORMAT(1X, I6, ': ', A12,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
-C     $     F4.1, ', A,', I3, ',', F4.1, ', C,', I3, ')               ',
-C     $      '          .' )
-C 9993 FORMAT(1X, I6, ': ', A12,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
-C     $      '(', F4.1, ',', F4.1, ') , A,', I3, ',(', F4.1, ',', F4.1,
-C     $      '), C,', I3, ')          .' )
+ 9994 FORMAT(1X, I6, ': ', A13,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
+     $     F4.1, ', A,', I3, ',', F4.1, ', C,', I3, ')               ',
+     $      '          .' )
+ 9993 FORMAT(1X, I6, ': ', A13,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
+     $      '(', F4.1, ',', F4.1, ') , A,', I3, ',(', F4.1, ',', F4.1,
+     $      '), C,', I3, ')          .' )
  9992 FORMAT(' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
@@ -1791,7 +1802,7 @@ C     $      '), C,', I3, ')          .' )
       INTEGER          NOUT, NC, IORDER, N, K, LDA, LDC
       DOUBLE COMPLEX   ALPHA, BETA
       CHARACTER*1      UPLO, TRANSA
-      CHARACTER*12     SNAME
+      CHARACTER*13     SNAME
       CHARACTER*14     CRC, CU, CA
 
       IF (UPLO.EQ.'U')THEN
@@ -1814,7 +1825,7 @@ C     $      '), C,', I3, ')          .' )
       WRITE(NOUT, FMT = 9995)NC, SNAME, CRC, CU, CA
       WRITE(NOUT, FMT = 9994)N, K, ALPHA, LDA, BETA, LDC
 
- 9995 FORMAT( 1X, I6, ': ', A12,'(', 3( A14, ',') )
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', 3( A14, ',') )
  9994 FORMAT( 10X, 2( I3, ',' ), ' (', F4.1, ',', F4.1 ,'), A,',
      $        I3, ', (', F4.1,',', F4.1, '), C,', I3, ').' )
       END
@@ -1825,7 +1836,7 @@ C     $      '), C,', I3, ')          .' )
       INTEGER          NOUT, NC, IORDER, N, K, LDA, LDC
       DOUBLE PRECISION ALPHA, BETA
       CHARACTER*1      UPLO, TRANSA
-      CHARACTER*12     SNAME
+      CHARACTER*13     SNAME
       CHARACTER*14     CRC, CU, CA
 
       IF (UPLO.EQ.'U')THEN
@@ -1848,7 +1859,7 @@ C     $      '), C,', I3, ')          .' )
       WRITE(NOUT, FMT = 9995)NC, SNAME, CRC, CU, CA
       WRITE(NOUT, FMT = 9994)N, K, ALPHA, LDA, BETA, LDC
 
- 9995 FORMAT( 1X, I6, ': ', A12,'(', 3( A14, ',') )
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', 3( A14, ',') )
  9994 FORMAT( 10X, 2( I3, ',' ),
      $      F4.1, ', A,', I3, ',', F4.1, ', C,', I3, ').' )
       END
@@ -1877,7 +1888,7 @@ C     $      '), C,', I3, ')          .' )
       DOUBLE PRECISION  EPS, THRESH
       INTEGER           NALF, NBET, NIDIM, NMAX, NOUT, NTRA, IORDER
       LOGICAL           FATAL, REWI, TRACE
-      CHARACTER*12      SNAME
+      CHARACTER*13      SNAME
 *     .. Array Arguments ..
       COMPLEX*16         AA( NMAX*NMAX ), AB( 2*NMAX*NMAX ),
      $                   ALF( NALF ), AS( NMAX*NMAX ), BB( NMAX*NMAX ),
@@ -2212,26 +2223,26 @@ C     $      '), C,', I3, ')          .' )
   160 CONTINUE
       RETURN
 *
-10003 FORMAT( ' ', A12,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
+10003 FORMAT( ' ', A13,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10002 FORMAT( ' ', A12,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
+10002 FORMAT( ' ', A13,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
      $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
      $ 'RATIO ', F8.2, ' - SUSPECT *******' )
-10001 FORMAT( ' ', A12,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
+10001 FORMAT( ' ', A13,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
-10000 FORMAT( ' ', A12,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
+10000 FORMAT( ' ', A13,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
      $ ' (', I6, ' CALL', 'S)' )
  9998 FORMAT(' ******* FATAL ERROR - PARAMETER NUMBER ', I2, ' WAS CH',
      $      'ANGED INCORRECTLY *******' )
- 9996 FORMAT( ' ******* ', A12,' FAILED ON CALL NUMBER:' )
+ 9996 FORMAT( ' ******* ', A13,' FAILED ON CALL NUMBER:' )
  9995 FORMAT( '      THESE ARE THE RESULTS FOR COLUMN ', I3 )
-C 9994 FORMAT(1X, I6, ': ', A12,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
-C     $      '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ',', F4.1,
-C     $      ', C,', I3, ')           .' )
-C 9993 FORMAT(1X, I6, ': ', A12,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
-C     $      '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ',(', F4.1,
-C     $      ',', F4.1, '), C,', I3, ')    .' )
+ 9994 FORMAT(1X, I6, ': ', A13,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
+     $      '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ',', F4.1,
+     $      ', C,', I3, ')           .' )
+ 9993 FORMAT(1X, I6, ': ', A13,'(', 2( '''', A1, ''',' ), 2( I3, ',' ),
+     $      '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3, ',(', F4.1,
+     $      ',', F4.1, '), C,', I3, ')    .' )
  9992 FORMAT(' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
@@ -2244,7 +2255,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
       INTEGER          NOUT, NC, IORDER, N, K, LDA, LDB, LDC
       DOUBLE COMPLEX   ALPHA, BETA
       CHARACTER*1      UPLO, TRANSA
-      CHARACTER*12     SNAME
+      CHARACTER*13     SNAME
       CHARACTER*14     CRC, CU, CA
 
       IF (UPLO.EQ.'U')THEN
@@ -2267,7 +2278,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
       WRITE(NOUT, FMT = 9995)NC, SNAME, CRC, CU, CA
       WRITE(NOUT, FMT = 9994)N, K, ALPHA, LDA, LDB, BETA, LDC
 
- 9995 FORMAT( 1X, I6, ': ', A12,'(', 3( A14, ',') )
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', 3( A14, ',') )
  9994 FORMAT( 10X, 2( I3, ',' ), ' (', F4.1, ',', F4.1, '), A,',
      $  I3, ', B', I3, ', (', F4.1, ',', F4.1, '), C,', I3, ').' )
       END
@@ -2279,7 +2290,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
       DOUBLE COMPLEX   ALPHA
       DOUBLE PRECISION BETA
       CHARACTER*1      UPLO, TRANSA
-      CHARACTER*12     SNAME
+      CHARACTER*13     SNAME
       CHARACTER*14     CRC, CU, CA
 
       IF (UPLO.EQ.'U')THEN
@@ -2302,7 +2313,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
       WRITE(NOUT, FMT = 9995)NC, SNAME, CRC, CU, CA
       WRITE(NOUT, FMT = 9994)N, K, ALPHA, LDA, LDB, BETA, LDC
 
- 9995 FORMAT( 1X, I6, ': ', A12,'(', 3( A14, ',') )
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', 3( A14, ',') )
  9994 FORMAT( 10X, 2( I3, ',' ), ' (', F4.1, ',', F4.1, '), A,',
      $      I3, ', B', I3, ',', F4.1, ', C,', I3, ').' )
       END
@@ -2710,7 +2721,7 @@ C     $      ',', F4.1, '), C,', I3, ')    .' )
    50    CONTINUE
       END IF
 *
-C   60 CONTINUE
+   60 CONTINUE
       LZERES = .TRUE.
       GO TO 80
    70 CONTINUE
@@ -2791,6 +2802,543 @@ C   60 CONTINUE
       RETURN
 *
 *     End of DDIFF.
+*
+      END
+
+      SUBROUTINE ZCHK6( SNAME, EPS, THRESH, NOUT, NTRA, TRACE, REWI,
+     $                  FATAL, NIDIM, IDIM, NALF, ALF, NBET, BET, NMAX,
+     $                  A, AA, AS, B, BB, BS, C, CC, CS, CT, G,
+     $                  IORDER )
+      IMPLICIT NONE
+*
+*  Tests CGEMMTR.
+*
+*  Auxiliary routine for test program for Level 3 Blas.
+*
+*  -- Written on 24-June-2024.
+*     Martin Koehler, Max Planck Institute Magdeburg
+*
+*     .. Parameters ..
+      COMPLEX*16         ZERO
+      PARAMETER          ( ZERO = ( 0.0, 0.0 ) )
+      DOUBLE PRECISION   RZERO
+      PARAMETER          ( RZERO = 0.0 )
+*     .. Scalar Arguments ..
+      DOUBLE PRECISION   EPS, THRESH
+      INTEGER            NALF, NBET, NIDIM, NMAX, NOUT, NTRA, IORDER
+      LOGICAL            FATAL, REWI, TRACE
+      CHARACTER*13       SNAME
+*     .. Array Arguments ..
+      COMPLEX*16         A( NMAX, NMAX ), AA( NMAX*NMAX ), ALF( NALF ),
+     $                   AS( NMAX*NMAX ), B( NMAX, NMAX ),
+     $                   BB( NMAX*NMAX ), BET( NBET ), BS( NMAX*NMAX ),
+     $                   C( NMAX, NMAX ), CC( NMAX*NMAX ),
+     $                   CS( NMAX*NMAX ), CT( NMAX )
+      DOUBLE PRECISION   G( NMAX )
+      INTEGER            IDIM( NIDIM )
+*     .. Local Scalars ..
+      COMPLEX*16         ALPHA, ALS, BETA, BLS
+      DOUBLE PRECISION   ERR, ERRMAX
+      INTEGER            I, IA, IB, ICA, ICB, IK, IM, IN, K, KS, LAA,
+     $                   LBB, LCC, LDA, LDAS, LDB, LDBS, LDC, LDCS,
+     $                   MA, MB, N, NA, NARGS, NB, NC, NS, IS
+      LOGICAL            NULL, RESET, SAME, TRANA, TRANB
+      CHARACTER*1        TRANAS, TRANBS, TRANSA, TRANSB, UPLO, UPLOS
+      CHARACTER*3        ICH
+      CHARACTER*2        ISHAPE
+*     .. Local Arrays ..
+      LOGICAL            ISAME( 13 )
+*     .. External Functions ..
+      LOGICAL            LZE, LZERES
+      EXTERNAL           LZE, LZERES
+*     .. External Subroutines ..
+      EXTERNAL           CZGEMMTR, ZMAKE, ZMMTCH, ZPRCN8
+*     .. Intrinsic Functions ..
+      INTRINSIC          MAX
+*     .. Scalars in Common ..
+      INTEGER            INFOT, NOUTC
+      LOGICAL            LERR, OK
+*     .. Common blocks ..
+      COMMON             /INFOC/INFOT, NOUTC, OK, LERR
+*     .. Data statements ..
+      DATA               ICH/'NTC'/
+      DATA               ISHAPE/'UL'/
+*     .. Executable Statements ..
+*
+      NARGS = 13
+      NC = 0
+      RESET = .TRUE.
+      ERRMAX = RZERO
+*
+      DO 100 IN = 1, NIDIM
+         N = IDIM( IN )
+*        Set LDC to 1 more than minimum value if room.
+         LDC = N
+         IF( LDC.LT.NMAX )
+     $      LDC = LDC + 1
+*        Skip tests if not enough room.
+         IF( LDC.GT.NMAX )
+     $      GO TO 100
+         LCC = LDC*N
+         NULL = N.LE.0.
+*
+         DO 90 IK = 1, NIDIM
+            K = IDIM( IK )
+*
+            DO 80 ICA = 1, 3
+               TRANSA = ICH( ICA: ICA )
+               TRANA = TRANSA.EQ.'T'.OR.TRANSA.EQ.'C'
+*
+               IF( TRANA )THEN
+                  MA = K
+                  NA = N
+               ELSE
+                  MA = N
+                  NA = K
+               END IF
+*              Set LDA to 1 more than minimum value if room.
+               LDA = MA
+               IF( LDA.LT.NMAX )
+     $            LDA = LDA + 1
+*              Skip tests if not enough room.
+               IF( LDA.GT.NMAX )
+     $            GO TO 80
+               LAA = LDA*NA
+*
+*              Generate the matrix A.
+*
+               CALL ZMAKE( 'ge', ' ', ' ', MA, NA, A, NMAX, AA, LDA,
+     $                     RESET, ZERO )
+*
+               DO 70 ICB = 1, 3
+                  TRANSB = ICH( ICB: ICB )
+                  TRANB = TRANSB.EQ.'T'.OR.TRANSB.EQ.'C'
+*
+                  IF( TRANB )THEN
+                     MB = N
+                     NB = K
+                  ELSE
+                     MB = K
+                     NB = N
+                  END IF
+*                 Set LDB to 1 more than minimum value if room.
+                  LDB = MB
+                  IF( LDB.LT.NMAX )
+     $               LDB = LDB + 1
+*                 Skip tests if not enough room.
+                  IF( LDB.GT.NMAX )
+     $               GO TO 70
+                  LBB = LDB*NB
+*
+*                 Generate the matrix B.
+*
+                  CALL ZMAKE( 'ge', ' ', ' ', MB, NB, B, NMAX, BB,
+     $                        LDB, RESET, ZERO )
+*
+                  DO 60 IA = 1, NALF
+                     ALPHA = ALF( IA )
+*
+                     DO 50 IB = 1, NBET
+                        BETA = BET( IB )
+                        DO 45 IS = 1, 2
+                           UPLO = ISHAPE(IS:IS)
+*
+*                          Generate the matrix C.
+*
+                           CALL ZMAKE( 'ge', UPLO, ' ', N, N, C, NMAX,
+     $                                 CC, LDC, RESET, ZERO )
+*
+                           NC = NC + 1
+*
+*                          Save every datum before calling the
+*                          subroutine.
+*
+                           UPLOS = UPLO
+                           TRANAS = TRANSA
+                           TRANBS = TRANSB
+                           NS = N
+                           KS = K
+                           ALS = ALPHA
+                           DO 10 I = 1, LAA
+                              AS( I ) = AA( I )
+   10                      CONTINUE
+                           LDAS = LDA
+                           DO 20 I = 1, LBB
+                              BS( I ) = BB( I )
+   20                      CONTINUE
+                           LDBS = LDB
+                           BLS = BETA
+                           DO 30 I = 1, LCC
+                              CS( I ) = CC( I )
+   30                      CONTINUE
+                           LDCS = LDC
+*
+*                          Call the subroutine.
+*
+                           IF( TRACE )
+     $                        CALL ZPRCN8(NTRA, NC, SNAME, IORDER, UPLO,
+     $                        TRANSA, TRANSB, N, K, ALPHA, LDA,
+     $                        LDB, BETA, LDC)
+                           IF( REWI )
+     $                        REWIND NTRA
+                           CALL CZGEMMTR(IORDER, UPLO, TRANSA, TRANSB,
+     $                                 N, K, ALPHA, AA, LDA, BB, LDB,
+     $                                 BETA, CC, LDC )
+*
+*                          Check if error-exit was taken incorrectly.
+*
+                           IF( .NOT.OK )THEN
+                              WRITE( NOUT, FMT = 9994 )
+                              FATAL = .TRUE.
+                              GO TO 120
+                           END IF
+*
+*                          See what data changed inside subroutines.
+*
+                           ISAME( 1 ) = UPLO .EQ. UPLOS
+                           ISAME( 2 ) = TRANSA.EQ.TRANAS
+                           ISAME( 3 ) = TRANSB.EQ.TRANBS
+                           ISAME( 4 ) = NS.EQ.N
+                           ISAME( 5 ) = KS.EQ.K
+                           ISAME( 6 ) = ALS.EQ.ALPHA
+                           ISAME( 7 ) = LZE( AS, AA, LAA )
+                           ISAME( 8 ) = LDAS.EQ.LDA
+                           ISAME( 9 ) = LZE( BS, BB, LBB )
+                           ISAME( 10 ) = LDBS.EQ.LDB
+                           ISAME( 11 ) = BLS.EQ.BETA
+                           IF( NULL )THEN
+                              ISAME( 12 ) = LZE( CS, CC, LCC )
+                           ELSE
+                             ISAME( 12 ) = LZERES( 'ge', ' ', N, N, CS,
+     $                                      CC, LDC )
+                           END IF
+                           ISAME( 13 ) = LDCS.EQ.LDC
+*
+*                          If data was incorrectly changed, report
+*                          and return.
+*
+                           SAME = .TRUE.
+                           DO 40 I = 1, NARGS
+                              SAME = SAME.AND.ISAME( I )
+                              IF( .NOT.ISAME( I ) )
+     $                           WRITE( NOUT, FMT = 9998 )I
+   40                      CONTINUE
+                           IF( .NOT.SAME )THEN
+                              FATAL = .TRUE.
+                              GO TO 120
+                           END IF
+*
+                           IF( .NOT.NULL )THEN
+*
+*                             Check the result.
+*
+                              CALL ZMMTCH( UPLO, TRANSA, TRANSB, N, K,
+     $                                   ALPHA, A, NMAX, B, NMAX, BETA,
+     $                                   C, NMAX, CT, G, CC, LDC, EPS,
+     $                                   ERR, FATAL, NOUT, .TRUE. )
+                              ERRMAX = MAX( ERRMAX, ERR )
+*                             If got really bad answer, report and
+*                             return.
+                              IF( FATAL )
+     $                           GO TO 120
+                           END IF
+*
+   45                   CONTINUE
+*
+   50                CONTINUE
+*
+   60             CONTINUE
+*
+   70          CONTINUE
+*
+   80       CONTINUE
+*
+   90    CONTINUE
+*
+  100 CONTINUE
+*
+*
+*     Report result.
+*
+      IF( ERRMAX.LT.THRESH )THEN
+         IF ( IORDER.EQ.0) WRITE( NOUT, FMT = 10000 )SNAME, NC
+         IF ( IORDER.EQ.1) WRITE( NOUT, FMT = 10001 )SNAME, NC
+      ELSE
+         IF ( IORDER.EQ.0) WRITE( NOUT, FMT = 10002 )SNAME, NC, ERRMAX
+         IF ( IORDER.EQ.1) WRITE( NOUT, FMT = 10003 )SNAME, NC, ERRMAX
+      END IF
+      GO TO 130
+*
+  120 CONTINUE
+      WRITE( NOUT, FMT = 9996 )SNAME
+      CALL ZPRCN8(NOUT, NC, SNAME, IORDER, UPLO, TRANSA, TRANSB,
+     $           N, K, ALPHA, LDA, LDB, BETA, LDC)
+*
+  130 CONTINUE
+      RETURN
+*
+10003 FORMAT( ' ', A13,' COMPLETED THE ROW-MAJOR    COMPUTATIONAL ',
+     $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
+     $ 'RATIO ', F8.2, ' - SUSPECT *******' )
+10002 FORMAT( ' ', A13,' COMPLETED THE COLUMN-MAJOR COMPUTATIONAL ',
+     $ 'TESTS (', I6, ' CALLS)', /' ******* BUT WITH MAXIMUM TEST ',
+     $ 'RATIO ', F8.2, ' - SUSPECT *******' )
+10001 FORMAT( ' ', A13,' PASSED THE ROW-MAJOR    COMPUTATIONAL TESTS',
+     $ ' (', I6, ' CALL', 'S)' )
+10000 FORMAT( ' ', A13,' PASSED THE COLUMN-MAJOR COMPUTATIONAL TESTS',
+     $ ' (', I6, ' CALL', 'S)' )
+ 9998 FORMAT(' ******* FATAL ERROR - PARAMETER NUMBER ', I2, ' WAS CH',
+     $      'ANGED INCORRECTLY *******' )
+ 9996 FORMAT( ' ******* ', A13,' FAILED ON CALL NUMBER:' )
+ 9995 FORMAT( 1X, I6, ': ', A13,'(''', A1, ''',''', A1, ''',',
+     $     3( I3, ',' ), '(', F4.1, ',', F4.1, '), A,', I3, ', B,', I3,
+     $     ',(', F4.1, ',', F4.1, '), C,', I3, ').' )
+ 9994 FORMAT(' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
+     $      '******' )
+*
+*     End of ZCHK6.
+*
+      END
+
+      SUBROUTINE ZPRCN8(NOUT, NC, SNAME, IORDER, UPLO,
+     $                 TRANSA, TRANSB, N,
+     $                 K, ALPHA, LDA, LDB, BETA, LDC)
+      INTEGER          NOUT, NC, IORDER, N, K, LDA, LDB, LDC
+      COMPLEX*16       ALPHA, BETA
+      CHARACTER*1      TRANSA, TRANSB, UPLO
+      CHARACTER*13     SNAME
+      CHARACTER*14     CRC, CTA,CTB,CUPLO
+
+      IF (UPLO.EQ.'U') THEN
+          CUPLO = 'CblasUpper'
+      ELSE
+          CUPLO = 'CblasLower'
+      END IF
+      IF (TRANSA.EQ.'N')THEN
+         CTA = '  CblasNoTrans'
+      ELSE IF (TRANSA.EQ.'T')THEN
+         CTA = '    CblasTrans'
+      ELSE
+         CTA = 'CblasConjTrans'
+      END IF
+      IF (TRANSB.EQ.'N')THEN
+         CTB = '  CblasNoTrans'
+      ELSE IF (TRANSB.EQ.'T')THEN
+         CTB = '    CblasTrans'
+      ELSE
+         CTB = 'CblasConjTrans'
+      END IF
+      IF (IORDER.EQ.1)THEN
+         CRC = ' CblasRowMajor'
+      ELSE
+         CRC = ' CblasColMajor'
+      END IF
+      WRITE(NOUT, FMT = 9995)NC,SNAME,CRC, CUPLO, CTA,CTB
+      WRITE(NOUT, FMT = 9994)N, K, ALPHA, LDA, LDB, BETA, LDC
+
+ 9995 FORMAT( 1X, I6, ': ', A13,'(', A14, ',', A14, ',', A14, ',',
+     $        A14, ',')
+ 9994 FORMAT( 10X, 2( I3, ',' ) ,' (', F4.1,',',F4.1,') , A,',
+     $ I3, ', B,', I3, ', (', F4.1,',',F4.1,') , C,', I3, ').' )
+      END
+
+      SUBROUTINE ZMMTCH(UPLO, TRANSA, TRANSB, N, KK, ALPHA, A, LDA,
+     $                  B, LDB,
+     $                  BETA, C, LDC, CT, G, CC, LDCC, EPS, ERR, FATAL,
+     $                  NOUT, MV )
+      IMPLICIT NONE
+*
+*  Checks the results of the computational tests for GEMMTR.
+*
+*  Auxiliary routine for test program for Level 3 Blas.
+*
+*  -- Written on 24-June-2024.
+*     Martin Koehler, Max Planck Institute, Magdeburg
+*
+*     .. Parameters ..
+      COMPLEX*16         ZERO
+      PARAMETER          ( ZERO = ( 0.0, 0.0 ) )
+      DOUBLE PRECISION   RZERO, RONE
+      PARAMETER          ( RZERO = 0.0, RONE = 1.0 )
+*     .. Scalar Arguments ..
+      COMPLEX*16         ALPHA, BETA
+      DOUBLE PRECISION   EPS, ERR
+      INTEGER            KK, LDA, LDB, LDC, LDCC, N, NOUT
+      LOGICAL            FATAL, MV
+      CHARACTER*1        TRANSA, TRANSB, UPLO
+*     .. Array Arguments ..
+      COMPLEX*16         A( LDA, * ), B( LDB, * ), C( LDC, * ),
+     $                   CC( LDCC, * ), CT( * )
+      DOUBLE PRECISION   G( * )
+*     .. Local Scalars ..
+      COMPLEX*16         CL
+      DOUBLE PRECISION   ERRI
+      INTEGER            I, J, K, ISTART, ISTOP
+      LOGICAL            CTRANA, CTRANB, TRANA, TRANB, UPPER
+*     .. Intrinsic Functions ..
+      INTRINSIC          DABS, DIMAG, DCONJG, MAX, DBLE, DSQRT
+*     .. Statement Functions ..
+      DOUBLE PRECISION   ABS1
+*     .. Statement Function definitions ..
+      ABS1( CL ) = DABS( DBLE( CL ) ) + DABS( DIMAG( CL ) )
+*     .. Executable Statements ..
+
+      UPPER = UPLO.EQ.'U'
+      TRANA = TRANSA.EQ.'T'.OR.TRANSA.EQ.'C'
+      TRANB = TRANSB.EQ.'T'.OR.TRANSB.EQ.'C'
+      CTRANA = TRANSA.EQ.'C'
+      CTRANB = TRANSB.EQ.'C'
+
+      ISTART = 1
+      ISTOP = N
+*
+*     Compute expected result, one column at a time, in CT using data
+*     in A, B and C.
+*     Compute gauges in G.
+*
+      DO 220 J = 1, N
+*
+         IF (UPPER) THEN
+             ISTART = 1
+             ISTOP =  J
+         ELSE
+             ISTART = J
+             ISTOP  = N
+         END IF
+         DO 10 I = ISTART, ISTOP
+            CT( I ) = ZERO
+            G( I ) = RZERO
+   10    CONTINUE
+         IF( .NOT.TRANA.AND..NOT.TRANB )THEN
+            DO 30 K = 1, KK
+               DO 20 I = ISTART, ISTOP
+                  CT( I ) = CT( I ) + A( I, K )*B( K, J )
+                  G( I ) = G( I ) + ABS1( A( I, K ) )*ABS1( B( K, J ) )
+   20          CONTINUE
+   30       CONTINUE
+         ELSE IF( TRANA.AND..NOT.TRANB )THEN
+            IF( CTRANA )THEN
+               DO 50 K = 1, KK
+                  DO 40 I =  ISTART, ISTOP
+                     CT( I ) = CT( I ) + DCONJG( A( K, I ) )*B( K, J )
+                     G( I ) = G( I ) + ABS1( A( K, I ) )*
+     $                        ABS1( B( K, J ) )
+   40             CONTINUE
+   50          CONTINUE
+            ELSE
+               DO 70 K = 1, KK
+                  DO 60 I = ISTART, ISTOP
+                     CT( I ) = CT( I ) + A( K, I )*B( K, J )
+                     G( I ) = G( I ) + ABS1( A( K, I ) )*
+     $                        ABS1( B( K, J ) )
+   60             CONTINUE
+   70          CONTINUE
+            END IF
+         ELSE IF( .NOT.TRANA.AND.TRANB )THEN
+            IF( CTRANB )THEN
+               DO 90 K = 1, KK
+                  DO 80 I =  ISTART, ISTOP
+                     CT( I ) = CT( I ) + A( I, K )*DCONJG( B( J, K ) )
+                     G( I ) = G( I ) + ABS1( A( I, K ) )*
+     $                        ABS1( B( J, K ) )
+   80             CONTINUE
+   90          CONTINUE
+            ELSE
+               DO 110 K = 1, KK
+                  DO 100 I = ISTART, ISTOP
+                     CT( I ) = CT( I ) + A( I, K )*B( J, K )
+                     G( I ) = G( I ) + ABS1( A( I, K ) )*
+     $                        ABS1( B( J, K ) )
+  100             CONTINUE
+  110          CONTINUE
+            END IF
+         ELSE IF( TRANA.AND.TRANB )THEN
+            IF( CTRANA )THEN
+               IF( CTRANB )THEN
+                  DO 130 K = 1, KK
+                     DO 120 I = ISTART, ISTOP
+                        CT( I ) = CT( I ) + DCONJG( A( K, I ) )*
+     $                            DCONJG( B( J, K ) )
+                        G( I ) = G( I ) + ABS1( A( K, I ) )*
+     $                           ABS1( B( J, K ) )
+  120                CONTINUE
+  130             CONTINUE
+               ELSE
+                  DO 150 K = 1, KK
+                     DO 140 I =  ISTART, ISTOP
+                       CT( I ) = CT( I ) + DCONJG( A( K, I ) )*B( J, K )
+                       G( I ) = G( I ) + ABS1( A( K, I ) )*
+     $                           ABS1( B( J, K ) )
+  140                CONTINUE
+  150             CONTINUE
+               END IF
+            ELSE
+               IF( CTRANB )THEN
+                  DO 170 K = 1, KK
+                     DO 160 I =  ISTART, ISTOP
+                       CT( I ) = CT( I ) + A( K, I )*DCONJG( B( J, K ) )
+                       G( I ) = G( I ) + ABS1( A( K, I ) )*
+     $                           ABS1( B( J, K ) )
+  160                CONTINUE
+  170             CONTINUE
+               ELSE
+                  DO 190 K = 1, KK
+                     DO 180 I =  ISTART, ISTOP
+                        CT( I ) = CT( I ) + A( K, I )*B( J, K )
+                        G( I ) = G( I ) + ABS1( A( K, I ) )*
+     $                           ABS1( B( J, K ) )
+  180                CONTINUE
+  190             CONTINUE
+               END IF
+            END IF
+         END IF
+         DO 200 I =  ISTART, ISTOP
+            CT( I ) = ALPHA*CT( I ) + BETA*C( I, J )
+            G( I ) = ABS1( ALPHA )*G( I ) +
+     $               ABS1( BETA )*ABS1( C( I, J ) )
+  200    CONTINUE
+*
+*        Compute the error ratio for this result.
+*
+         ERR = ZERO
+         DO 210 I =  ISTART, ISTOP
+            ERRI = ABS1( CT( I ) - CC( I, J ) )/EPS
+            IF( G( I ).NE.RZERO )
+     $         ERRI = ERRI/G( I )
+            ERR = MAX( ERR, ERRI )
+            IF( ERR*DSQRT( EPS ).GE.RONE )
+     $         GO TO 230
+  210    CONTINUE
+*
+  220 CONTINUE
+*
+*     If the loop completes, all results are at least half accurate.
+      GO TO 250
+*
+*     Report fatal error.
+*
+  230 FATAL = .TRUE.
+      WRITE( NOUT, FMT = 9999 )
+      DO 240 I =  ISTART, ISTOP
+         IF( MV )THEN
+            WRITE( NOUT, FMT = 9998 )I, CT( I ), CC( I, J )
+         ELSE
+            WRITE( NOUT, FMT = 9998 )I, CC( I, J ), CT( I )
+         END IF
+  240 CONTINUE
+      IF( N.GT.1 )
+     $   WRITE( NOUT, FMT = 9997 )J
+*
+  250 CONTINUE
+      RETURN
+*
+ 9999 FORMAT(' ******* FATAL ERROR - COMPUTED RESULT IS LESS THAN HAL',
+     $     'F ACCURATE *******', /'                       EXPECTED RE',
+     $     'SULT                    COMPUTED RESULT' )
+ 9998 FORMAT( 1X, I7, 2( '  (', G15.6, ',', G15.6, ')' ) )
+ 9997 FORMAT( '      THESE ARE THE RESULTS FOR COLUMN ', I3 )
+*
+*     End of ZMMTCH.
 *
       END
 
