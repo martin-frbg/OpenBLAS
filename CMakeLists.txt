@@ -77,7 +77,7 @@ set(SYMBOLPREFIX "" CACHE STRING  "Add a prefix to all exported symbol names in 
 
 set(SYMBOLSUFFIX "" CACHE STRING  "Add a suffix to all exported symbol names in the shared library, e.g. _64 for INTERFACE64 builds" )
 
-if (CMAKE_SYSTEM_NAME MATCHES "Windows" AND BUILD_SHARED_LIBS AND NOT (${SYMBOLPREFIX}${SYMBOLSUFFIX} STREQUAL ""))
+if (CMAKE_SYSTEM_NAME MATCHES "Windows" AND BUILD_SHARED_LIBS AND NOT ("${SYMBOLPREFIX}${SYMBOLSUFFIX}" STREQUAL ""))
 if (NOT BUILD_STATIC_LIBS)
 	message (STATUS "forcing build of a temporary static library for symbol renaming")
 	set (BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared library" FORCE)
