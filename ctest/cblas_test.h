@@ -6,6 +6,18 @@
 #define CBLAS_TEST_H
 #include "cblas.h"
 
+#ifdef USE64BITINT
+#define int long
+#endif
+
+#if defined(_MSC_VER) && defined(__INTEL_CLANG_COMPILER)
+//#define LAPACK_COMPLEX_STRUCTURE
+#define NOCHANGE
+#endif
+/* e.g. mingw64/x86_64-w64-mingw32/include/winerror.h */
+#ifdef FAILED
+#undef FAILED
+#endif
 
 #define  TRUE           1
 #define  PASSED         1
@@ -21,174 +33,509 @@
 typedef struct { float real; float imag; } CBLAS_TEST_COMPLEX;
 typedef struct { double real; double imag; } CBLAS_TEST_ZOMPLEX;
 
-//#define F77_xerbla 		F77_GLOBAL(xerbla,XERBLA)
+#if defined(ADD_)
 /*
  * Level 1 BLAS
  */
-#define F77_srotg 		F77_GLOBAL(srotgtest,SROTGTEST)
-#define F77_srotmg 		F77_GLOBAL(srotmgtest,SROTMGTEST)
-#define F77_srot 		F77_GLOBAL(srottest,SROTTEST)
-#define F77_srotm 		F77_GLOBAL(srotmtest,SROTMTEST)
-#define F77_drotg 		F77_GLOBAL(drotgtest,DROTGTEST)
-#define F77_drotmg 		F77_GLOBAL(drotmgtest,DROTMGTEST)
-#define F77_drot 		F77_GLOBAL(drottest,DROTTEST)
-#define F77_drotm 		F77_GLOBAL(drotmtest,DROTMTEST)
-#define F77_sswap 		F77_GLOBAL(sswaptest,SSWAPTEST)
-#define F77_scopy 		F77_GLOBAL(scopytest,SCOPYTEST)
-#define F77_saxpy 		F77_GLOBAL(saxpytest,SAXPYTEST)
-#define F77_isamax 		F77_GLOBAL(isamaxtest,ISAMAXTEST)
-#define F77_dswap 		F77_GLOBAL(dswaptest,DSWAPTEST)
-#define F77_dcopy 		F77_GLOBAL(dcopytest,DCOPYTEST)
-#define F77_daxpy 		F77_GLOBAL(daxpytest,DAXPYTEST)
-#define F77_idamax 		F77_GLOBAL(idamaxtest,IDAMAXTEST)
-#define F77_cswap 		F77_GLOBAL(cswaptest,CSWAPTEST)
-#define F77_ccopy 		F77_GLOBAL(ccopytest,CCOPYTEST)
-#define F77_caxpy 		F77_GLOBAL(caxpytest,CAXPYTEST)
-#define F77_icamax 		F77_GLOBAL(icamaxtest,ICAMAXTEST)
-#define F77_zswap 		F77_GLOBAL(zswaptest,ZSWAPTEST)
-#define F77_zcopy 		F77_GLOBAL(zcopytest,ZCOPYTEST)
-#define F77_zaxpy 		F77_GLOBAL(zaxpytest,ZAXPYTEST)
-#define F77_izamax 		F77_GLOBAL(izamaxtest,IZAMAXTEST)
-#define F77_sdot 		F77_GLOBAL(sdottest,SDOTTEST)
-#define F77_ddot 		F77_GLOBAL(ddottest,DDOTTEST)
-#define F77_dsdot 		F77_GLOBAL(dsdottest,DSDOTTEST)
-#define F77_sscal 		F77_GLOBAL(sscaltest,SSCALTEST)
-#define F77_dscal 		F77_GLOBAL(dscaltest,DSCALTEST)
-#define F77_cscal 		F77_GLOBAL(cscaltest,CSCALTEST)
-#define F77_zscal 		F77_GLOBAL(zscaltest,ZSCALTEST)
-#define F77_csscal 		F77_GLOBAL(csscaltest,CSSCALTEST)
-#define F77_zdscal 		F77_GLOBAL(zdscaltest,ZDSCALTEST)
-#define F77_cdotu 		F77_GLOBAL(cdotutest,CDOTUTEST)
-#define F77_cdotc 		F77_GLOBAL(cdotctest,CDOTCTEST)
-#define F77_zdotu 		F77_GLOBAL(zdotutest,ZDOTUTEST)
-#define F77_zdotc 		F77_GLOBAL(zdotctest,ZDOTCTEST)
-#define F77_snrm2 		F77_GLOBAL(snrm2test,SNRM2TEST)
-#define F77_sasum 		F77_GLOBAL(sasumtest,SASUMTEST)
-#define F77_dnrm2 		F77_GLOBAL(dnrm2test,DNRM2TEST)
-#define F77_dasum 		F77_GLOBAL(dasumtest,DASUMTEST)
-#define F77_scnrm2 		F77_GLOBAL(scnrm2test,SCNRM2TEST)
-#define F77_scasum 		F77_GLOBAL(scasumtest,SCASUMTEST)
-#define F77_dznrm2 		F77_GLOBAL(dznrm2test,DZNRM2TEST)
-#define F77_dzasum 		F77_GLOBAL(dzasumtest,DZASUMTEST)
-#define F77_sdsdot 		F77_GLOBAL(sdsdottest, SDSDOTTEST)
+   #define F77_srotg      srotgtest_
+   #define F77_srotmg     srotmgtest_
+   #define F77_srot       srottest_
+   #define F77_srotm      srotmtest_
+   #define F77_drotg      drotgtest_
+   #define F77_drotmg     drotmgtest_
+   #define F77_drot       drottest_
+   #define F77_drotm      drotmtest_
+   #define F77_sswap      sswaptest_
+   #define F77_scopy      scopytest_
+   #define F77_saxpy      saxpytest_
+   #define F77_isamax     isamaxtest_
+   #define F77_dswap      dswaptest_
+   #define F77_dcopy      dcopytest_
+   #define F77_daxpy      daxpytest_
+   #define F77_idamax     idamaxtest_
+   #define F77_cswap      cswaptest_
+   #define F77_ccopy      ccopytest_
+   #define F77_caxpy      caxpytest_
+   #define F77_icamax     icamaxtest_
+   #define F77_zswap      zswaptest_
+   #define F77_zcopy      zcopytest_
+   #define F77_zaxpy      zaxpytest_
+   #define F77_izamax     izamaxtest_
+   #define F77_sdot       sdottest_
+   #define F77_ddot       ddottest_
+   #define F77_dsdot      dsdottest_
+   #define F77_sscal      sscaltest_
+   #define F77_dscal      dscaltest_
+   #define F77_cscal      cscaltest_
+   #define F77_zscal      zscaltest_
+   #define F77_csscal     csscaltest_
+   #define F77_zdscal      zdscaltest_
+   #define F77_cdotu      cdotutest_
+   #define F77_cdotc      cdotctest_
+   #define F77_zdotu      zdotutest_
+   #define F77_zdotc      zdotctest_
+   #define F77_snrm2      snrm2test_
+   #define F77_sasum      sasumtest_
+   #define F77_dnrm2      dnrm2test_
+   #define F77_dasum      dasumtest_
+   #define F77_scnrm2     scnrm2test_
+   #define F77_scasum     scasumtest_
+   #define F77_dznrm2     dznrm2test_
+   #define F77_dzasum     dzasumtest_
+   #define F77_sdsdot     sdsdottest_
 /*
  * Level 2 BLAS
  */
-#define F77_s2chke 		F77_GLOBAL(cs2chke,CS2CHKE)
-#define F77_d2chke 		F77_GLOBAL(cd2chke,CD2CHKE)
-#define F77_c2chke 		F77_GLOBAL(cc2chke,CC2CHKE)
-#define F77_z2chke 		F77_GLOBAL(cz2chke,CZ2CHKE)
-#define F77_ssymv 		F77_GLOBAL(cssymv,CSSYMV)
-#define F77_ssbmv 		F77_GLOBAL(cssbmv,CSSBMV)
-#define F77_sspmv 		F77_GLOBAL(csspmv,CSSPMV)
-#define F77_sger 		F77_GLOBAL(csger,CSGER)
-#define F77_ssyr 		F77_GLOBAL(cssyr,CSSYR)
-#define F77_sspr 		F77_GLOBAL(csspr,CSSPR)
-#define F77_ssyr2 		F77_GLOBAL(cssyr2,CSSYR2)
-#define F77_sspr2 		F77_GLOBAL(csspr2,CSSPR2)
-#define F77_dsymv 		F77_GLOBAL(cdsymv,CDSYMV)
-#define F77_dsbmv 		F77_GLOBAL(cdsbmv,CDSBMV)
-#define F77_dspmv 		F77_GLOBAL(cdspmv,CDSPMV)
-#define F77_dger 		F77_GLOBAL(cdger,CDGER)
-#define F77_dsyr 		F77_GLOBAL(cdsyr,CDSYR)
-#define F77_dspr 		F77_GLOBAL(cdspr,CDSPR)
-#define F77_dsyr2 		F77_GLOBAL(cdsyr2,CDSYR2)
-#define F77_dspr2 		F77_GLOBAL(cdspr2,CDSPR2)
-#define F77_chemv 		F77_GLOBAL(cchemv,CCHEMV)
-#define F77_chbmv 		F77_GLOBAL(cchbmv,CCHBMV)
-#define F77_chpmv 		F77_GLOBAL(cchpmv,CCHPMV)
-#define F77_cgeru 		F77_GLOBAL(ccgeru,CCGERU)
-#define F77_cgerc 		F77_GLOBAL(ccgerc,CCGERC)
-#define F77_cher 		F77_GLOBAL(ccher,CCHER)
-#define F77_chpr 		F77_GLOBAL(cchpr,CCHPR)
-#define F77_cher2 		F77_GLOBAL(ccher2,CCHER2)
-#define F77_chpr2 		F77_GLOBAL(cchpr2,CCHPR2)
-#define F77_zhemv 		F77_GLOBAL(czhemv,CZHEMV)
-#define F77_zhbmv 		F77_GLOBAL(czhbmv,CZHBMV)
-#define F77_zhpmv 		F77_GLOBAL(czhpmv,CZHPMV)
-#define F77_zgeru 		F77_GLOBAL(czgeru,CZGERU)
-#define F77_zgerc 		F77_GLOBAL(czgerc,CZGERC)
-#define F77_zher 		F77_GLOBAL(czher,CZHER)
-#define F77_zhpr 		F77_GLOBAL(czhpr,CZHPR)
-#define F77_zher2 		F77_GLOBAL(czher2,CZHER2)
-#define F77_zhpr2 		F77_GLOBAL(czhpr2,CZHPR2)
-#define F77_sgemv 		F77_GLOBAL(csgemv,CSGEMV)
-#define F77_sgbmv 		F77_GLOBAL(csgbmv,CSGBMV)
-#define F77_strmv 		F77_GLOBAL(cstrmv,CSTRMV)
-#define F77_stbmv 		F77_GLOBAL(cstbmv,CSTBMV)
-#define F77_stpmv 		F77_GLOBAL(cstpmv,CSTPMV)
-#define F77_strsv 		F77_GLOBAL(cstrsv,CSTRSV)
-#define F77_stbsv 		F77_GLOBAL(cstbsv,CSTBSV)
-#define F77_stpsv 		F77_GLOBAL(cstpsv,CSTPSV)
-#define F77_dgemv 		F77_GLOBAL(cdgemv,CDGEMV)
-#define F77_dgbmv 		F77_GLOBAL(cdgbmv,CDGBMV)
-#define F77_dtrmv 		F77_GLOBAL(cdtrmv,CDTRMV)
-#define F77_dtbmv 		F77_GLOBAL(cdtbmv,CDTBMV)
-#define F77_dtpmv 		F77_GLOBAL(cdtpmv,CDTPMV)
-#define F77_dtrsv 		F77_GLOBAL(cdtrsv,CDTRSV)
-#define F77_dtbsv 		F77_GLOBAL(cdtbsv,CDTBSV)
-#define F77_dtpsv 		F77_GLOBAL(cdtpsv,CDTPSV)
-#define F77_cgemv 		F77_GLOBAL(ccgemv,CCGEMV)
-#define F77_cgbmv 		F77_GLOBAL(ccgbmv,CCGBMV)
-#define F77_ctrmv 		F77_GLOBAL(cctrmv,CCTRMV)
-#define F77_ctbmv 		F77_GLOBAL(cctbmv,CCTBMV)
-#define F77_ctpmv 		F77_GLOBAL(cctpmv,CCTPMV)
-#define F77_ctrsv 		F77_GLOBAL(cctrsv,CCTRSV)
-#define F77_ctbsv 		F77_GLOBAL(cctbsv,CCTBSV)
-#define F77_ctpsv 		F77_GLOBAL(cctpsv,CCTPSV)
-#define F77_zgemv 		F77_GLOBAL(czgemv,CZGEMV)
-#define F77_zgbmv 		F77_GLOBAL(czgbmv,CZGBMV)
-#define F77_ztrmv 		F77_GLOBAL(cztrmv,CZTRMV)
-#define F77_ztbmv 		F77_GLOBAL(cztbmv,CZTBMV)
-#define F77_ztpmv 		F77_GLOBAL(cztpmv,CZTPMV)
-#define F77_ztrsv 		F77_GLOBAL(cztrsv,CZTRSV)
-#define F77_ztbsv 		F77_GLOBAL(cztbsv,CZTBSV)
-#define F77_ztpsv 		F77_GLOBAL(cztpsv,CZTPSV)
+   #define F77_s2chke     cs2chke_
+   #define F77_d2chke     cd2chke_
+   #define F77_c2chke     cc2chke_
+   #define F77_z2chke     cz2chke_
+   #define F77_ssymv      cssymv_
+   #define F77_ssbmv      cssbmv_
+   #define F77_sspmv      csspmv_
+   #define F77_sger       csger_
+   #define F77_ssyr       cssyr_
+   #define F77_sspr       csspr_
+   #define F77_ssyr2      cssyr2_
+   #define F77_sspr2      csspr2_
+   #define F77_dsymv      cdsymv_
+   #define F77_dsbmv      cdsbmv_
+   #define F77_dspmv      cdspmv_
+   #define F77_dger       cdger_
+   #define F77_dsyr       cdsyr_
+   #define F77_dspr       cdspr_
+   #define F77_dsyr2      cdsyr2_
+   #define F77_dspr2      cdspr2_
+   #define F77_chemv      cchemv_
+   #define F77_chbmv      cchbmv_
+   #define F77_chpmv      cchpmv_
+   #define F77_cgeru      ccgeru_
+   #define F77_cgerc      ccgerc_
+   #define F77_cher       ccher_
+   #define F77_chpr       cchpr_
+   #define F77_cher2      ccher2_
+   #define F77_chpr2      cchpr2_
+   #define F77_zhemv      czhemv_
+   #define F77_zhbmv      czhbmv_
+   #define F77_zhpmv      czhpmv_
+   #define F77_zgeru      czgeru_
+   #define F77_zgerc      czgerc_
+   #define F77_zher       czher_
+   #define F77_zhpr       czhpr_
+   #define F77_zher2      czher2_
+   #define F77_zhpr2      czhpr2_
+   #define F77_sgemv      csgemv_
+   #define F77_sgbmv      csgbmv_
+   #define F77_strmv      cstrmv_
+   #define F77_stbmv      cstbmv_
+   #define F77_stpmv      cstpmv_
+   #define F77_strsv      cstrsv_
+   #define F77_stbsv      cstbsv_
+   #define F77_stpsv      cstpsv_
+   #define F77_dgemv      cdgemv_
+   #define F77_dgbmv      cdgbmv_
+   #define F77_dtrmv      cdtrmv_
+   #define F77_dtbmv      cdtbmv_
+   #define F77_dtpmv      cdtpmv_
+   #define F77_dtrsv      cdtrsv_
+   #define F77_dtbsv      cdtbsv_
+   #define F77_dtpsv      cdtpsv_
+   #define F77_cgemv      ccgemv_
+   #define F77_cgbmv      ccgbmv_
+   #define F77_ctrmv      cctrmv_
+   #define F77_ctbmv      cctbmv_
+   #define F77_ctpmv      cctpmv_
+   #define F77_ctrsv      cctrsv_
+   #define F77_ctbsv      cctbsv_
+   #define F77_ctpsv      cctpsv_
+   #define F77_zgemv      czgemv_
+   #define F77_zgbmv      czgbmv_
+   #define F77_ztrmv      cztrmv_
+   #define F77_ztbmv      cztbmv_
+   #define F77_ztpmv      cztpmv_
+   #define F77_ztrsv      cztrsv_
+   #define F77_ztbsv      cztbsv_
+   #define F77_ztpsv      cztpsv_
 /*
  * Level 3 BLAS
  */
-#define F77_s3chke 		F77_GLOBAL(cs3chke,CS3CHKE)
-#define F77_d3chke 		F77_GLOBAL(cd3chke,CD3CHKE)
-#define F77_c3chke 		F77_GLOBAL(cc3chke,CC3CHKE)
-#define F77_z3chke 		F77_GLOBAL(cz3chke,CZ3CHKE)
-#define F77_chemm 		F77_GLOBAL(cchemm,CCHEMM)
-#define F77_cherk 		F77_GLOBAL(ccherk,CCHERK)
-#define F77_cher2k 		F77_GLOBAL(ccher2k,CCHER2K)
-#define F77_zhemm 		F77_GLOBAL(czhemm,CZHEMM)
-#define F77_zherk 		F77_GLOBAL(czherk,CZHERK)
-#define F77_zher2k 		F77_GLOBAL(czher2k,CZHER2K)
-#define F77_sgemm 		F77_GLOBAL(csgemm,CSGEMM)
-#define F77_sgemmtr 		F77_GLOBAL(csgemmtr,CSGEMMTR)
-#define F77_ssymm 		F77_GLOBAL(cssymm,CSSYMM)
-#define F77_ssyrk 		F77_GLOBAL(cssyrk,CSSYRK)
-#define F77_ssyr2k 		F77_GLOBAL(cssyr2k,CSSYR2K)
-#define F77_strmm 		F77_GLOBAL(cstrmm,CSTRMM)
-#define F77_strsm 		F77_GLOBAL(cstrsm,CSTRSM)
-#define F77_dgemm 		F77_GLOBAL(cdgemm,CDGEMM)
-#define F77_dgemmtr 		F77_GLOBAL(cdgemmtr,CDGEMMTR)
-#define F77_dsymm 		F77_GLOBAL(cdsymm,CDSYMM)
-#define F77_dsyrk 		F77_GLOBAL(cdsyrk,CDSYRK)
-#define F77_dsyr2k 		F77_GLOBAL(cdsyr2k,CDSYR2K)
-#define F77_dtrmm 		F77_GLOBAL(cdtrmm,CDTRMM)
-#define F77_dtrsm 		F77_GLOBAL(cdtrsm,CDTRSM)
-#define F77_cgemm 		F77_GLOBAL(ccgemm,CCGEMM)
-#define F77_cgemmtr 		F77_GLOBAL(ccgemmtr,CCGEMMTR)
-#define F77_csymm 		F77_GLOBAL(ccsymm,CCSYMM)
-#define F77_csyrk 		F77_GLOBAL(ccsyrk,CCSYRK)
-#define F77_csyr2k 		F77_GLOBAL(ccsyr2k,CCSYR2K)
-#define F77_ctrmm 		F77_GLOBAL(cctrmm,CCTRMM)
-#define F77_ctrsm 		F77_GLOBAL(cctrsm,CCTRSM)
-#define F77_zgemm 		F77_GLOBAL(czgemm,CZGEMM)
-#define F77_zgemmtr 		F77_GLOBAL(czgemmtr,CZGEMMTR)
-#define F77_zsymm 		F77_GLOBAL(czsymm,CZSYMM)
-#define F77_zsyrk 		F77_GLOBAL(czsyrk,CZSYRK)
-#define F77_zsyr2k 		F77_GLOBAL(czsyr2k,CZSYR2K)
-#define F77_ztrmm 		F77_GLOBAL(cztrmm,CZTRMM)
-#define F77_ztrsm 		F77_GLOBAL(cztrsm, CZTRSM)
+   #define F77_s3chke     cs3chke_
+   #define F77_d3chke     cd3chke_
+   #define F77_c3chke     cc3chke_
+   #define F77_z3chke     cz3chke_
+   #define F77_chemm      cchemm_
+   #define F77_cherk      ccherk_
+   #define F77_cher2k     ccher2k_
+   #define F77_zhemm      czhemm_
+   #define F77_zherk      czherk_
+   #define F77_zher2k     czher2k_
+   #define F77_sgemm      csgemm_
+   #define F77_sgemmtr    csgemmtr_
+   #define F77_ssymm      cssymm_
+   #define F77_ssyrk      cssyrk_
+   #define F77_ssyr2k     cssyr2k_
+   #define F77_strmm      cstrmm_
+   #define F77_strsm      cstrsm_
+   #define F77_dgemm      cdgemm_
+   #define F77_dgemmtr    cdgemmtr_
+   #define F77_dsymm      cdsymm_
+   #define F77_dsyrk      cdsyrk_
+   #define F77_dsyr2k     cdsyr2k_
+   #define F77_dtrmm      cdtrmm_
+   #define F77_dtrsm      cdtrsm_
+   #define F77_cgemm      ccgemm_
+   #define F77_cgemm3m    ccgemm3m_
+   #define F77_cgemmtr    ccgemmtr_
+   #define F77_csymm      ccsymm_
+   #define F77_csyrk      ccsyrk_
+   #define F77_csyr2k     ccsyr2k_
+   #define F77_ctrmm      cctrmm_
+   #define F77_ctrsm      cctrsm_
+   #define F77_zgemm      czgemm_
+   #define F77_zgemm3m    czgemm3m_
+   #define F77_zgemmtr    czgemmtr_
+   #define F77_zsymm      czsymm_
+   #define F77_zsyrk      czsyrk_
+   #define F77_zsyr2k     czsyr2k_
+   #define F77_ztrmm      cztrmm_
+   #define F77_ztrsm      cztrsm_
+#elif defined(UPCASE)
+/*
+ * Level 1 BLAS
+ */
+   #define F77_srotg      SROTGTEST
+   #define F77_srotmg     SROTMGTEST
+   #define F77_srot       SROTCTEST
+   #define F77_srotm      SROTMTEST
+   #define F77_drotg      DROTGTEST
+   #define F77_drotmg     DROTMGTEST
+   #define F77_drot       DROTTEST
+   #define F77_drotm      DROTMTEST
+   #define F77_sswap      SSWAPTEST
+   #define F77_scopy      SCOPYTEST
+   #define F77_saxpy      SAXPYTEST
+   #define F77_isamax     ISAMAXTEST
+   #define F77_dswap      DSWAPTEST
+   #define F77_dcopy      DCOPYTEST
+   #define F77_daxpy      DAXPYTEST
+   #define F77_idamax     IDAMAXTEST
+   #define F77_cswap      CSWAPTEST
+   #define F77_ccopy      CCOPYTEST
+   #define F77_caxpy      CAXPYTEST
+   #define F77_icamax     ICAMAXTEST
+   #define F77_zswap      ZSWAPTEST
+   #define F77_zcopy      ZCOPYTEST
+   #define F77_zaxpy      ZAXPYTEST
+   #define F77_izamax     IZAMAXTEST
+   #define F77_sdot       SDOTTEST
+   #define F77_ddot       DDOTTEST
+   #define F77_dsdot       DSDOTTEST
+   #define F77_sscal      SSCALTEST
+   #define F77_dscal      DSCALTEST
+   #define F77_cscal      CSCALTEST
+   #define F77_zscal      ZSCALTEST
+   #define F77_csscal      CSSCALTEST
+   #define F77_zdscal      ZDSCALTEST
+   #define F77_cdotu      CDOTUTEST
+   #define F77_cdotc      CDOTCTEST
+   #define F77_zdotu      ZDOTUTEST
+   #define F77_zdotc      ZDOTCTEST
+   #define F77_snrm2      SNRM2TEST
+   #define F77_sasum      SASUMTEST
+   #define F77_dnrm2      DNRM2TEST
+   #define F77_dasum      DASUMTEST
+   #define F77_scnrm2      SCNRM2TEST
+   #define F77_scasum      SCASUMTEST
+   #define F77_dznrm2      DZNRM2TEST
+   #define F77_dzasum      DZASUMTEST
+   #define F77_sdsdot       SDSDOTTEST
+/*
+ * Level 2 BLAS
+ */
+   #define F77_s2chke     CS2CHKE
+   #define F77_d2chke     CD2CHKE
+   #define F77_c2chke     CC2CHKE
+   #define F77_z2chke     CZ2CHKE
+   #define F77_ssymv      CSSYMV
+   #define F77_ssbmv      CSSBMV
+   #define F77_sspmv      CSSPMV
+   #define F77_sger       CSGER
+   #define F77_ssyr       CSSYR
+   #define F77_sspr       CSSPR
+   #define F77_ssyr2      CSSYR2
+   #define F77_sspr2      CSSPR2
+   #define F77_dsymv      CDSYMV
+   #define F77_dsbmv      CDSBMV
+   #define F77_dspmv      CDSPMV
+   #define F77_dger       CDGER
+   #define F77_dsyr       CDSYR
+   #define F77_dspr       CDSPR
+   #define F77_dsyr2      CDSYR2
+   #define F77_dspr2      CDSPR2
+   #define F77_chemv      CCHEMV
+   #define F77_chbmv      CCHBMV
+   #define F77_chpmv      CCHPMV
+   #define F77_cgeru      CCGERU
+   #define F77_cgerc      CCGERC
+   #define F77_cher       CCHER
+   #define F77_chpr       CCHPR
+   #define F77_cher2      CCHER2
+   #define F77_chpr2      CCHPR2
+   #define F77_zhemv      CZHEMV
+   #define F77_zhbmv      CZHBMV
+   #define F77_zhpmv      CZHPMV
+   #define F77_zgeru      CZGERU
+   #define F77_zgerc      CZGERC
+   #define F77_zher       CZHER
+   #define F77_zhpr       CZHPR
+   #define F77_zher2      CZHER2
+   #define F77_zhpr2      CZHPR2
+   #define F77_sgemv      CSGEMV
+   #define F77_sgbmv      CSGBMV
+   #define F77_strmv      CSTRMV
+   #define F77_stbmv      CSTBMV
+   #define F77_stpmv      CSTPMV
+   #define F77_strsv      CSTRSV
+   #define F77_stbsv      CSTBSV
+   #define F77_stpsv      CSTPSV
+   #define F77_dgemv      CDGEMV
+   #define F77_dgbmv      CDGBMV
+   #define F77_dtrmv      CDTRMV
+   #define F77_dtbmv      CDTBMV
+   #define F77_dtpmv      CDTPMV
+   #define F77_dtrsv      CDTRSV
+   #define F77_dtbsv      CDTBSV
+   #define F77_dtpsv      CDTPSV
+   #define F77_cgemv      CCGEMV
+   #define F77_cgbmv      CCGBMV
+   #define F77_ctrmv      CCTRMV
+   #define F77_ctbmv      CCTBMV
+   #define F77_ctpmv      CCTPMV
+   #define F77_ctrsv      CCTRSV
+   #define F77_ctbsv      CCTBSV
+   #define F77_ctpsv      CCTPSV
+   #define F77_zgemv      CZGEMV
+   #define F77_zgbmv      CZGBMV
+   #define F77_ztrmv      CZTRMV
+   #define F77_ztbmv      CZTBMV
+   #define F77_ztpmv      CZTPMV
+   #define F77_ztrsv      CZTRSV
+   #define F77_ztbsv      CZTBSV
+   #define F77_ztpsv      CZTPSV
+/*
+ * Level 3 BLAS
+ */
+   #define F77_s3chke     CS3CHKE
+   #define F77_d3chke     CD3CHKE
+   #define F77_c3chke     CC3CHKE
+   #define F77_z3chke     CZ3CHKE
+   #define F77_chemm      CCHEMM
+   #define F77_cherk      CCHERK
+   #define F77_cher2k     CCHER2K
+   #define F77_zhemm      CZHEMM
+   #define F77_zherk      CZHERK
+   #define F77_zher2k     CZHER2K
+   #define F77_sgemm      CSGEMM
+   #define F77_sgemmtr    CSGEMMTR
+   #define F77_ssymm      CSSYMM
+   #define F77_ssyrk      CSSYRK
+   #define F77_ssyr2k     CSSYR2K
+   #define F77_strmm      CSTRMM
+   #define F77_strsm      CSTRSM
+   #define F77_dgemm      CDGEMM
+   #define F77_dgemmtr    CDGEMMTR
+   #define F77_dsymm      CDSYMM
+   #define F77_dsyrk      CDSYRK
+   #define F77_dsyr2k     CDSYR2K
+   #define F77_dtrmm      CDTRMM
+   #define F77_dtrsm      CDTRSM
+   #define F77_cgemm      CCGEMM
+   #define F77_cgemm3m    CCGEMM3M
+   #define F77_cgemmtr    CCGEMMTR
+   #define F77_csymm      CCSYMM
+   #define F77_csyrk      CCSYRK
+   #define F77_csyr2k     CCSYR2K
+   #define F77_ctrmm      CCTRMM
+   #define F77_ctrsm      CCTRSM
+   #define F77_zgemm      CZGEMM
+   #define F77_zgemm3m    CZGEMM3M
+   #define F77_zgemmtr    CZGEMMTR
+   #define F77_zsymm      CZSYMM
+   #define F77_zsyrk      CZSYRK
+   #define F77_zsyr2k     CZSYR2K
+   #define F77_ztrmm      CZTRMM
+   #define F77_ztrsm      CZTRSM
+#elif defined(NOCHANGE)
+/*
+ * Level 1 BLAS
+ */
+   #define F77_srotg      srotgtest
+   #define F77_srotmg     srotmgtest
+   #define F77_srot       srottest
+   #define F77_srotm      srotmtest
+   #define F77_drotg      drotgtest
+   #define F77_drotmg     drotmgtest
+   #define F77_drot       drottest
+   #define F77_drotm      drotmtest
+   #define F77_sswap      sswaptest
+   #define F77_scopy      scopytest
+   #define F77_saxpy      saxpytest
+   #define F77_isamax     isamaxtest
+   #define F77_dswap      dswaptest
+   #define F77_dcopy      dcopytest
+   #define F77_daxpy      daxpytest
+   #define F77_idamax     idamaxtest
+   #define F77_cswap      cswaptest
+   #define F77_ccopy      ccopytest
+   #define F77_caxpy      caxpytest
+   #define F77_icamax     icamaxtest
+   #define F77_zswap      zswaptest
+   #define F77_zcopy      zcopytest
+   #define F77_zaxpy      zaxpytest
+   #define F77_izamax     izamaxtest
+   #define F77_sdot       sdottest
+   #define F77_ddot       ddottest
+   #define F77_dsdot       dsdottest
+   #define F77_sscal      sscaltest
+   #define F77_dscal      dscaltest
+   #define F77_cscal      cscaltest
+   #define F77_zscal      zscaltest
+   #define F77_csscal      csscaltest
+   #define F77_zdscal      zdscaltest
+   #define F77_cdotu  cdotutest
+   #define F77_cdotc  cdotctest
+   #define F77_zdotu  zdotutest
+   #define F77_zdotc  zdotctest
+   #define F77_snrm2  snrm2test
+   #define F77_sasum  sasumtest
+   #define F77_dnrm2  dnrm2test
+   #define F77_dasum  dasumtest
+   #define F77_scnrm2  scnrm2test
+   #define F77_scasum  scasumtest
+   #define F77_dznrm2  dznrm2test
+   #define F77_dzasum  dzasumtest
+   #define F77_sdsdot   sdsdottest
+/*
+ * Level 2 BLAS
+ */
+   #define F77_s2chke     cs2chke
+   #define F77_d2chke     cd2chke
+   #define F77_c2chke     cc2chke
+   #define F77_z2chke     cz2chke
+   #define F77_ssymv      cssymv
+   #define F77_ssbmv      cssbmv
+   #define F77_sspmv      csspmv
+   #define F77_sger       csger
+   #define F77_ssyr       cssyr
+   #define F77_sspr       csspr
+   #define F77_ssyr2      cssyr2
+   #define F77_sspr2      csspr2
+   #define F77_dsymv      cdsymv
+   #define F77_dsbmv      cdsbmv
+   #define F77_dspmv      cdspmv
+   #define F77_dger       cdger
+   #define F77_dsyr       cdsyr
+   #define F77_dspr       cdspr
+   #define F77_dsyr2      cdsyr2
+   #define F77_dspr2      cdspr2
+   #define F77_chemv      cchemv
+   #define F77_chbmv      cchbmv
+   #define F77_chpmv      cchpmv
+   #define F77_cgeru      ccgeru
+   #define F77_cgerc      ccgerc
+   #define F77_cher       ccher
+   #define F77_chpr       cchpr
+   #define F77_cher2      ccher2
+   #define F77_chpr2      cchpr2
+   #define F77_zhemv      czhemv
+   #define F77_zhbmv      czhbmv
+   #define F77_zhpmv      czhpmv
+   #define F77_zgeru      czgeru
+   #define F77_zgerc      czgerc
+   #define F77_zher       czher
+   #define F77_zhpr       czhpr
+   #define F77_zher2      czher2
+   #define F77_zhpr2      czhpr2
+   #define F77_sgemv      csgemv
+   #define F77_sgbmv      csgbmv
+   #define F77_strmv      cstrmv
+   #define F77_stbmv      cstbmv
+   #define F77_stpmv      cstpmv
+   #define F77_strsv      cstrsv
+   #define F77_stbsv      cstbsv
+   #define F77_stpsv      cstpsv
+   #define F77_dgemv      cdgemv
+   #define F77_dgbmv      cdgbmv
+   #define F77_dtrmv      cdtrmv
+   #define F77_dtbmv      cdtbmv
+   #define F77_dtpmv      cdtpmv
+   #define F77_dtrsv      cdtrsv
+   #define F77_dtbsv      cdtbsv
+   #define F77_dtpsv      cdtpsv
+   #define F77_cgemv      ccgemv
+   #define F77_cgbmv      ccgbmv
+   #define F77_ctrmv      cctrmv
+   #define F77_ctbmv      cctbmv
+   #define F77_ctpmv      cctpmv
+   #define F77_ctrsv      cctrsv
+   #define F77_ctbsv      cctbsv
+   #define F77_ctpsv      cctpsv
+   #define F77_zgemv      czgemv
+   #define F77_zgbmv      czgbmv
+   #define F77_ztrmv      cztrmv
+   #define F77_ztbmv      cztbmv
+   #define F77_ztpmv      cztpmv
+   #define F77_ztrsv      cztrsv
+   #define F77_ztbsv      cztbsv
+   #define F77_ztpsv      cztpsv
+/*
+ * Level 3 BLAS
+ */
+   #define F77_s3chke     cs3chke
+   #define F77_d3chke     cd3chke
+   #define F77_c3chke     cc3chke
+   #define F77_z3chke     cz3chke
+   #define F77_chemm      cchemm
+   #define F77_cherk      ccherk
+   #define F77_cher2k     ccher2k
+   #define F77_zhemm      czhemm
+   #define F77_zherk      czherk
+   #define F77_zher2k     czher2k
+   #define F77_sgemm      csgemm
+   #define F77_sgemmtr    csgemmtr
+   #define F77_ssymm      cssymm
+   #define F77_ssyrk      cssyrk
+   #define F77_ssyr2k     cssyr2k
+   #define F77_strmm      cstrmm
+   #define F77_strsm      cstrsm
+   #define F77_dgemm      cdgemm
+   #define F77_dgemmtr    cdgemmtr
+   #define F77_dsymm      cdsymm
+   #define F77_dsyrk      cdsyrk
+   #define F77_dsyr2k     cdsyr2k
+   #define F77_dtrmm      cdtrmm
+   #define F77_dtrsm      cdtrsm
+   #define F77_cgemm      ccgemm
+   #define F77_cgemm3m    ccgemm3m
+   #define F77_cgemmtr    ccgemmtr
+   #define F77_csymm      ccsymm
+   #define F77_csyrk      ccsyrk
+   #define F77_csyr2k     ccsyr2k
+   #define F77_ctrmm      cctrmm
+   #define F77_ctrsm      cctrsm
+   #define F77_zgemm      czgemm
+   #define F77_zgemm3m    czgemm3m
+   #define F77_zgemmtr    czgemmtr
+   #define F77_zsymm      czsymm
+   #define F77_zsyrk      czsyrk
+   #define F77_zsyr2k     czsyr2k
+   #define F77_ztrmm      cztrmm
+   #define F77_ztrsm      cztrsm
+#endif
 
-void get_transpose_type(char *type, CBLAS_TRANSPOSE *trans);
-void get_uplo_type(char *type, CBLAS_UPLO *uplo);
-void get_diag_type(char *type, CBLAS_DIAG *diag);
-void get_side_type(char *type, CBLAS_SIDE *side);
+void get_transpose_type(char *type, enum CBLAS_TRANSPOSE *trans);
+void get_uplo_type(char *type, enum CBLAS_UPLO *uplo);
+void get_diag_type(char *type, enum CBLAS_DIAG *diag);
+void get_side_type(char *type, enum CBLAS_SIDE *side);
 
 #endif /* CBLAS_TEST_H */
