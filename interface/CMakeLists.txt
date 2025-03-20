@@ -109,7 +109,7 @@ endif ()
   GenerateNamedObjects("trsm.c" "TRMM" "trmm" ${CBLAS_FLAG})
   
   # gemmtr is gemmt under the name adopted by the Reference BLAS
-  GenerateNamedObjects("gemm.c" "RNAME" "gemmtr" ${CBLAS_FLAG})
+  GenerateNamedObjects("gemmt.c" "RNAME" "gemmtr" ${CBLAS_FLAG})
 
   # max and imax are compiled 4 times
   GenerateNamedObjects("max.c" "" "" ${CBLAS_FLAG})
@@ -125,8 +125,8 @@ endif ()
 if (BUILD_BFLOAT16)
 	GenerateNamedObjects("bf16dot.c" "" "sbdot" ${CBLAS_FLAG} "" "" true "BFLOAT16")
 	GenerateNamedObjects("gemm.c" "" "sbgemm" ${CBLAS_FLAG} "" "" true "BFLOAT16")
-	GenerateNamedObjects("gemmt.c" "" "sbgemmt" ${CBLAS_FLAG} "" "" true "BFLOAT16")
-	GenerateNamedObjects("gemmt.c" "RNAME" "sbgemmtr" ${CBLAS_FLAG} "" "" true "BFLOAT16")
+	GenerateNamedObjects("sbgemmt.c" "" "sbgemmt" ${CBLAS_FLAG} "" "" true "BFLOAT16")
+	GenerateNamedObjects("sbgemmt.c" "RNAME" "sbgemmtr" ${CBLAS_FLAG} "" "" true "BFLOAT16")
 	GenerateNamedObjects("sbgemv.c" "" "sbgemv" ${CBLAS_FLAG} "" "" true "BFLOAT16")
 	GenerateNamedObjects("tobf16.c" "SINGLE_PREC" "sbstobf16" ${CBLAS_FLAG} "" "" true "BFLOAT16")
 	GenerateNamedObjects("tobf16.c" "DOUBLE_PREC" "sbdtobf16" ${CBLAS_FLAG} "" "" true "BFLOAT16")
