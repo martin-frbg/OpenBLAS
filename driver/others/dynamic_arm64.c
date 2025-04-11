@@ -43,6 +43,14 @@
 #include <sys/auxv.h>
 #endif
 
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+int32_t value;
+size_t length=sizeof(value);
+int64_t value64;
+size_t length64=sizeof(value64);
+#endif
+
 extern gotoblas_t  gotoblas_ARMV8;
 #ifdef DYNAMIC_LIST
 #ifdef DYN_CORTEXA53
@@ -168,7 +176,7 @@ extern void openblas_warning(int verbose, const char * msg);
 #define FALLBACK_VERBOSE 1
 #define NEOVERSEN1_FALLBACK "OpenBLAS : Your OS does not support SVE instructions. OpenBLAS is using Neoverse N1 kernels as a fallback, which may give poorer performance.\n"
 
-#define NUM_CORETYPES   18
+#define NUM_CORETYPES   19
 
 /*
  * In case asm/hwcap.h is outdated on the build system, make sure
@@ -207,6 +215,7 @@ static char *corename[] = {
   "cortexa55",
   "armv8sve",
   "a64fx",
+  "armv9sme",
   "unknown"
 };
 
@@ -229,6 +238,7 @@ char *gotoblas_corename(void) {
   if (gotoblas == &gotoblas_CORTEXA55)    return corename[15];
   if (gotoblas == &gotoblas_ARMV8SVE)     return corename[16];
   if (gotoblas == &gotoblas_A64FX)        return corename[17];
+  if (gotoblas == &gotoblas_ARMV9SME)     return corename[18];
   return corename[NUM_CORETYPES];
 }
 
@@ -277,6 +287,11 @@ static gotoblas_t *get_coretype(void) {
   char coremsg[128];
 
 #if defined (OS_DARWIN)
+//future	#if !defined(NO_SME)
+//  		if (support_sme1) {
+//    			return &gotoblas_ARMV9SME;
+//		  }
+//		#endif
   return &gotoblas_NEOVERSEN1;
 #endif
 	
@@ -439,6 +454,7 @@ static gotoblas_t *get_coretype(void) {
       }
       break;
     case 0x61: // Apple
+//future	if (support_sme1) return &gotoblas_ARMV9SME;
 	return &gotoblas_NEOVERSEN1;
       break;
     default:
@@ -446,8 +462,8 @@ static gotoblas_t *get_coretype(void) {
       openblas_warning(1, coremsg);
   }
 
-#if !defined(NO_SME) && defined(HWCAP2_SME)
-  if ((getauxval(AT_HWCAP2) & HWCAP2_SME)) {
+#if !defined(NO_SME)
+  if (support_sme1) {
     return &gotoblas_ARMV9SME;
   }
 #endif
@@ -511,6 +527,10 @@ int support_sme1(void) {
         if(getauxval(AT_HWCAP2) & HWCAP2_SME){
                 ret = 1;
         }
+#endif
+#if defined(__APPLE__)
+	sysctlbyname("hw.optional.arm.FEAT_SME",&value64,&length64,NULL,0);
+	ret = value64;
 #endif
        return ret;
 }
