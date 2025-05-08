@@ -74,8 +74,8 @@ DSCALKERNEL  = scal.S
 CSCALKERNEL  = zscal.S
 ZSCALKERNEL  = zscal.S
 
-SGEMVNKERNEL = gemv_n_sve.c
-DGEMVNKERNEL = gemv_n.S
+SGEMVNKERNEL = gemv_n_sve_v1x3.c
+DGEMVNKERNEL = gemv_n_sve_v1x3.c
 CGEMVNKERNEL = zgemv_n.S
 ZGEMVNKERNEL = zgemv_n.S
 
@@ -83,6 +83,11 @@ SGEMVTKERNEL = gemv_t_sve_v1x3.c
 DGEMVTKERNEL = gemv_t_sve_v1x3.c
 CGEMVTKERNEL = zgemv_t.S
 ZGEMVTKERNEL = zgemv_t.S
+
+SSYMV_L_KERNEL = symv_L_sve_v1x4.c
+SSYMV_U_KERNEL = symv_U_sve_v1x4.c
+DSYMV_L_KERNEL = symv_L_sve_v1x4.c
+DSYMV_U_KERNEL = symv_U_sve_v1x4.c
 
 SASUMKERNEL    = sasum_thunderx2t99.c
 DASUMKERNEL    = dasum_thunderx2t99.c
