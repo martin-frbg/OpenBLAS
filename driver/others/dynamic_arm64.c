@@ -128,7 +128,7 @@ extern gotoblas_t gotoblas_ARMV9SME;
 #else
 #define gotoblas_ARMV9SME gotoblas_ARMV8
 #endif
-#ifdef DYN_CORTEX_A55
+#ifdef DYN_CORTEXA55
 extern gotoblas_t  gotoblas_CORTEXA55;
 #else
 #define gotoblas_CORTEXA55 gotoblas_ARMV8
@@ -155,17 +155,17 @@ extern gotoblas_t  gotoblas_NEOVERSEV1;
 extern gotoblas_t  gotoblas_NEOVERSEN2;
 extern gotoblas_t  gotoblas_ARMV8SVE;
 extern gotoblas_t  gotoblas_A64FX;
+#ifndef NO_SME
+extern gotoblas_t  gotoblas_ARMV9SME;
+#else
+#define gotoblas_ARMV9SME gotoblas_ARMV8SVE
+#endif
 #else
 #define gotoblas_NEOVERSEV1 gotoblas_ARMV8
 #define gotoblas_NEOVERSEN2 gotoblas_ARMV8
 #define gotoblas_ARMV8SVE   gotoblas_ARMV8
 #define gotoblas_A64FX      gotoblas_ARMV8
-#endif
-
-#ifndef NO_SME
-extern gotoblas_t  gotoblas_ARMV9SME;
-#else
-#define gotoblas_ARMV9SME gotoblas_ARMV8SVE
+#define gotoblas_ARMV9SME   gotoblas_ARMV8
 #endif
 
 extern gotoblas_t  gotoblas_THUNDERX3T110;
@@ -276,6 +276,7 @@ static gotoblas_t *force_coretype(char *coretype) {
     case 15: return (&gotoblas_CORTEXA55);
     case 16: return (&gotoblas_ARMV8SVE);
     case 17: return (&gotoblas_A64FX);
+    case 18: return (&gotoblas_ARMV9SME);
   }
   snprintf(message, 128, "Core not found: %s\n", coretype);
   openblas_warning(1, message);
@@ -288,7 +289,7 @@ static gotoblas_t *get_coretype(void) {
 
 #if defined (OS_DARWIN)
 //future	#if !defined(NO_SME)
-//  		if (support_sme1) {
+//  		if (support_sme1()) {
 //    			return &gotoblas_ARMV9SME;
 //		  }
 //		#endif
@@ -454,7 +455,7 @@ static gotoblas_t *get_coretype(void) {
       }
       break;
     case 0x61: // Apple
-//future	if (support_sme1) return &gotoblas_ARMV9SME;
+//future	if (support_sme1()) return &gotoblas_ARMV9SME;
 	return &gotoblas_NEOVERSEN1;
       break;
     default:
@@ -463,7 +464,7 @@ static gotoblas_t *get_coretype(void) {
   }
 
 #if !defined(NO_SME)
-  if (support_sme1) {
+  if (support_sme1()) {
     return &gotoblas_ARMV9SME;
   }
 #endif
