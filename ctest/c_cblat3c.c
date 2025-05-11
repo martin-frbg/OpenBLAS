@@ -2287,9 +2287,7 @@ L120:
 				    if (*trace) {
 					cprcn3_(ntra, &nc, sname, iorder, 
 						side, uplo, transa, diag, &m, 
-						&n, &alpha, &lda, &ldb, (
-						ftnlen)13, (ftnlen)1, (ftnlen)
-						1, (ftnlen)1, (ftnlen)1);
+						&n, &alpha, &lda, &ldb);
 				    }
 				    if (*rewi) {
 					al__1.aerr = 0;
@@ -2304,9 +2302,7 @@ L120:
 				    if (*trace) {
 					cprcn3_(ntra, &nc, sname, iorder, 
 						side, uplo, transa, diag, &m, 
-						&n, &alpha, &lda, &ldb, (
-						ftnlen)13, (ftnlen)1, (ftnlen)
-						1, (ftnlen)1, (ftnlen)1);
+						&n, &alpha, &lda, &ldb);
 				    }
 				    if (*rewi) {
 					al__1.aerr = 0;
