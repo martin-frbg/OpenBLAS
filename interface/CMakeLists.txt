@@ -30,17 +30,17 @@ set(BLAS2_SOURCES
   gemv.c ger.c
   trsv.c trmv.c 
   syr2.c gbmv.c
-  sbmv.c 
+  sbmv.c spmv.c
   spr2.c
   tbsv.c tbmv.c
   tpsv.c tpmv.c
 )
 
 set(BLAS2_REAL_ONLY_SOURCES
-  symv.c syr.c spmv.c spr.c
+  symv.c syr.c spr.c
 )
 set(BLAS2_COMPLEX_LAPACK_SOURCES
-  symv.c syr.c spmv.c spr.c
+  symv.c syr.c spr.c
 )
 
 set(BLAS2_COMPLEX_ONLY_MANGLED_SOURCES
@@ -195,7 +195,7 @@ if (NOT DEFINED NO_CBLAS)
   endforeach ()
 endif()
 
-if (NOT DEFINED NO_LAPACK)
+if (NOT NO_LAPACK)
   set(LAPACK_SOURCES
     lapack/gesv.c
   )
@@ -250,3 +250,7 @@ if ( BUILD_COMPLEX16 AND NOT  BUILD_DOUBLE)
 endif ()
 
 add_library(interface OBJECT ${OPENBLAS_SRC})
+
+if (USE_OPENMP)
+  target_link_libraries(interface OpenMP::OpenMP_C)
+endif()

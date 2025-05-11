@@ -26,6 +26,9 @@
 * Chris Sidebottom <chris.sidebottom@arm.com>
   * Optimizations and other improvements targeting AArch64
 
+* Annop Wongwathanarat <annop.wongwathanarat@arm.com>
+  * Optimizations and other improvements targeting AArch64
+
 ## Previous Developers
 
 * Zaheer Chothia <zaheer.chothia@gmail.com>
@@ -248,3 +251,6 @@ In chronological order:
 * Ye Tao <ye.tao@arm.com>
   * [2025-02-03] Optimize SBGEMM kernel on NEOVERSEV1
   * [2025-02-27] Add sbgemv_n_neon kernel
+
+* Abhishek Kumar <https://github.com/abhishek-iitmadras>
+  * [2025-04-22] Optimise dot kernel for NEOVERSE V1
