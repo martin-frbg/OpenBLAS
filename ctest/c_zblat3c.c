@@ -3853,30 +3853,9 @@ doublereal ddiff_(doublereal* x, doublereal* y)
     static char ich[3] = "NTC";
     static char ishape[2] = "UL";
 
-    /* Format strings */
-    static char fmt_9994[] = "(\002 ******* FATAL ERROR - ERROR-CALL MYEXIT "
-	    "TAKEN ON VALID CALL *******\002)";
-    static char fmt_9998[] = "(\002 ******* FATAL ERROR - PARAMETER NUMBER"
-	    " \002,i2,\002 WAS CH\002,\002ANGED INCORRECTLY *******\002)";
-    static char fmt_10000[] = "(\002 \002,a13,\002 PASSED THE COLUMN-MAJOR C"
-	    "OMPUTATIONAL TESTS\002,\002 (\002,i6,\002 CALL\002,\002S)\002)";
-    static char fmt_10001[] = "(\002 \002,a13,\002 PASSED THE ROW-MAJOR    C"
-	    "OMPUTATIONAL TESTS\002,\002 (\002,i6,\002 CALL\002,\002S)\002)";
-    static char fmt_10002[] = "(\002 \002,a13,\002 COMPLETED THE COLUMN-MAJO"
-	    "R COMPUTATIONAL \002,\002TESTS (\002,i6,\002 CALLS)\002,/\002 **"
-	    "***** BUT WITH MAXIMUM TEST \002,\002RATIO \002,f8.2,\002 - SUSP"
-	    "ECT *******\002)";
-    static char fmt_10003[] = "(\002 \002,a13,\002 COMPLETED THE ROW-MAJOR  "
-	    "  COMPUTATIONAL \002,\002TESTS (\002,i6,\002 CALLS)\002,/\002 **"
-	    "***** BUT WITH MAXIMUM TEST \002,\002RATIO \002,f8.2,\002 - SUSP"
-	    "ECT *******\002)";
-    static char fmt_9996[] = "(\002 ******* \002,a13,\002 FAILED ON CALL NUM"
-	    "BER:\002)";
-
     /* System generated locals */
     integer a_dim1, a_offset, b_dim1, b_offset, c_dim1, c_offset, i__1, i__2, 
 	    i__3, i__4, i__5, i__6, i__7;
-    alist al__1;
 
     /* Local variables */
     extern /* Subroutine */ int czgemmtr_(integer *, char *, char *, char *, 
@@ -3913,17 +3892,6 @@ doublereal ddiff_(doublereal* x, doublereal* y)
 	    logical *);
     extern logical lzeres_(char *, char *, integer *, integer *, 
 	    doublecomplex *, doublecomplex *, integer *);
-
-    /* Fortran I/O blocks */
-    static cilist io___468 = { 0, 0, 0, fmt_9994, 0 };
-    static cilist io___471 = { 0, 0, 0, fmt_9998, 0 };
-    static cilist io___473 = { 0, 0, 0, fmt_10000, 0 };
-    static cilist io___474 = { 0, 0, 0, fmt_10001, 0 };
-    static cilist io___475 = { 0, 0, 0, fmt_10002, 0 };
-    static cilist io___476 = { 0, 0, 0, fmt_10003, 0 };
-    static cilist io___477 = { 0, 0, 0, fmt_9996, 0 };
-
-
 
 /*  Tests CGEMMTR. */
 
@@ -4249,20 +4217,8 @@ L130:
 	k, doublecomplex *alpha, integer *lda, integer *ldb, doublecomplex *
 	beta, integer *ldc)
 {
-    /* Format strings */
-    static char fmt_9995[] = "(1x,i6,\002: \002,a13,\002(\002,a14,\002,\002,"
-	    "a14,\002,\002,a14,\002,\002,a14,\002,\002)";
-    static char fmt_9994[] = "(10x,2(i3,\002,\002),\002 (\002,f4.1,\002,\002"
-	    ",f4.1,\002) , A,\002,i3,\002, B,\002,i3,\002, (\002,f4.1,\002"
-	    ",\002,f4.1,\002) , C,\002,i3,\002).\002)";
-
     /* Local variables */
     char crc[14], cta[14], ctb[14], cuplo[14];
-
-    /* Fortran I/O blocks */
-    static cilist io___482 = { 0, 0, 0, fmt_9995, 0 };
-    static cilist io___483 = { 0, 0, 0, fmt_9994, 0 };
-
 
     if (*(unsigned char *)uplo == 'U') {
 	s_copy(cuplo, "CblasUpper", (ftnlen)14, (ftnlen)10);
@@ -4300,16 +4256,6 @@ L130:
 	cc, integer *ldcc, doublereal *eps, doublereal *err, logical *fatal, 
 	integer *nout, logical *mv)
 {
-    /* Format strings */
-    static char fmt_9999[] = "(\002 ******* FATAL ERROR - COMPUTED RESULT IS"
-	    " LESS THAN HAL\002,\002F ACCURATE *******\002,/\002             "
-	    "          EXPECTED RE\002,\002SULT                    COMPUTED R"
-	    "ESULT\002)";
-    static char fmt_9998[] = "(1x,i7,2(\002  (\002,g15.6,\002,\002,g15.6,"
-	    "\002)\002))";
-    static char fmt_9997[] = "(\002      THESE ARE THE RESULTS FOR COLUMN"
-	    " \002,i3)";
-
     /* System generated locals */
     integer a_dim1, a_offset, b_dim1, b_offset, c_dim1, c_offset, cc_dim1, 
 	    cc_offset, i__1, i__2, i__3, i__4, i__5, i__6, i__7;

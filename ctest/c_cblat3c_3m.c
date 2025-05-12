@@ -275,7 +275,7 @@ int /* Main program */ main(void)
 {
     /* Initialized data */
 
-    static char snames[9][13] = {"cblas_cgemm3m ", "cblas_chemm ", "cblas_csymm ", 
+    static char snames[9][13] = {"cblas_cgemm3m", "cblas_chemm ", "cblas_csymm ", 
 	    "cblas_ctrmm ", "cblas_ctrsm ", "cblas_cherk ", "cblas_csyrk ", 
 	    "cblas_cher2k", "cblas_csyr2k"};
 

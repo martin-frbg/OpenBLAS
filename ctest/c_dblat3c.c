@@ -3280,30 +3280,9 @@ doublereal ddiff_(doublereal* x, doublereal* y)
     static char ich[3] = "NTC";
     static char ishape[2] = "UL";
 
-    /* Format strings */
-    static char fmt_9994[] = "(\002 ******* FATAL ERROR - ERROR-CALL MYEXIT "
-	    "TAKEN ON VALID CALL *******\002)";
-    static char fmt_9998[] = "(\002 ******* FATAL ERROR - PARAMETER NUMBER"
-	    " \002,i2,\002 WAS CH\002,\002ANGED INCORRECTLY *******\002)";
-    static char fmt_10000[] = "(\002 \002,a13,\002 PASSED THE COLUMN-MAJOR C"
-	    "OMPUTATIONAL TESTS\002,\002 (\002,i6,\002 CALL\002,\002S)\002)";
-    static char fmt_10001[] = "(\002 \002,a13,\002 PASSED THE ROW-MAJOR    C"
-	    "OMPUTATIONAL TESTS\002,\002 (\002,i6,\002 CALL\002,\002S)\002)";
-    static char fmt_10002[] = "(\002 \002,a13,\002 COMPLETED THE COLUMN-MAJO"
-	    "R COMPUTATIONAL \002,\002TESTS (\002,i6,\002 CALLS)\002,/\002 **"
-	    "***** BUT WITH MAXIMUM TEST \002,\002RATIO \002,f8.2,\002 - SUSP"
-	    "ECT *******\002)";
-    static char fmt_10003[] = "(\002 \002,a13,\002 COMPLETED THE ROW-MAJOR  "
-	    "  COMPUTATIONAL \002,\002TESTS (\002,i6,\002 CALLS)\002,/\002 **"
-	    "***** BUT WITH MAXIMUM TEST \002,\002RATIO \002,f8.2,\002 - SUSP"
-	    "ECT *******\002)";
-    static char fmt_9996[] = "(\002 ******* \002,a13,\002 FAILED ON CALL NUM"
-	    "BER:\002)";
-
     /* System generated locals */
     integer a_dim1, a_offset, b_dim1, b_offset, c_dim1, c_offset, i__1, i__2, 
 	    i__3, i__4, i__5;
-    alist al__1;
 
     /* Local variables */
     extern /* Subroutine */ int cdgemmtr_(integer *, char *, char *, char *, 
@@ -3326,7 +3305,8 @@ doublereal ddiff_(doublereal* x, doublereal* y)
     char uplos[1];
     extern /* Subroutine */ void dprcn8_(integer *, integer *, char *, integer 
 	    *, char *, char *, char *, integer *, integer *, doublereal *, 
-	    integer *, integer *, doublereal *, integer *), dmmtch_(char *, char *, char *, integer *, 
+	    integer *, integer *, doublereal *, integer *);
+    extern int dmmtch_(char *, char *, char *, integer *, 
 	    integer *, doublereal *, doublereal *, integer *, doublereal *, 
 	    integer *, doublereal *, doublereal *, integer *, doublereal *, 
 	    doublereal *, doublereal *, integer *, doublereal *, doublereal *,
@@ -3643,19 +3623,9 @@ L130:
 	k, doublereal *alpha, integer *lda, integer *ldb, doublereal *beta, 
 	integer *ldc)
 {
-    /* Format strings */
-    static char fmt_9995[] = "(1x,i6,\002: \002,a13,\002(\002,a14,\002,\002,"
-	    "a14,\002,\002,a14,\002,\002,a14,\002,\002)";
-    static char fmt_9994[] = "(10x,2(i3,\002,\002),\002 \002,f4.1,\002 , A"
-	    ",\002,i3,\002, B,\002,i3,\002, \002,f4.1,\002 , C,\002,i3,\002)"
-	    ".\002)";
-
     /* Local variables */
     char crc[14], cta[14], ctb[14], cuplo[14];
 
-    /* Fortran I/O blocks */
-    static cilist io___455 = { 0, 0, 0, fmt_9995, 0 };
-    static cilist io___456 = { 0, 0, 0, fmt_9994, 0 };
 
 
     if (*(unsigned char *)uplo == 'U') {
@@ -3686,7 +3656,7 @@ L130:
     printf("%d %d %4.1f A, %d, B, %d, %4.1f, C, %d.\n",*n,*k,*alpha,*lda,*ldb,*beta,*ldc);
 } /* dprcn8_ */
 
-/* Subroutine */ void dmmtch_(char *uplo, char *transa, char *transb, integer *
+/* Subroutine */ int dmmtch_(char *uplo, char *transa, char *transb, integer *
 	n, integer *kk, doublereal *alpha, doublereal *a, integer *lda, 
 	doublereal *b, integer *ldb, doublereal *beta, doublereal *c__, 
 	integer *ldc, doublereal *ct, doublereal *g, doublereal *cc, integer *

@@ -272,7 +272,7 @@ static logical c_false = FALSE_;
 {
     /* Initialized data */
 
-    static char snames[9][13] = { "cblas_zgemm3m ", "cblas_zhemm ", "cblas_zsymm ", "cblas_ztrmm ",
+    static char snames[9][13] = { "cblas_zgemm3m", "cblas_zhemm ", "cblas_zsymm ", "cblas_ztrmm ",
      "cblas_ztrsm ", "cblas_zherk ", "cblas_zsyrk ", "cblas_zher2k", "cblas_zsyr2k"};
 
     /* System generated locals */
