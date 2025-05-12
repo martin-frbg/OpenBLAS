@@ -1981,13 +1981,13 @@ cblas_sgemmt.$(SUFFIX) cblas_sgemmt.$(PSUFFIX) : gemmt.c ../param.h
 	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
 
 cblas_sgemmtr.$(SUFFIX) cblas_sgemmtr.$(PSUFFIX) : gemmt.c ../param.h
-	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
+	$(CC) -DCBLAS -DRNAME -c $(CFLAGS) $< -o $(@F)
 
 ifeq ($(BUILD_BFLOAT16),1)
 cblas_sbgemmt.$(SUFFIX) cblas_sbgemmt.$(PSUFFIX) : sbgemmt.c ../param.h
 	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
 cblas_sbgemmtr.$(SUFFIX) cblas_sbgemmtr.$(PSUFFIX) : sbgemmt.c ../param.h
-	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
+	$(CC) -DCBLAS -DRNAME -c $(CFLAGS) $< -o $(@F)
 endif
 
 cblas_dgemmt.$(SUFFIX) cblas_dgemmt.$(PSUFFIX) : gemmt.c ../param.h
@@ -2000,13 +2000,13 @@ cblas_zgemmt.$(SUFFIX) cblas_zgemmt.$(PSUFFIX) : gemmt.c ../param.h
 	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
 
 cblas_dgemmtr.$(SUFFIX) cblas_dgemmtr.$(PSUFFIX) : gemmt.c ../param.h
-	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
+	$(CC) -DCBLAS -DRNAME -c $(CFLAGS) $< -o $(@F)
 
 cblas_cgemmtr.$(SUFFIX) cblas_cgemmtr.$(PSUFFIX) : gemmt.c ../param.h
-	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
+	$(CC) -DCBLAS -DRNAME -c $(CFLAGS) $< -o $(@F)
 
 cblas_zgemmtr.$(SUFFIX) cblas_zgemmtr.$(PSUFFIX) : gemmt.c ../param.h
-	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
+	$(CC) -DCBLAS -DRNAME -c $(CFLAGS) $< -o $(@F)
 
 cblas_ssymm.$(SUFFIX) cblas_ssymm.$(PSUFFIX) : symm.c
 	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
