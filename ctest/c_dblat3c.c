@@ -302,7 +302,7 @@ static logical c_false = FALSE_;
     static integer nidim;
     static char snaps[32];
     static integer isnum;
-    static logical ltest[6];
+    static logical ltest[7];
     static doublereal aa[4225], ab[8450]	/* was [65][130] */, bb[4225],
 	     cc[4225], as[4225], bs[4225], cs[4225], ct[65];
     static logical sfatal, corder;

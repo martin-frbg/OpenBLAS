@@ -2261,7 +2261,7 @@ L160:
 			if (conj) {
 			    ralpha = alpha.r;
 			    q__1.r = ralpha, q__1.i = 0.f;
-			    alpha.r = q__1.r, alpha.i = q__1.i;
+			    alpha.r = q__1.r; alpha.i = q__1.i;
 			}
 
 			i__4 = *nbet;
@@ -2297,7 +2297,7 @@ L160:
 			    if (conj) {
 				rals = ralpha;
 			    } else {
-				als.r = alpha.r, als.i = alpha.i;
+				als.r = alpha.r; als.i = alpha.i;
 			    }
 			    i__5 = laa;
 			    for (i__ = 1; i__ <= i__5; ++i__) {
@@ -2311,7 +2311,7 @@ L160:
 			    if (conj) {
 				rbets = rbeta;
 			    } else {
-				bets.r = beta.r, bets.i = beta.i;
+				bets.r = beta.r; bets.i = beta.i;
 			    }
 			    i__5 = lcc;
 			    for (i__ = 1; i__ <= i__5; ++i__) {
@@ -2378,10 +2378,10 @@ L160:
 			    isame[5] = lce_(&as[1], &aa[1], &laa);
 			    isame[6] = ldas == lda;
 			    if (conj) {
-				isame[7] = rbets == rbeta;
+				isame[7] = (rbets == rbeta);
 			    } else {
-				isame[7] = bets.r == beta.r && bets.i == 
-					beta.i;
+				isame[7] = ((bets.r == beta.r) && (bets.i == 
+					beta.i));
 			    }
 			    if (null) {
 				isame[8] = lce_(&cs[1], &cc[1], &lcc);
@@ -2818,7 +2818,7 @@ L130:
 			    if (conj) {
 				rbets = rbeta;
 			    } else {
-				bets.r = beta.r, bets.i = beta.i;
+				bets.r = beta.r; bets.i = beta.i;
 			    }
 			    i__5 = lcc;
 			    for (i__ = 1; i__ <= i__5; ++i__) {

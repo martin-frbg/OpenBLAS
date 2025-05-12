@@ -2330,7 +2330,7 @@ L160:
 			    if (conj) {
 				rbets = rbeta;
 			    } else {
-				bets.r = beta.r, bets.i = beta.i;
+				bets.r = beta.r; bets.i = beta.i;
 			    }
 			    i__5 = lcc;
 			    for (i__ = 1; i__ <= i__5; ++i__) {
@@ -2389,18 +2389,18 @@ L160:
 			    isame[2] = ns == n;
 			    isame[3] = ks == k;
 			    if (conj) {
-				isame[4] = rals == ralpha;
+				isame[4] = (rals == ralpha);
 			    } else {
-				isame[4] = als.r == alpha.r && als.i == 
-					alpha.i;
+				isame[4] = (( als.r == alpha.r) && (als.i == 
+					alpha.i));
 			    }
 			    isame[5] = lce_(&as[1], &aa[1], &laa);
 			    isame[6] = ldas == lda;
 			    if (conj) {
 				isame[7] = rbets == rbeta;
 			    } else {
-				isame[7] = bets.r == beta.r && bets.i == 
-					beta.i;
+				isame[7] = ((bets.r == beta.r) && (bets.i == 
+					beta.i));
 			    }
 			    if (null) {
 				isame[8] = lce_(&cs[1], &cc[1], &lcc);
@@ -2408,7 +2408,7 @@ L160:
 				isame[8] = lceres_(sname + 7, uplo, &n, &n, &
 					cs[1], &cc[1], &ldc);
 			    }
-			    isame[9] = ldcs == ldc;
+			    isame[9] = (ldcs == ldc);
 
 /*                       If data was incorrectly changed, report and */
 /*                       return. */
@@ -2837,7 +2837,7 @@ L130:
 			    if (conj) {
 				rbets = rbeta;
 			    } else {
-				bets.r = beta.r, bets.i = beta.i;
+				bets.r = beta.r; bets.i = beta.i;
 			    }
 			    i__5 = lcc;
 			    for (i__ = 1; i__ <= i__5; ++i__) {

@@ -299,7 +299,7 @@ static logical c_false = FALSE_;
     extern /* Subroutine */ int smmch_(char*, char*, integer*, integer*, integer*, real*, real*, integer*, real*, integer*, real*, real*, integer*, real*, real*, real*, integer*, real*, real*, logical*, integer*, logical*);
     static char snaps[32];
     static integer isnum;
-    static logical ltest[6];
+    static logical ltest[7];
     static real aa[4225], ab[8450]	/* was [65][130] */, bb[4225], cc[
 	    4225], as[4225], bs[4225], cs[4225], ct[65];
     static logical sfatal, corder;
@@ -794,7 +794,7 @@ L230:
 
     /* System generated locals */
     integer a_dim1, a_offset, b_dim1, b_offset, c_dim1, c_offset, i__1, i__2, 
-	    i__3, i__4, i__5, i__6, i__7;
+	    i__3, i__4, i__5, i__6;
 
 
     /* Local variables */
@@ -1174,7 +1174,7 @@ L130:
 
     /* System generated locals */
     integer a_dim1, a_offset, b_dim1, b_offset, c_dim1, c_offset, i__1, i__2, 
-	    i__3, i__4, i__5, i__6;
+	    i__3, i__4, i__5;
 
 
     /* Local variables */
