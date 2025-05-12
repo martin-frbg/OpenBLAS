@@ -3857,7 +3857,7 @@ L130:
     }
 
 L150:
-
+	return(0);
 
 /*     End of DMMTCH */
 
