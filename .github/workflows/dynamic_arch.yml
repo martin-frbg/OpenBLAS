@@ -270,6 +270,7 @@ jobs:
                 -DTARGET=CORE2 \
                 -DCMAKE_Fortran_FLAGS_RELEASE=-O2 \
                 -DCMAKE_C_FLAGS_RELEASE=-O2 \
+                -DCMAKE_VERBOSE_MAKEFILE=ON \
                 ${{ matrix.idx64-flags }} \
                 -DCMAKE_C_COMPILER_LAUNCHER=ccache \
                 -DCMAKE_Fortran_COMPILER_LAUNCHER=ccache \
