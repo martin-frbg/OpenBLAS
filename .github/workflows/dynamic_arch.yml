@@ -268,8 +268,8 @@ jobs:
                 -DUSE_THREAD=ON \
                 -DNUM_THREADS=64 \
                 -DTARGET=CORE2 \
-                -DCMAKE_Fortran_FLAGS_RELEASE=-O2 \
-                -DCMAKE_C_FLAGS_RELEASE=-O2 \
+                -DCMAKE_Fortran_FLAGS_RELEASE=-O1 \
+                -DCMAKE_C_FLAGS_RELEASE=-O1 \
                 -DCMAKE_VERBOSE_MAKEFILE=ON \
                 ${{ matrix.idx64-flags }} \
                 -DCMAKE_C_COMPILER_LAUNCHER=ccache \
