@@ -202,7 +202,7 @@ jobs:
 
     env:
       CHERE_INVOKING: 1
-      OPENBLAS_VERBOSE: 2
+      OPENBLAS_CORETYPE: HASWELL
 
     steps:
       - name: Get CPU name
