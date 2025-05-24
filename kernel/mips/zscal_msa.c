@@ -47,7 +47,7 @@ int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da_r, FLOAT da_i,
 
     if (1 == inc_x)
     {
-        if ((0.0 == da_r) && (0.0 == da_i))
+        if ((0.0 == da_r) && (0.0 == da_i) && !dummy2)
         {
             v2f64 zero_v = {0.0, 0.0};
 
@@ -471,7 +471,7 @@ int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da_r, FLOAT da_i,
     {
         inc_x2 = 2 * inc_x;
 
-        if ((0.0 == da_r) && (0.0 == da_i))
+        if ((0.0 == da_r) && (0.0 == da_i) && !dummy2)
         {
             v2f64 zero_v = {0.0, 0.0};
 

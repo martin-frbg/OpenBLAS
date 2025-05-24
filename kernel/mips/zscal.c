@@ -39,7 +39,7 @@ int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da_r,FLOAT da_i, F
 	{
 		if ( da_r == 0.0 )
 		{
-			if ( da_i == 0.0 )
+			if ( da_i == 0.0 && !dummy2)
 			{
 				temp = 0.0;
 				x[ip+1] = 0.0 ;
