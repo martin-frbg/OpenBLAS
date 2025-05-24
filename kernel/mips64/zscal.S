@@ -48,6 +48,7 @@
 #define TEMP	$3
 
 #define XX	$5
+#define DUMMY2  $6
 
 #define ALPHA_R	$f15
 #define ALPHA_I	$f16
@@ -74,6 +75,9 @@
 	blez	N, .L999
 	dsll	INCX, INCX, ZBASE_SHIFT
 
+	LDARG   DUMMY2, 8(sp)
+	dsll	DUMMY2, DUMMY2, ZBASE_SHIFT
+
 	CMPEQ	$fcc0, ALPHA_R, a1
 	CMPEQ	$fcc1, ALPHA_I, a1
 
@@ -82,6 +86,8 @@
 
 	bc1f	$fcc1, .L50
 	NOP
+
+	beq	DUMMY2, TEMP, .L50
 
 	bne	INCX, TEMP, .L20
 	dsra	I, N, 2
