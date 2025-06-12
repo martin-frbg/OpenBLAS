@@ -75,7 +75,7 @@
 	blez	N, .L999
 	dsll	INCX, INCX, ZBASE_SHIFT
 
-	LDARG   DUMMY2, 8(sp)
+	LDARG   DUMMY2, 8($sp)
 	dsll	DUMMY2, DUMMY2, ZBASE_SHIFT
 
 	CMPEQ	$fcc0, ALPHA_R, a1
