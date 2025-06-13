@@ -87,7 +87,7 @@
 	bc1f	$fcc1, .L50
 	NOP
 
-	beq	DUMMY2, TEMP, .L50
+	beq	DUMMY2, $1, .L50
 
 	bne	INCX, TEMP, .L20
 	dsra	I, N, 2
