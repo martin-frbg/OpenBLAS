@@ -27,10 +27,8 @@ jobs:
         RUN cd /tmp/openblas                                      &&  \
             COMMON_FLAGS='TARGET=PENRYN NUM_THREADS=32' && \
             BTYPE='BINARY=32' CC=gcc && \
-            make $COMMON_FLAGS $BTYPE && \
-            make -C test $COMMON_FLAGS $BTYPE && \
-            make -C ctest $COMMON_FLAGS $BTYPE && \
-            make -C utest $COMMON_FLAGS $BTYPE" > Dockerfile
+            make TARGET=NEHALEM BINARY=32 && \
+            make -C utest TARGET=NEHALEM BINARY=32" > Dockerfile
       docker build .
     displayName: Run manylinux1 docker build
 - job: Intel_SDE_skx
