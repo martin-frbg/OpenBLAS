@@ -32,7 +32,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **********************************************************************************/
 
 #include "openblas_utest.h"
-#if defined(ARCH_LOONGARCH64)
+#if defined(ARCH_LOONGARCH64) || defined(BINARY32)
 #pragma GCC optimize("no-gcse")
 #endif
 /*
