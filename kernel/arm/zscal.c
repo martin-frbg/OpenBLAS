@@ -33,7 +33,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *    TEST           : OK
 *
 **************************************************************************************/
-
+#pragma GCC optimize("O0"
 #include "common.h"
 
 // The c/zscal_k function is called not only by cblas_c/zscal but also by other upper-level interfaces.
