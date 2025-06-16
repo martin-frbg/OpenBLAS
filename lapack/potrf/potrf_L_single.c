@@ -35,7 +35,7 @@
 /* interpreted as representing official policies, either expressed   */
 /* or implied, of The University of Texas at Austin.                 */
 /*********************************************************************/
-
+#pragma GCC optimize("O0")
 #include <stdio.h>
 #include "common.h"
 
