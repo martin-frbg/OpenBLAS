@@ -22,7 +22,7 @@ jobs:
     vmImage: 'ubuntu-latest'
   steps:
   - script: |
-      echo "FROM quay.io/pypa/manylinux1_686
+      echo "FROM quay.io/pypa/manylinux2014_i686
         COPY . /tmp/openblas
         RUN cd /tmp/openblas                                      &&  \
             COMMON_FLAGS='DYNAMIC_ARCH=1 TARGET=NEHALEM NUM_THREADS=32' && \
