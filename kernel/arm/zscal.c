@@ -51,6 +51,7 @@ int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da_r,FLOAT da_i, F
 
     inc_x2 = 2 * inc_x;
     if (dummy2 == 0) {
+        printf("arm zscal da_r %f da_i %f\n",da_r,da_i);
         for (i = 0; i < n; i++)
         {
             if (da_r == 0.0 && da_i == 0.0)
