@@ -51,22 +51,39 @@ int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da_r,FLOAT da_i, F
 
     inc_x2 = 2 * inc_x;
     if (dummy2 == 0) {
-        for (i = 0; i < n; i++)
+        for ( i=0; i<n; i++ )
         {
-            if (da_r == 0.0 && da_i == 0.0)
-            {
-                x[ip] = 0.0;
-                x[ip+1] = 0.0;
-            }
-            else
-            {
-                temp    = da_r * x[ip]   - da_i * x[ip+1];
-                x[ip+1] = da_r * x[ip+1] + da_i * x[ip]  ;
-                x[ip] = temp;
-            }
+                if ( da_r == 0.0 )
+                {
+                        if ( da_i == 0.0 )
+                        {
+                                temp = 0.0;
+                                x[ip+1] = 0.0 ;
+                        }
+                        else
+                        {
+                                temp = - da_i * x[ip+1] ;
+                                x[ip+1] = da_i * x[ip]  ;
+                        }
+                }
+                else
+                {
+                        if ( da_i == 0.0 )
+                        {
+                                temp    = da_r * x[ip]  ;
+                                x[ip+1] = da_r * x[ip+1];
+                        }
+                        else
+                        {
+                                temp    = da_r * x[ip]   - da_i * x[ip+1] ;
+                                x[ip+1] = da_r * x[ip+1] + da_i * x[ip]   ;
+                        }
+                }
+                x[ip]   = temp;
 
-            ip += inc_x2;
+                ip += inc_x2;
         }
+
         return(0);
     }
     for (i = 0; i < n; i++)
