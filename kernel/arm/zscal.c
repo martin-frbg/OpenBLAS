@@ -33,7 +33,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *    TEST           : OK
 *
 **************************************************************************************/
-#pragma GCC optimize("O0"
+
 #include "common.h"
 
 // The c/zscal_k function is called not only by cblas_c/zscal but also by other upper-level interfaces.
@@ -48,9 +48,10 @@ int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da_r,FLOAT da_i, F
 
     if ((n <= 0) || (inc_x <= 0))
         return(0);
-
+printf("arm zscal kernel\n");
     inc_x2 = 2 * inc_x;
     if (dummy2 == 0) {
+        printf("arm zscal kernel, dummy2 is zero\n");
         for ( i=0; i<n; i++ )
         {
                 if ( da_r == 0.0 )
@@ -86,6 +87,7 @@ int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da_r,FLOAT da_i, F
 
         return(0);
     }
+    printf("arm zscal kernel in nan-propagating mode\n");
     for (i = 0; i < n; i++)
     {
         temp    = da_r * x[ip]   - da_i * x[ip+1];
