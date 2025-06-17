@@ -66,7 +66,7 @@ blasint CNAME(blas_arg_t *args, BLASLONG *range_m, BLASLONG *range_n, FLOAT *sa,
   for (j = 0; j < n; j++) {
 
     ajj = CREAL(DOTC_K(j, a, 1, a, 1));
-
+printf("zpotf2_U ajj from CDOT is %f\n",ajj);
     ajj = *(a + j * 2) - ajj;
 
     if (ajj <= 0){
@@ -86,7 +86,7 @@ blasint CNAME(blas_arg_t *args, BLASLONG *range_m, BLASLONG *range_n, FLOAT *sa,
 	      a + lda * 2, lda,
 	      a, 1,
 	      a + (j + lda) * 2, lda, sb);
-
+printf("zpotf2_U calling scal with 1./%f\n",ajj);
       SCAL_K(i, 0, 0, ONE / ajj, ZERO,
 	      a + (j + lda) * 2, lda, NULL, 0, NULL, 0);
     }
