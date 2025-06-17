@@ -395,7 +395,8 @@ CTEST(potrf, bug_695){
   };
 #ifdef BUILD_COMPLEX
   BLASFUNC(cpotrf)(&up, &n, (float*)(A3), &n, info);
-  //  printf("%g+%g*I\n", creal(A3[91]), cimag(A3[91]));
+    printf("%g+%g*I\n", creal(A3[90]), cimag(A3[90]));
+    printf("%g+%g*I\n", creal(A3[91]), cimag(A3[91]));
   if(isnan(CREAL(A3[91])) || isnan(CIMAG(A3[91]))) {
     CTEST_ERR("%s:%d  got NaN", __FILE__, __LINE__);
   }
