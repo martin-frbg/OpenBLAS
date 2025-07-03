@@ -125,6 +125,23 @@ gotoblas_t TABLE_NAME = {
 #endif
 #endif
 
+#ifdef BUILD_HFLOAT16
+  0, 0, 0,
+  SHGEMM_DEFAULT_UNROLL_M, SHGEMM_DEFAULT_UNROLL_N,
+#ifdef SHGEMM_DEFAULT_UNROLL_MN
+ SHGEMM_DEFAULT_UNROLL_MN,
+#else
+ MAX(SHGEMM_DEFAULT_UNROLL_M, SHGEMM_DEFAULT_UNROLL_N),
+#endif
+  shgemm_kernelTS, shgemm_betaTS,
+#if SHGEMM_DEFAULT_UNROLL_M != SHGEMM_DEFAULT_UNROLL_N
+  shgemm_incopyTS, shgemm_itcopyTS,
+#else
+  shgemm_oncopyTS, shgemm_otcopyTS,
+#endif
+  shgemm_oncopyTS, shgemm_otcopyTS,
+#endif
+
 #if ( BUILD_SINGLE==1) || (BUILD_DOUBLE==1) || (BUILD_COMPLEX==1) || (BUILD_COMPLEX16==1)
   0, 0, 0,
   SGEMM_DEFAULT_UNROLL_M, SGEMM_DEFAULT_UNROLL_N,
@@ -1253,6 +1270,9 @@ static void init_parameter(void) {
 #ifdef BUILD_BFLOAT16
   TABLE_NAME.sbgemm_p = SBGEMM_DEFAULT_P;
 #endif
+#ifdef BUILD_HFLOAT16
+  TABLE_NAME.shgemm_p = SHGEMM_DEFAULT_P;
+#endif
   TABLE_NAME.sgemm_p = SGEMM_DEFAULT_P;
   TABLE_NAME.dgemm_p = DGEMM_DEFAULT_P;
   TABLE_NAME.cgemm_p = CGEMM_DEFAULT_P;
@@ -1260,6 +1280,9 @@ static void init_parameter(void) {
 
 #ifdef BUILD_BFLOAT16
   TABLE_NAME.sbgemm_r = SBGEMM_DEFAULT_R;
+#endif
+#ifdef BUILD_HFLOAT16
+  TABLE_NAME.shgemm_r = SHGEMM_DEFAULT_R;
 #endif
   TABLE_NAME.sgemm_r = SGEMM_DEFAULT_R;
   TABLE_NAME.dgemm_r = DGEMM_DEFAULT_R;
@@ -1269,6 +1292,9 @@ static void init_parameter(void) {
 
 #ifdef BUILD_BFLOAT16
   TABLE_NAME.sbgemm_q = SBGEMM_DEFAULT_Q;
+#endif
+#ifdef BUILD_HFLOAT16
+  TABLE_NAME.shgemm_q = SHGEMM_DEFAULT_Q;
 #endif
   TABLE_NAME.sgemm_q = SGEMM_DEFAULT_Q;
   TABLE_NAME.dgemm_q = DGEMM_DEFAULT_Q;
@@ -1416,6 +1442,10 @@ static void init_parameter(void) {
 #ifdef BUILD_BFLOAT16
   TABLE_NAME.sbgemm_p = SBGEMM_DEFAULT_P;
   TABLE_NAME.sbgemm_q = SBGEMM_DEFAULT_Q;
+#endif
+#ifdef BUILD_HFLOAT16
+  TABLE_NAME.shgemm_p = SHGEMM_DEFAULT_P;
+  TABLE_NAME.shgemm_q = SHGEMM_DEFAULT_Q;
 #endif
 #if  (BUILD_SINGLE==1) || (BUILD_COMPLEX==1)
   TABLE_NAME.sgemm_q = SGEMM_DEFAULT_Q;
@@ -2010,6 +2040,13 @@ static void init_parameter(void) {
 			       ((TABLE_NAME.sbgemm_p * TABLE_NAME.sbgemm_q *  4 + TABLE_NAME.offsetA
 				 + TABLE_NAME.align) & ~TABLE_NAME.align)
 			       ) / (TABLE_NAME.sbgemm_q *  4) - 15) & ~15);
+#endif
+
+#if BUILD_HFLOAT16==1
+  TABLE_NAME.shgemm_r = (((BUFFER_SIZE -
+			       ((TABLE_NAME.shgemm_p * TABLE_NAME.shgemm_q *  4 + TABLE_NAME.offsetA
+				 + TABLE_NAME.align) & ~TABLE_NAME.align)
+			       ) / (TABLE_NAME.shgemm_q *  4) - 15) & ~15);
 #endif
 
 #if BUILD_SINGLE==1

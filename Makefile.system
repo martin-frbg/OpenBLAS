@@ -393,6 +393,8 @@ GCCVERSIONGTEQ9 := $(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 9)
 GCCVERSIONGTEQ10 := $(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 10)
 GCCVERSIONGTEQ11 := $(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 11)
 GCCVERSIONGTEQ12 := $(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 12)
+GCCVERSIONGTEQ13 := $(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 13)
+GCCVERSIONGTEQ14 := $(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 14)
 # Note that the behavior of -dumpversion is compile-time-configurable for
 # gcc-7.x and newer. Use -dumpfullversion there
 ifeq ($(GCCVERSIONGTEQ7),1)
@@ -1191,6 +1193,13 @@ endif
 else ifeq ($(ARCH), $(filter $(ARCH),mips))
 FCOMMON_OPT += -mabi=32
 endif
+ifeq ($(ARCH), $(filter $(ARCH),loongarch64))
+ifdef INTERFACE64
+ifneq ($(INTERFACE64), 0)
+FCOMMON_OPT +=  -fdefault-integer-8
+endif
+endif
+endif
 else
 ifdef BINARY64
 ifneq ($(OSNAME), AIX)
@@ -1547,6 +1556,9 @@ endif
 ifeq ($(BUILD_BFLOAT16), 1)
 CCOMMON_OPT += -DBUILD_BFLOAT16
 endif
+ifeq ($(BUILD_HFLOAT16), 1)
+CCOMMON_OPT += -DBUILD_HFLOAT16
+endif
 ifeq ($(BUILD_SINGLE), 1)
 CCOMMON_OPT += -DBUILD_SINGLE=1
 endif
@@ -1889,11 +1901,14 @@ export TARGET_CORE
 export NO_AVX512
 export NO_AVX2
 export BUILD_BFLOAT16
+export BUILD_HFLOAT16
 export NO_LSX
 export NO_LASX
 
 export SBGEMM_UNROLL_M
 export SBGEMM_UNROLL_N
+export SHGEMM_UNROLL_M
+export SHGEMM_UNROLL_N
 export SGEMM_UNROLL_M
 export SGEMM_UNROLL_N
 export DGEMM_UNROLL_M

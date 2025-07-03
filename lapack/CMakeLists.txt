@@ -3,12 +3,14 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_BINARY_DIR})
 
 list (REMOVE_ITEM FLOAT_TYPES "BFLOAT16")
+list (REMOVE_ITEM FLOAT_TYPES "HFLOAT16")
 
 set(LAPACK_SOURCES
   potrf/potrf_U_single.c
   potrf/potrf_L_single.c
   lauum/lauum_U_single.c
   lauum/lauum_L_single.c
+  laed3/laed3_single.c
 )
 
 # add a 'z' to filename for complex version
@@ -78,6 +80,7 @@ if (USE_THREAD)
     lauum/lauum_L_parallel.c
     potrf/potrf_U_parallel.c
     potrf/potrf_L_parallel.c
+    laed3/laed3_parallel.c
   )
 
   # this has a z version

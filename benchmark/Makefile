@@ -56,9 +56,15 @@ GOTO_LAPACK_TARGETS=
 endif
 
 ifeq ($(BUILD_BFLOAT16),1)
-GOTO_HALF_TARGETS=sbgemm.goto
+GOTO_BFLOAT_TARGETS=sbgemm.goto
 else
-GOTO_HALF_TARGETS=
+GOTO_BFLOAT_TARGETS=
+endif
+
+ifeq ($(BUILD_HFLOAT16),1)
+GOTO_HFLOAT_TARGETS=shgemm.goto
+else
+GOTO_HFLOAT_TARGETS=
 endif
 
 ifeq ($(OSNAME), WINNT)
@@ -104,7 +110,7 @@ goto :: slinpack.goto dlinpack.goto clinpack.goto zlinpack.goto \
        spotrf.goto dpotrf.goto cpotrf.goto zpotrf.goto \
        ssymm.goto dsymm.goto csymm.goto zsymm.goto \
        somatcopy.goto domatcopy.goto comatcopy.goto zomatcopy.goto \
-       saxpby.goto daxpby.goto caxpby.goto zaxpby.goto $(GOTO_HALF_TARGETS)
+       saxpby.goto daxpby.goto caxpby.goto zaxpby.goto $(GOTO_BFLOAT_TARGETS) $(GOTO_HFLOAT_TARGETS)
 
 acml :: slinpack.acml dlinpack.acml clinpack.acml zlinpack.acml \
        scholesky.acml dcholesky.acml ccholesky.acml zcholesky.acml \
@@ -278,7 +284,7 @@ goto :: sgemm.goto dgemm.goto cgemm.goto zgemm.goto \
        smin.goto dmin.goto \
        saxpby.goto daxpby.goto caxpby.goto zaxpby.goto \
        somatcopy.goto domatcopy.goto comatcopy.goto zomatcopy.goto \
-       snrm2.goto dnrm2.goto scnrm2.goto dznrm2.goto $(GOTO_LAPACK_TARGETS) $(GOTO_HALF_TARGETS)
+       snrm2.goto dnrm2.goto scnrm2.goto dznrm2.goto $(GOTO_LAPACK_TARGETS) $(GOTO_BFLOAT_TARGETS) $(GOTO_HFLOAT_TARGETS)
 
 acml :: slinpack.acml dlinpack.acml clinpack.acml zlinpack.acml \
        scholesky.acml dcholesky.acml ccholesky.acml zcholesky.acml \
@@ -630,6 +636,11 @@ zcholesky.essl : zcholesky.$(SUFFIX)
 ##################################### Sgemm ####################################################
 ifeq ($(BUILD_BFLOAT16),1)
 sbgemm.goto : sbgemm.$(SUFFIX) ../$(LIBNAME)
+	$(CC) $(CFLAGS) -o $(@F) $^ $(CEXTRALIB) $(EXTRALIB) $(FEXTRALIB) -lm
+endif
+
+ifeq ($(BUILD_HFLOAT16),1)
+shgemm.goto : shgemm.$(SUFFIX) ../$(LIBNAME)
 	$(CC) $(CFLAGS) -o $(@F) $^ $(CEXTRALIB) $(EXTRALIB) $(FEXTRALIB) -lm
 endif
 
@@ -2960,7 +2971,12 @@ zcholesky.$(SUFFIX) : cholesky.c
 
 ifeq ($(BUILD_BFLOAT16),1)
 sbgemm.$(SUFFIX) : gemm.c
-	$(CC) $(CFLAGS) -c -DHALF -UCOMPLEX -UDOUBLE -o $(@F) $^
+	$(CC) $(CFLAGS) -c -DBFLOAT16 -UCOMPLEX -UDOUBLE -o $(@F) $^
+endif
+
+ifeq ($(BUILD_HFLOAT16),1)
+shgemm.$(SUFFIX) : gemm.c
+	$(CC) $(CFLAGS) -c -DHFLOAT16 -UCOMPLEX -UDOUBLE -o $(@F) $^
 endif
 
 sgemm.$(SUFFIX) : gemm.c

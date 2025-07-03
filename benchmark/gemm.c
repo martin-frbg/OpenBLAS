@@ -33,10 +33,17 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef DOUBLE
 #define GEMM   BLASFUNC(dgemm)
-#elif defined(HALF)
+#elif defined(BFLOAT16)
 #define GEMM   BLASFUNC(sbgemm)
+#undef IFLOAT
+#define IFLOAT bfloat16
+#elif defined(HFLOAT16)
+#define GEMM   BLASFUNC(shgemm)
+#undef IFLOAT
+#define IFLOAT hfloat16
 #else
 #define GEMM   BLASFUNC(sgemm)
+#define IFLOAT float
 #endif
 
 #else

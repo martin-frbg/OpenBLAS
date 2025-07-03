@@ -52,6 +52,7 @@ blasobjsz="
 
 blasobjs="lsame xerbla"
 bfblasobjs="sbgemm sbgemmt sbgemmtr sbgemv sbdot sbstobf16 sbdtobf16 sbf16tos dbf16tod"
+hfblasobjs="shgemm"
 cblasobjsc="
     cblas_caxpy cblas_ccopy cblas_cdotc cblas_cdotu cblas_cgbmv cblas_cgemm cblas_cgemv
     cblas_cgerc cblas_cgeru cblas_chbmv cblas_chemm cblas_chemv cblas_cher2 cblas_cher2k
@@ -100,6 +101,7 @@ cblasobjsz="
 cblasobjs="cblas_xerbla"
 
 bfcblasobjs="cblas_sbgemm cblas_sbgemv cblas_sbdot cblas_sbstobf16 cblas_sbdtobf16 cblas_sbf16tos cblas_dbf16tod cblas_sbgemm_batch"
+hfcblasobjs="cblas_shgemm"
 
 exblasobjs="
     qamax qamin qasum qaxpy qcabs1 qcopy qdot qgbmv qgemm
@@ -3814,6 +3816,8 @@ shift
 p16=$9
 shift
 p17=$9
+shift
+p18=$9
 
 if [ $p13 -eq 1 ]; then
 	blasobjs="$blasobjs $bfblasobjs"
@@ -3821,6 +3825,11 @@ if [ $p13 -eq 1 ]; then
 fi
 
 if [ $p14 -eq 1 ]; then
+	blasobjs="$blasobjs $hfblasobjs"
+	cblasobjs="$cblasobjs $hfcblasobjs"
+fi
+
+if [ $p15 -eq 1 ]; then
 	blasobjs="$blasobjs $blasobjss"
 	cblasobjs="$cblasobjs $cblasobjss"
 	lapackobjs="$lapackobjs $lapackobjss"
@@ -3833,11 +3842,11 @@ if [ $p14 -eq 1 ]; then
 	lapackeobjs="$lapackeobjs $lapackeobjss"
 fi
 
-if [ $p15 -eq 1 ]; then
+if [ $p16 -eq 1 ]; then
 	blasobjs="$blasobjs $blasobjsd"
 	cblasobjs="$cblasobjs $cblasobjsd"
 	lapackobjs="$lapackobjs $lapackobjsd"
-    if [ $p14 -eq 0 ]; then
+    if [ $p15 -eq 0 ]; then
 		lapackobjs2="$lapackobjs2 $lapackobjs2ds"
 	fi
 	lapackobjs2="$lapackobjs2 $lapackobjs2d $lapackobjs2dz"
@@ -3847,14 +3856,14 @@ if [ $p15 -eq 1 ]; then
 	lapackeobjs="$lapackeobjs $lapackeobjsd"
 fi
 
-if [ $p16 -eq 1 ]; then
+if [ $p17 -eq 1 ]; then
 	blasobjs="$blasobjs $blasobjsc"
 	cblasobjs="$cblasobjs $cblasobjsc"
 	gemm3mobjs="$gemm3mobjs $gemm3mobjsc"
 	cblasgemm3mobjs="$cblasgemm3mobjs $cblasgemm3mobjsc"
 	lapackobjs="$lapackobjs $lapackobjsc"
 	lapackobjs2="$lapackobjs2 $lapackobjs2c $lapackobjs2zc"
-    if [ $p14 -eq 0 ]; then
+    if [ $p15 -eq 0 ]; then
 		lapackobjs2="$lapackobjs2 $lapackobjs2sc"
 	fi
 	lapack_deprecated_objs="$lapack_deprecated_objs $lapack_deprecated_objsc"
@@ -3863,17 +3872,17 @@ if [ $p16 -eq 1 ]; then
 	lapackeobjs="$lapackeobjs $lapackeobjsc"
 fi
 
-if [ $p17 -eq 1 ]; then
+if [ $p18 -eq 1 ]; then
 	blasobjs="$blasobjs $blasobjsz"
 	cblasobjs="$cblasobjs $cblasobjsz"
 	gemm3mobjs="$gemm3mobjs $gemm3mobjsz"
 	cblasgemm3mobjs="$cblasgemm3mobjs $cblasgemm3mobjsz"
 	lapackobjs="$lapackobjs $lapackobjsz"
 	lapackobjs2="$lapackobjs2 $lapackobjs2z"
-	if [ $p16 -eq 0 ]; then
+	if [ $p17 -eq 0 ]; then
 		lapackobjs2="$lapackobjs2 $lapackobjs2zc"
 	fi
-	if [ $p15 -eq 0 ]; then
+	if [ $p16 -eq 0 ]; then
 		lapackobjs2="$lapackobjs2 $lapackobjs2dz"
 	fi
 	lapack_deprecated_objs="$lapack_deprecated_objs $lapack_deprecated_objsz"

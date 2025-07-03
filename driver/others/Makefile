@@ -218,7 +218,7 @@ mulx.$(SUFFIX) : $(ARCH)/mulx.c
 	$(CC) $(CFLAGS) -c -DXDOUBLE -UCOMPLEX $< -o $(@F)
 
 detect_riscv64.$(SUFFIX): detect_riscv64.c
-	$(CC) $(CFLAGS) -c -march=rv64imafdcv $< -o $(@F)
+	$(CC) $(CFLAGS) -c -march=rv64imafdcv_zvfh_zfh $< -o $(@F)
 
 xerbla.$(PSUFFIX) : xerbla.c
 	$(CC) $(PFLAGS) -c $< -o $(@F)

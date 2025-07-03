@@ -64,11 +64,11 @@ TARGET_FLAGS = -march=rv64imafdcv_zba_zbb_zfh -mabi=lp64d
 endif
 
 ifeq ($(TARGET), RISCV64_ZVL256B)
-TARGET_FLAGS = -march=rv64imafdcv -mabi=lp64d
+TARGET_FLAGS = -march=rv64imafdcv_zvfh_zfh -mabi=lp64d
 endif
 
 ifeq ($(TARGET), RISCV64_ZVL128B)
-TARGET_FLAGS = -march=rv64imafdcv -mabi=lp64d
+TARGET_FLAGS = -march=rv64imafdcv_zvfh_zfh -mabi=lp64d
 endif
 
 ifeq ($(TARGET), RISCV64_GENERIC)
