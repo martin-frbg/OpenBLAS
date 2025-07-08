@@ -331,6 +331,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 			info = 2;
 		if (uplo < 0)
 			info = 1;
+		if (info >0 ) fprintf(stderr,"colmajor\n");
 	}
 
 	if (order == CblasRowMajor) {
@@ -398,9 +399,9 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 		if (ldc < MAX(1,m))
 			info = 13;
 		if (ldb < MAX(1, ncolb))
-			info = 8;
-		if (lda < MAX(1, ncola))
 			info = 10;
+		if (lda < MAX(1, ncola))
+			info = 8;
 		if (k < 0)
 			info = 5;
 		if (m < 0)
@@ -411,6 +412,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 			info = 3;
 		if (uplo < 0)
 			info = 1;
+		if (info >0 ) fprintf(stderr,"rowmajor\n");
 	}
 
 	if (info >= 0) {
