@@ -47,7 +47,7 @@ void  F77_c3chke(char *  rout) {
 
 
    if (strncmp( sf,"cblas_cgemm3m"   ,13)==0) {
-      cblas_rout = "cblas_cgemm3"   ;
+      cblas_rout = "cblas_cgemm3m"   ;
 
       cblas_info = 1;
       cblas_cgemm3m( INVALID,  CblasNoTrans, CblasNoTrans, 0, 0, 0,

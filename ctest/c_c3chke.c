@@ -246,15 +246,15 @@ void  F77_c3chke(char *  rout) {
       chkxer();
 
       cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_cgemmtr( CblasColMajor,  CblasUpper, CblasNoTrans, CblasNoTrans, 0, 2,
+      cblas_cgemmtr( CblasRowMajor,  CblasUpper, CblasNoTrans, CblasNoTrans, 0, 2,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
       cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_cgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasNoTrans, 0, 2,
+      cblas_cgemmtr( CblasRowMajor,  CblasUpper, CblasTrans, CblasNoTrans, 0, 2,
                    ALPHA, A, 2, B, 1, BETA, C, 1 );
       chkxer();
       cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_cgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
+      cblas_cgemmtr( CblasRowMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
 
