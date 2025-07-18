@@ -1998,7 +1998,7 @@ CTEST(zgemmt, xerbla_c_api_rowmajor_lda_invalid)
 {
     blasint M = 50, K = 100;
     blasint lda = 50, ldb = 50, ldc = 50;
-    int expected_info = 8;
+    int expected_info = 10;
 
     int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
@@ -2014,7 +2014,7 @@ CTEST(zgemmt, xerbla_c_api_rowmajor_ldb_invalid)
 {
     blasint M = 50, K = 100;
     blasint lda = 50, ldb = 50, ldc = 50;
-    int expected_info = 10;
+    int expected_info = 8;
 
     int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasTrans, CblasTrans,
                             M, K, lda, ldb, ldc, expected_info);
