@@ -1,3 +1,32 @@
+###############################################################################
+# Copyright (c) 2025, The OpenBLAS Project
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 3. Neither the name of the OpenBLAS project nor the names of
+#    its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE OPENBLAS PROJECT OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+###############################################################################
+
 TOPDIR	= ../..
 include ../../Makefile.system
 
@@ -20,6 +49,7 @@ USE_GEMM3M = 1
 endif
 
 ifeq ($(BUILD_BFLOAT16),1)
+BBLASOBJS       += bgemm_nn.$(SUFFIX) bgemm_nt.$(SUFFIX) bgemm_tn.$(SUFFIX) bgemm_tt.$(SUFFIX)
 SBBLASOBJS       += sbgemm_nn.$(SUFFIX) sbgemm_nt.$(SUFFIX) sbgemm_tn.$(SUFFIX) sbgemm_tt.$(SUFFIX)
 endif
 
@@ -212,6 +242,7 @@ COMMONOBJS  += syrk_thread.$(SUFFIX)
 
 ifneq ($(USE_SIMPLE_THREADED_LEVEL3), 1)
 ifeq ($(BUILD_BFLOAT16),1)
+BBLASOBJS     += bgemm_thread_nn.$(SUFFIX) bgemm_thread_nt.$(SUFFIX) bgemm_thread_tn.$(SUFFIX) bgemm_thread_tt.$(SUFFIX)
 SBBLASOBJS    += sbgemm_thread_nn.$(SUFFIX) sbgemm_thread_nt.$(SUFFIX) sbgemm_thread_tn.$(SUFFIX) sbgemm_thread_tt.$(SUFFIX)
 endif
 ifeq ($(BUILD_HFLOAT16),1)
@@ -349,6 +380,18 @@ ifneq ($(BUILD_COMPLEX16),1)
 endif
 
 all ::
+
+bgemm_nn.$(SUFFIX) : gemm.c level3.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DNN $< -o $(@F)
+
+bgemm_nt.$(SUFFIX) : gemm.c level3.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DNT $< -o $(@F)
+
+bgemm_tn.$(SUFFIX) : gemm.c level3.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DTN $< -o $(@F)
+
+bgemm_tt.$(SUFFIX) : gemm.c level3.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DTT $< -o $(@F)
 
 sbgemm_nn.$(SUFFIX) : gemm.c level3.c ../../param.h
 	$(CC) $(CFLAGS) $(BLOCKS) -c -DBFLOAT16 -UDOUBLE -UCOMPLEX -DNN $< -o $(@F)
@@ -568,6 +611,18 @@ gemm_thread_variable.$(SUFFIX) : gemm_thread_variable.c ../../common.h
 
 beta_thread.$(SUFFIX) : beta_thread.c ../../common.h
 	$(CC) -c $(CFLAGS) $< -o $(@F)
+
+bgemm_thread_nn.$(SUFFIX) : gemm.c level3_thread.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DTHREADED_LEVEL3 -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DNN $< -o $(@F)
+
+bgemm_thread_nt.$(SUFFIX) : gemm.c level3_thread.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DTHREADED_LEVEL3 -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DNT $< -o $(@F)
+
+bgemm_thread_tn.$(SUFFIX) : gemm.c level3_thread.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DTHREADED_LEVEL3 -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DTN $< -o $(@F)
+
+bgemm_thread_tt.$(SUFFIX) : gemm.c level3_thread.c ../../param.h
+	$(CC) $(CFLAGS) $(BLOCKS) -c -DTHREADED_LEVEL3 -DBFLOAT16 -DBGEMM -UDOUBLE -UCOMPLEX -DTT $< -o $(@F)
 
 sbgemm_thread_nn.$(SUFFIX) : gemm.c level3_thread.c ../../param.h
 	$(CC) $(CFLAGS) $(BLOCKS) -c -DTHREADED_LEVEL3 -DBFLOAT16 -UDOUBLE -UCOMPLEX -DNN $< -o $(@F)

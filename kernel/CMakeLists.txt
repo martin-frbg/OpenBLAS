@@ -1,3 +1,30 @@
+###############################################################################
+# Copyright (c) 2025, The OpenBLAS Project
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 3. Neither the name of the OpenBLAS project nor the names of
+#    its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE OPENBLAS PROJECT OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+###############################################################################
 
 include_directories(${PROJECT_SOURCE_DIR})
 
@@ -94,6 +121,7 @@ function (build_core TARGET_CORE KDIR TSUFFIX KERNEL_DEFINITIONS)
 
     # sbdot
     if (BUILD_BFLOAT16)
+      GenerateNamedObjects("${KERNELDIR}/${BSCALKERNEL}" "BGEMM" "scal_k" false "" "" false "BFLOAT16")
 	    GenerateNamedObjects("${KERNELDIR}/${SBDOTKERNEL}" "SBDOT" "dot_k" false "" "" false "BFLOAT16")
 	    GenerateNamedObjects("${KERNELDIR}/${BF16TOKERNEL}" "SINGLE" "f16tos_k" false "" "" false "BFLOAT16")
 	    GenerateNamedObjects("${KERNELDIR}/${BF16TOKERNEL}" "DOUBLE" "bf16tod_k" false "" "" false "DOUBLE")
@@ -195,6 +223,8 @@ function (build_core TARGET_CORE KDIR TSUFFIX KERNEL_DEFINITIONS)
 	    GenerateNamedObjects("${KERNELDIR}/${SGEMVTKERNEL}" "TRANS" "gemv_t" false "" "" false "SINGLE")
     endif ()
     if (BUILD_BFLOAT16)
+	    GenerateNamedObjects("${KERNELDIR}/${BGEMVNKERNEL}" "BGEMM" "gemv_n" false "" "" false "BFLOAT16")
+	    GenerateNamedObjects("${KERNELDIR}/${BGEMVTKERNEL}" "BGEMM" "gemv_t" false "" "" false "BFLOAT16")
 	    GenerateNamedObjects("${KERNELDIR}/${SBGEMVNKERNEL}" "" "gemv_n" false "" "" false "BFLOAT16")
 	    GenerateNamedObjects("${KERNELDIR}/${SBGEMVTKERNEL}" "" "gemv_t" false "" "" false "BFLOAT16")
     endif ()
@@ -211,6 +241,9 @@ function (build_core TARGET_CORE KDIR TSUFFIX KERNEL_DEFINITIONS)
     if (X86_64 OR ARM64)
        set(USE_DIRECT_SGEMM true)
     endif()
+    if (UC_TARGET_CORE MATCHES ARMV9SME)
+          set (HAVE_SME true)
+    endif ()
 
     if (USE_DIRECT_SGEMM)
 	    #	    if (NOT DEFINED SGEMMDIRECTKERNEL)
@@ -222,9 +255,11 @@ function (build_core TARGET_CORE KDIR TSUFFIX KERNEL_DEFINITIONS)
 	  GenerateNamedObjects("${KERNELDIR}/${SGEMMDIRECTPERFORMANT}" "" "gemm_direct_performant" false "" "" false  SINGLE)
 	    elseif (ARM64)
 	  set (SGEMMDIRECTKERNEL sgemm_direct_arm64_sme1.c)
+	  set (SGEMMDIRECTKERNEL_ALPHA_BETA sgemm_direct_alpha_beta_arm64_sme1.c)
 	  set (SGEMMDIRECTSMEKERNEL sgemm_direct_sme1.S)
 	  set (SGEMMDIRECTPREKERNEL sgemm_direct_sme1_preprocess.S)
 	  GenerateNamedObjects("${KERNELDIR}/${SGEMMDIRECTKERNEL}" "" "gemm_direct" false "" "" false SINGLE)
+	  GenerateNamedObjects("${KERNELDIR}/${SGEMMDIRECTKERNEL_ALPHA_BETA}" "" "gemm_direct_alpha_beta" false "" "" false SINGLE)
    	  if (HAVE_SME)
 	  GenerateNamedObjects("${KERNELDIR}/${SGEMMDIRECTSMEKERNEL}" "" "gemm_direct_sme1" false "" "" false SINGLE)
 	  GenerateNamedObjects("${KERNELDIR}/${SGEMMDIRECTPREKERNEL}" "" "gemm_direct_sme1_preprocess" false "" "" false SINGLE)
@@ -336,6 +371,20 @@ function (build_core TARGET_CORE KDIR TSUFFIX KERNEL_DEFINITIONS)
     endif ()
 
     if (BUILD_BFLOAT16)
+        if (BGEMMINCOPY)
+		GenerateNamedObjects("${KERNELDIR}/${BGEMMINCOPY}" "BGEMM" "${BGEMMINCOPYOBJ}" false "" "" true "BFLOAT16")
+        endif ()
+        if (BGEMMITCOPY)
+		GenerateNamedObjects("${KERNELDIR}/${BGEMMITCOPY}" "BGEMM" "${BGEMMITCOPYOBJ}" false "" "" true "BFLOAT16")
+        endif ()
+        if (BGEMMONCOPY)
+		GenerateNamedObjects("${KERNELDIR}/${BGEMMONCOPY}" "BGEMM" "${BGEMMONCOPYOBJ}" false "" "" true "BFLOAT16")
+        endif ()
+        if (BGEMMOTCOPY)
+		GenerateNamedObjects("${KERNELDIR}/${BGEMMOTCOPY}" "BGEMM" "${BGEMMOTCOPYOBJ}" false "" "" true "BFLOAT16")
+        endif ()
+	GenerateNamedObjects("${KERNELDIR}/${BGEMMKERNEL}" "BGEMM" "gemm_kernel" false "" "" false "BFLOAT16")
+	GenerateNamedObjects("${KERNELDIR}/${BGEMM_BETA}" "BGEMM" "gemm_beta" false "" "" false "BFLOAT16")
         if (SBGEMMINCOPY)
 		GenerateNamedObjects("${KERNELDIR}/${SBGEMMINCOPY}" "" "${SBGEMMINCOPYOBJ}" false "" "" true "BFLOAT16")
         endif ()

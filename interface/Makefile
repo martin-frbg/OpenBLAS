@@ -1,3 +1,31 @@
+###############################################################################
+# Copyright (c) 2025, The OpenBLAS Project
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 3. Neither the name of the OpenBLAS project nor the names of
+#    its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE OPENBLAS PROJECT OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+###############################################################################
+
 TOPDIR	= ..
 include $(TOPDIR)/Makefile.system
 
@@ -47,6 +75,9 @@ SBLAS3OBJS    = \
 		sgeadd.$(SUFFIX) sgemmt.$(SUFFIX) sgemmtr.$(SUFFIX)
 
 ifeq ($(BUILD_BFLOAT16),1)
+BBLAS3OBJS     = bgemm.$(SUFFIX)
+BBLAS2OBJS     = bgemv.$(SUFFIX)
+BBLAS1OBJS     = bscal.$(SUFFIX)
 SBBLAS1OBJS    = sbdot.$(SUFFIX)
 SBBLAS2OBJS    = sbgemv.$(SUFFIX)
 SBBLAS3OBJS    = sbgemm.$(SUFFIX) sbgemmt.$(SUFFIX) sbgemmtr.$(SUFFIX)
@@ -289,6 +320,9 @@ CSBLAS3OBJS   = \
 	cblas_sgeadd.$(SUFFIX) cblas_sgemmt.$(SUFFIX) cblas_sgemmtr.$(SUFFIX) cblas_sgemm_batch.$(SUFFIX)
 
 ifeq ($(BUILD_BFLOAT16),1)
+CBBLAS3OBJS = cblas_bgemm.$(SUFFIX)
+CBBLAS2OBJS = cblas_bgemv.$(SUFFIX)
+CBBLAS1OBJS = cblas_bscal.$(SUFFIX)
 CSBBLAS1OBJS = cblas_sbdot.$(SUFFIX)
 CSBBLAS2OBJS = cblas_sbgemv.$(SUFFIX)
 CSBBLAS3OBJS = cblas_sbgemm.$(SUFFIX) cblas_sbgemmt.$(SUFFIX) cblas_sbgemmtr.$(SUFFIX) cblas_sbgemm_batch.$(SUFFIX)
@@ -393,6 +427,9 @@ override CFLAGS += -I.
 SBLAS1OBJS   += $(CSBLAS1OBJS)
 SBLAS2OBJS   += $(CSBLAS2OBJS)
 SBLAS3OBJS   += $(CSBLAS3OBJS)
+BBLAS3OBJS   += $(CBBLAS3OBJS)
+BBLAS2OBJS   += $(CBBLAS2OBJS)
+BBLAS1OBJS   += $(CBBLAS1OBJS)
 SBBLAS1OBJS  += $(CSBBLAS1OBJS)
 SBBLAS2OBJS  += $(CSBBLAS2OBJS)
 SBBLAS3OBJS  += $(CSBBLAS3OBJS)
@@ -412,6 +449,7 @@ SBEXTOBJS     += $(CSBEXTOBJS)
 CBAUXOBJS += $(CXERBLAOBJ)
 endif
 
+BBLASOBJS    = $(BBLAS3OBJS) $(BBLAS2OBJS) $(BBLAS1OBJS)
 SBLASOBJS    = $(SBLAS1OBJS) $(SBLAS2OBJS) $(SBLAS3OBJS)
 SBBLASOBJS   = $(SBBLAS1OBJS) $(SBBLAS2OBJS) $(SBBLAS3OBJS)
 SHBLASOBJS   = $(SHBLAS3OBJS)
@@ -522,7 +560,7 @@ ifneq ($(BUILD_COMPLEX16),1)
 	ZBLASOBJS=
 endif
 
-FUNCOBJS    = $(SBEXTOBJS) $(CXERBLAOBJS) $(SBBLASOBJS) $(SBLASOBJS) $(DBLASOBJS) $(CBLASOBJS) $(ZBLASOBJS) $(SHBLASOBJS)
+FUNCOBJS    = $(SBEXTOBJS) $(CXERBLAOBJS) $(BBLASOBJS) $(SBBLASOBJS) $(SBLASOBJS) $(DBLASOBJS) $(CBLASOBJS) $(ZBLASOBJS) $(SHBLASOBJS)
 
 ifeq ($(EXPRECISION), 1)
 FUNCOBJS   += $(QBLASOBJS) $(XBLASOBJS)
@@ -557,10 +595,10 @@ clean ::
 level1 : $(SBEXTOBJS) $(SBBLAS1OBJS) $(SBLAS1OBJS) $(DBLAS1OBJS) $(QBLAS1OBJS) $(CBLAS1OBJS) $(ZBLAS1OBJS) $(XBLAS1OBJS)
 	$(AR) $(ARFLAGS) -ru $(TOPDIR)/$(LIBNAME) $^
 
-level2 : $(SBBLAS2OBJS) $(SBLAS2OBJS) $(DBLAS2OBJS) $(QBLAS2OBJS) $(CBLAS2OBJS) $(ZBLAS2OBJS) $(XBLAS2OBJS)
+level2 : $(SBBLAS2OBJS) $(BBLAS2OBJS) $(SBLAS2OBJS) $(DBLAS2OBJS) $(QBLAS2OBJS) $(CBLAS2OBJS) $(ZBLAS2OBJS) $(XBLAS2OBJS)
 	$(AR) $(ARFLAGS) -ru $(TOPDIR)/$(LIBNAME) $^
 
-level3 : $(SBBLAS3OBJS) $(SBLAS3OBJS) $(DBLAS3OBJS) $(QBLAS3OBJS) $(CBLAS3OBJS) $(ZBLAS3OBJS) $(XBLAS3OBJS) $(SHBLAS3OBJS)
+level3 : $(SBBLAS3OBJS) $(BBLAS3OBJ) $(SBLAS3OBJS) $(DBLAS3OBJS) $(QBLAS3OBJS) $(CBLAS3OBJS) $(ZBLAS3OBJS) $(XBLAS3OBJS) $(SHBLAS3OBJS)
 	$(AR) $(ARFLAGS) -ru $(TOPDIR)/$(LIBNAME) $^
 
 aux :	$(CBAUXOBJS)
@@ -792,6 +830,8 @@ dsdot.$(SUFFIX) dsdot.$(PSUFFIX) : dsdot.c
 	$(CC) $(CFLAGS) -c $< -o $(@F)
 
 ifeq ($(BUILD_BFLOAT16),1)
+bscal.$(SUFFIX) bscal.$(PSUFFIX) : scal.c
+	$(CC) $(CFLAGS) -DBGEMM -c $< -o $(@F)
 sbdot.$(SUFFIX) sbdot.$(PSUFFIX) : bf16dot.c
 	$(CC) $(CFLAGS) -c $< -o $(@F)
 sbstobf16.$(SUFFIX) sbstobf16.$(PSUFFIX) : tobf16.c
@@ -949,6 +989,8 @@ xgerc.$(SUFFIX) xgerc.$(PSUFFIX) : zger.c
 	$(CC) -c $(CFLAGS) -DCONJ $< -o $(@F)
 
 ifeq ($(BUILD_BFLOAT16),1)
+bgemv.$(SUFFIX) bgemv.$(PSUFFIX) : sbgemv.c
+	$(CC) $(CFLAGS) -DBGEMM -c $< -o $(@F)
 sbgemv.$(SUFFIX) sbgemv.$(PSUFFIX) : sbgemv.c
 	$(CC) $(CFLAGS) -c $< -o $(@F)
 endif
@@ -1311,6 +1353,8 @@ xhpr2.$(SUFFIX) xhpr2.$(PSUFFIX) : zhpr2.c
 	$(CC) -c $(CFLAGS) $< -o $(@F)
 
 ifeq ($(BUILD_BFLOAT16),1)
+bgemm.$(SUFFIX) bgemm.$(PSUFFIX) : gemm.c ../param.h
+	$(CC) -c $(CFLAGS) $< -o $(@F)
 sbgemm.$(SUFFIX) sbgemm.$(PSUFFIX) : gemm.c ../param.h
 	$(CC) -c $(CFLAGS) $< -o $(@F)
 sbgemmt.$(SUFFIX) sbgemmt.$(PSUFFIX) : sbgemmt.c ../param.h
@@ -1619,6 +1663,8 @@ cblas_dsdot.$(SUFFIX) cblas_dsdot.$(PSUFFIX) : dsdot.c
 	$(CC) $(CFLAGS) -DCBLAS -c $< -o $(@F)
 
 ifeq ($(BUILD_BFLOAT16),1)
+cblas_bscal.$(SUFFIX) cblas_bscal.$(PSUFFIX) : scal.c
+	$(CC) $(CFLAGS) -DCBLAS -c $< -o $(@F)
 cblas_sbdot.$(SUFFIX) cblas_sbdot.$(PSUFFIX) : bf16dot.c
 	$(CC) $(CFLAGS) -DCBLAS -c $< -o $(@F)
 cblas_sbstobf16.$(SUFFIX) cblas_sbstobf16.$(PSUFFIX) : tobf16.c
@@ -1773,6 +1819,8 @@ cblas_zdrot.$(SUFFIX) cblas_zdrot.$(PSUFFIX) : zrot.c
 	$(CC) $(CFLAGS) -DCBLAS -c $< -o $(@F)
 
 ifeq ($(BUILD_BFLOAT16),1)
+cblas_bgemv.$(SUFFIX) cblas_bgemv.$(PSUFFIX) : sbgemv.c
+	$(CC) -DCBLAS -DBGEMM -c $(CFLAGS) $< -o $(@F)
 cblas_sbgemv.$(SUFFIX) cblas_sbgemv.$(PSUFFIX) : sbgemv.c
 	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
 endif
@@ -1979,6 +2027,8 @@ cblas_sgemm.$(SUFFIX) cblas_sgemm.$(PSUFFIX) : gemm.c ../param.h
 	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
 
 ifeq ($(BUILD_BFLOAT16),1)
+cblas_bgemm.$(SUFFIX) cblas_bgemm.$(PSUFFIX) : gemm.c ../param.h
+	$(CC) -DCBLAS -DBGEMM -c $(CFLAGS) $< -o $(@F)
 cblas_sbgemm.$(SUFFIX) cblas_sbgemm.$(PSUFFIX) : gemm.c ../param.h
 	$(CC) -DCBLAS -c $(CFLAGS) $< -o $(@F)
 endif

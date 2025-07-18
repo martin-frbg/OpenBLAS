@@ -1,5 +1,6 @@
 /*********************************************************************/
 /* Copyright 2009, 2010 The University of Texas at Austin.           */
+/* Copyright 2025 The OpenBLAS Project.                              */
 /* All rights reserved.                                              */
 /*                                                                   */
 /* Redistribution and use in source and binary forms, with or        */
@@ -317,7 +318,11 @@ typedef int blasint;
 #elif defined(BFLOAT16)
 #define IFLOAT	bfloat16
 #define XFLOAT IFLOAT
-#define FLOAT	float
+#ifdef BGEMM
+#define FLOAT	bfloat16
+#else
+#define FLOAT float
+#endif
 #define SIZE   2
 #define BASE_SHIFT 1
 #define ZBASE_SHIFT 2

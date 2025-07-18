@@ -1,6 +1,6 @@
 /*********************************************************************/
 /* Copyright 2009, 2010 The University of Texas at Austin.           */
-/* Copyright 2023 The OpenBLAS Project.                              */
+/* Copyright 2023, 2025 The OpenBLAS Project.                        */
 /* All rights reserved.                                              */
 /*                                                                   */
 /* Redistribution and use in source and binary forms, with or        */
@@ -65,6 +65,10 @@ int (*shgemm_otcopy   )(BLASLONG, BLASLONG, hfloat16 *, BLASLONG, hfloat16 *);
 
 
 #if BUILD_BFLOAT16 == 1
+  int bgemm_p, bgemm_q, bgemm_r;
+  int bgemm_unroll_m, bgemm_unroll_n, bgemm_unroll_mn;
+  int bgemm_align_k;
+
   int sbgemm_p, sbgemm_q, sbgemm_r;
   int sbgemm_unroll_m, sbgemm_unroll_n, sbgemm_unroll_mn;
   int sbgemm_align_k;
@@ -94,9 +98,13 @@ int (*shgemm_otcopy   )(BLASLONG, BLASLONG, hfloat16 *, BLASLONG, hfloat16 *);
   int    (*sbrot_k)  (BLASLONG, float *, BLASLONG, float *, BLASLONG, float, float);
   int    (*sbrotm_k) (BLASLONG, float *, BLASLONG, float *, BLASLONG, float *);
 
+  int    (*bscal_k) (BLASLONG, BLASLONG, BLASLONG, bfloat16, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG);
   int    (*sbaxpy_k) (BLASLONG, BLASLONG, BLASLONG, float, float *, BLASLONG, float *, BLASLONG, float *, BLASLONG);
   int    (*sbscal_k) (BLASLONG, BLASLONG, BLASLONG, float, float *, BLASLONG, float *, BLASLONG, float *, BLASLONG);
   int    (*sbswap_k) (BLASLONG, BLASLONG, BLASLONG, float, float *, BLASLONG, float *, BLASLONG, float *, BLASLONG);
+
+  int    (*bgemv_n) (BLASLONG, BLASLONG, bfloat16, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG, bfloat16, bfloat16 *, BLASLONG);
+  int    (*bgemv_t) (BLASLONG, BLASLONG, bfloat16, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG, bfloat16, bfloat16 *, BLASLONG);
 
   int    (*sbgemv_n) (BLASLONG, BLASLONG, float, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG, float, float *, BLASLONG);
   int    (*sbgemv_t) (BLASLONG, BLASLONG, float, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG, float, float *, BLASLONG);
@@ -104,6 +112,14 @@ int (*shgemm_otcopy   )(BLASLONG, BLASLONG, hfloat16 *, BLASLONG, hfloat16 *);
 
   int    (*sbsymv_L) (BLASLONG, BLASLONG, float,  float  *, BLASLONG, float  *, BLASLONG, float  *, BLASLONG, float *);
   int    (*sbsymv_U) (BLASLONG, BLASLONG, float,  float  *, BLASLONG, float  *, BLASLONG, float  *, BLASLONG, float *);
+
+  int    (*bgemm_kernel   )(BLASLONG, BLASLONG, BLASLONG, bfloat16, bfloat16 *, bfloat16 *, bfloat16 *, BLASLONG);
+  int    (*bgemm_beta     )(BLASLONG, BLASLONG, BLASLONG, bfloat16, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG);
+
+  int    (*bgemm_incopy   )(BLASLONG, BLASLONG, bfloat16 *, BLASLONG, bfloat16 *);
+  int    (*bgemm_itcopy   )(BLASLONG, BLASLONG, bfloat16 *, BLASLONG, bfloat16 *);
+  int    (*bgemm_oncopy   )(BLASLONG, BLASLONG, bfloat16 *, BLASLONG, bfloat16 *);
+  int    (*bgemm_otcopy   )(BLASLONG, BLASLONG, bfloat16 *, BLASLONG, bfloat16 *);
 
   int    (*sbgemm_kernel   )(BLASLONG, BLASLONG, BLASLONG, float, bfloat16 *, bfloat16 *, float *, BLASLONG);
   int    (*sbgemm_beta     )(BLASLONG, BLASLONG, BLASLONG, float, bfloat16 *, BLASLONG, bfloat16 *, BLASLONG, float *, BLASLONG);
@@ -240,6 +256,7 @@ int (*shgemm_otcopy   )(BLASLONG, BLASLONG, hfloat16 *, BLASLONG, hfloat16 *);
 #endif
 #ifdef ARCH_ARM64
   void (*sgemm_direct) (BLASLONG, BLASLONG, BLASLONG, float *, BLASLONG , float *, BLASLONG , float * , BLASLONG);
+  void (*sgemm_direct_alpha_beta) (BLASLONG, BLASLONG, BLASLONG, float, float *, BLASLONG, float *, BLASLONG, float, float * , BLASLONG);
 #endif
 
   
@@ -1254,6 +1271,13 @@ extern gotoblas_t *gotoblas;
 #endif
 
 #if (BUILD_BFLOAT16==1)
+#define	BGEMM_P		gotoblas -> bgemm_p
+#define	BGEMM_Q		gotoblas -> bgemm_q
+#define	BGEMM_R		gotoblas -> bgemm_r
+#define	BGEMM_UNROLL_M	gotoblas -> bgemm_unroll_m
+#define	BGEMM_UNROLL_N	gotoblas -> bgemm_unroll_n
+#define	BGEMM_UNROLL_MN	gotoblas -> bgemm_unroll_mn
+
 #define	SBGEMM_P		gotoblas -> sbgemm_p
 #define	SBGEMM_Q		gotoblas -> sbgemm_q
 #define	SBGEMM_R		gotoblas -> sbgemm_r
@@ -1395,6 +1419,17 @@ extern gotoblas_t *gotoblas;
 #endif
 
 #if (BUILD_BFLOAT16 == 1)
+#define	BGEMM_P			BGEMM_DEFAULT_P
+#define	BGEMM_Q			BGEMM_DEFAULT_Q
+#define	BGEMM_R			BGEMM_DEFAULT_R
+#define	BGEMM_UNROLL_M	BGEMM_DEFAULT_UNROLL_M
+#define	BGEMM_UNROLL_N	BGEMM_DEFAULT_UNROLL_N
+#ifdef  BGEMM_DEFAULT_UNROLL_MN
+#define	BGEMM_UNROLL_MN	BGEMM_DEFAULT_UNROLL_MN
+#else
+#define	BGEMM_UNROLL_MN	MAX((BGEMM_UNROLL_M), (BGEMM_UNROLL_N))
+#endif
+
 #define	SBGEMM_P		SBGEMM_DEFAULT_P
 #define	SBGEMM_Q		SBGEMM_DEFAULT_Q
 #define	SBGEMM_R		SBGEMM_DEFAULT_R
@@ -1555,6 +1590,18 @@ extern gotoblas_t *gotoblas;
 #define GEMM_DEFAULT_R		SHGEMM_DEFAULT_R
 #define GEMM_DEFAULT_UNROLL_M	SHGEMM_DEFAULT_UNROLL_M
 #define GEMM_DEFAULT_UNROLL_N	SHGEMM_DEFAULT_UNROLL_N
+#elif defined(BFLOAT16) && defined(BGEMM)
+#define GEMM_P			BGEMM_P
+#define GEMM_Q			BGEMM_Q
+#define GEMM_R			BGEMM_R
+#define GEMM_UNROLL_M		BGEMM_UNROLL_M
+#define GEMM_UNROLL_N		BGEMM_UNROLL_N
+#define GEMM_UNROLL_MN		BGEMM_UNROLL_MN
+#define GEMM_DEFAULT_P		BGEMM_DEFAULT_P
+#define GEMM_DEFAULT_Q		BGEMM_DEFAULT_Q
+#define GEMM_DEFAULT_R		BGEMM_DEFAULT_R
+#define GEMM_DEFAULT_UNROLL_M	BGEMM_DEFAULT_UNROLL_M
+#define GEMM_DEFAULT_UNROLL_N	BGEMM_DEFAULT_UNROLL_N
 #elif defined(BFLOAT16)
 #define GEMM_P			SBGEMM_P
 #define GEMM_Q			SBGEMM_Q

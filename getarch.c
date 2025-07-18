@@ -1,5 +1,5 @@
 /*****************************************************************************
-Copyright (c) 2011-2014, The OpenBLAS Project
+Copyright (c) 2011-2014, 2025 The OpenBLAS Project
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -836,7 +836,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define CORENAME  "POWER9"
 #endif
 
-#if defined(FORCE_POWER10)
+#if defined(FORCE_POWER10) || (FORCE_POWER11)
 #define FORCE
 #define ARCHITECTURE    "POWER"
 #define SUBARCHITECTURE "POWER10"
@@ -1476,7 +1476,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
        "-DL2_SIZE=1048576 -DL2_LINESIZE=64 -DL2_ASSOCIATIVE=16 " \
        "-DDTB_DEFAULT_ENTRIES=64 -DDTB_SIZE=4096 " \
        "-DHAVE_VFPV4 -DHAVE_VFPV3 -DHAVE_VFP -DHAVE_NEON -DHAVE_SVE -DARMV8 " \
-       "-march=armv8.4-a+sve -mtune=neoverse-v1"
+       "-march=armv8.4-a+sve+bf16 -mtune=neoverse-v1"
 #define LIBNAME   "neoversev1"
 #define CORENAME  "NEOVERSEV1"
 #endif
