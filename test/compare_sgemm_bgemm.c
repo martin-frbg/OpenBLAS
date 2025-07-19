@@ -125,14 +125,18 @@ main (int argc, char *argv[])
                 float16to32 (AA[k * j + l]) * float16to32 (BB[i + l * n]);
             }
           if (!is_close(float16to32(CC[i * m + j]), truncate_float32_to_bfloat16(C[i * m + j]), 0.01, 0.001)) {
-            printf("Mismatch at i=%d, j=%d, k=%d: CC=%.6f, C=%.6f\n",
+#ifdef DEBUG
+            printf("Mismatch at i=%d, j=%d, k=%ld: CC=%.6f, C=%.6f\n",
                     i, j, k, float16to32(CC[i * m + j]), truncate_float32_to_bfloat16(C[i * m + j]));
+#endif
             ret++;
           }
 
           if (!is_close(float16to32(CC[i * m + j]), truncate_float32_to_bfloat16(DD[i * m + j]), 0.0001, 0.00001)) {
-            printf("Mismatch at i=%d, j=%d, k=%d: CC=%.6f, DD=%.6f\n",
+#ifdef DEBUG
+            printf("Mismatch at i=%d, j=%d, k=%ld: CC=%.6f, DD=%.6f\n",
                     i, j, k, float16to32(CC[i * m + j]), truncate_float32_to_bfloat16(DD[i * m + j]));
+#endif
             ret++;
           }
             

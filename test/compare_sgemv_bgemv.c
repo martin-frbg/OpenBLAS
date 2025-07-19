@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
             SGEMV(&transA, &x, &x, &alpha, A, &x, B, &k, &beta, C, &k);
             BGEMV(&transA, &x, &x, &alpha_bf16, AA, &x, BB, &k, &beta_bf16, CC, &k);
 
-            for (int i = 0; i < x; i++)
+            for (i = 0; i < x; i++)
               DD[i] *= beta;
 
             for (j = 0; j < x; j++)
@@ -118,14 +118,18 @@ int main(int argc, char *argv[])
             {
               if (!is_close(float16to32(CC[j << l]), truncate_float32_to_bfloat16(C[j << l]), 0.01, 0.001))
               {
-                printf("Mismatch at trans=%c, alpha=%.2f, beta=%.2f, i=%d, j=%d, k=%d: CC=%.6f, C=%.6f\n",
+#ifdef DEBUG
+                printf("Mismatch at trans=%c, alpha=%.2f, beta=%.2f, i=%d, j=%d, k=%ld: CC=%.6f, C=%.6f\n",
                        transA, alpha, beta, i, j, k, float16to32(CC[j << l]), truncate_float32_to_bfloat16(C[j << l]));
+#endif
                 ret++;
               }
               if (!is_close(float16to32(CC[j << l]), truncate_float32_to_bfloat16(DD[j]), 0.001, 0.0001))
               {
-                printf("Mismatch at trans=%c, alpha=%.2f, beta=%.2f, i=%d, j=%d, k=%d: CC=%.6f, C=%.6f\n",
+#ifdef DEBUG
+                printf("Mismatch at trans=%c, alpha=%.2f, beta=%.2f, i=%d, j=%d, k=%ld: CC=%.6f, C=%.6f\n",
                        transA, alpha, beta, i, j, k, float16to32(CC[j << l]), truncate_float32_to_bfloat16(DD[j]));
+#endif
                 ret++;
               }
             }
