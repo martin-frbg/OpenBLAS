@@ -243,16 +243,16 @@ void F77_d3chke(char *rout) {
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
 
-      cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_dgemmtr( CblasRowMajor,  CblasUpper, CblasNoTrans, CblasNoTrans, 0, 2,
+      cblas_info = 11; RowMajorStrg = FALSE;
+      cblas_dgemmtr( CblasColMajor,  CblasUpper, CblasNoTrans, CblasNoTrans, 0, 2,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
-      cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_dgemmtr( CblasRowMajor,  CblasUpper, CblasTrans, CblasNoTrans, 0, 2,
+      cblas_info = 11; RowMajorStrg = FALSE;
+      cblas_dgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasNoTrans, 0, 2,
                    ALPHA, A, 2, B, 1, BETA, C, 1 );
       chkxer();
-      cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_dgemmtr( CblasRowMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
+      cblas_info = 11; RowMajorStrg = FALSE;
+      cblas_dgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
 

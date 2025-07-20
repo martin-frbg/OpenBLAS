@@ -168,6 +168,7 @@ void F77_s3chke(char *rout) {
       cblas_sgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasNoTrans, 0, 2,
                    ALPHA, A, 2, B, 1, BETA, C, 1 );
       chkxer();
+
       cblas_info = 11; RowMajorStrg = FALSE;
       cblas_sgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
@@ -242,20 +243,18 @@ void F77_s3chke(char *rout) {
       cblas_sgemmtr( CblasRowMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
-
-      cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_sgemmtr( CblasRowMajor,  CblasUpper, CblasNoTrans, CblasNoTrans, 0, 2,
+      cblas_info = 11; RowMajorStrg = FALSE;
+      cblas_sgemmtr( CblasColMajor,  CblasUpper, CblasNoTrans, CblasNoTrans, 0, 2,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
-      cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_sgemmtr( CblasRowMajor,  CblasUpper, CblasTrans, CblasNoTrans, 0, 2,
+      cblas_info = 11; RowMajorStrg = FALSE;
+      cblas_sgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasNoTrans, 0, 2,
                    ALPHA, A, 2, B, 1, BETA, C, 1 );
       chkxer();
-      cblas_info = 11; RowMajorStrg = TRUE;
-      cblas_sgemmtr( CblasRowMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
+      cblas_info = 11; RowMajorStrg = FALSE;
+      cblas_sgemmtr( CblasColMajor,  CblasUpper, CblasTrans, CblasTrans, 2, 0,
                    ALPHA, A, 1, B, 1, BETA, C, 1 );
       chkxer();
-
       cblas_info = 14; RowMajorStrg = TRUE;
       cblas_sgemmtr( CblasRowMajor,  CblasUpper, CblasNoTrans, CblasNoTrans, 2, 0,
                    ALPHA, A, 2, B, 2, BETA, C, 1 );
