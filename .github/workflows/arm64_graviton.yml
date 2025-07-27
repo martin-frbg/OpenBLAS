@@ -88,12 +88,11 @@ jobs:
         run: |
           case "${{ matrix.build }}" in
             "make")
-              make -j$(nproc) DYNAMIC_ARCH=1 BUILD_BFLOAT16=1 USE_OPENMP=0 FC="ccache ${{ matrix.fortran }}"
+              make -j$(nproc) BUILD_BFLOAT16=1 USE_OPENMP=0 FC="ccache ${{ matrix.fortran }}"
               ;;
             "cmake")
               mkdir build && cd build
-              cmake -DDYNAMIC_ARCH=1 \
-                    -DNOFORTRAN=0 \
+              cmake -DNOFORTRAN=0 \
                     -DBUILD_WITHOUT_LAPACK=0 \
                     -DBUILD_BFLOAT16=1 \
                     -DCMAKE_VERBOSE_MAKEFILE=ON \
@@ -119,7 +118,7 @@ jobs:
         run: |
           case "${{ matrix.build }}" in
             "make")
-              MAKE_FLAGS='DYNAMIC_ARCH=1 USE_OPENMP=0'
+              MAKE_FLAGS='BUILD_BFLOAT16=1 USE_OPENMP=0'
               echo "::group::Tests in 'test' directory"
               make -C test $MAKE_FLAGS FC="ccache ${{ matrix.fortran }}"
               echo "::endgroup::"
