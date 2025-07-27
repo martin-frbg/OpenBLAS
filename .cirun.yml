@@ -6,7 +6,7 @@ runners:
     cloud: "aws"
     region: "us-east-1"
     # Cheapest VM on AWS
-    instance_type: "c7g.large"
+    instance_type: "c8g.large"
     # Ubuntu-22.04, ami image
     machine_image: "ami-0a0c8eebcdd6dcbd0"
     preemptible: false
