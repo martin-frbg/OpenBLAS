@@ -57,7 +57,6 @@ jobs:
             -DBINARY=64 ^
             -DCMAKE_C_COMPILER=clang-cl ^
             -DCMAKE_Fortran_COMPILER=flang-new ^
-            -DCMAKE_Fortran_FLAGS=-fintrinsic-modules-path C:/Program\ Files/LLVM/include/flang ^
             -DBUILD_SHARED_LIBS=ON ^
             -DCMAKE_SYSTEM_PROCESSOR=arm64 ^
             -DCMAKE_SYSTEM_NAME=Windows ^
