@@ -10,5 +10,10 @@ pipeline {
                 sh 'make clean && make'
             }
         }
+        stage('CMakeBuild') {
+            steps {
+                sh 'make clean && mkdir build && cd build && cmake -DDYNAMIC_ARCH=1 .. && make'
+            }
+        }
     }
 }
