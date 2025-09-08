@@ -12,7 +12,7 @@ pipeline {
         }
         stage('CMakeBuild') {
             steps {
-                sh 'sudo apt update && sudo apt install cmake && make clean && mkdir build && cd build && cmake -DDYNAMIC_ARCH=1 .. && make'
+                sh 'sudo apt update && sudo apt install cmake -y && make clean && mkdir build && cd build && cmake -DDYNAMIC_ARCH=1 .. && make'
             }
         }
     }
