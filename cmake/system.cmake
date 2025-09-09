@@ -317,10 +317,10 @@ if (DEFINED TARGET)
   endif()
 
 if (${TARGET} STREQUAL Z13)
-    set (KERNEL_DEFINITIONS "${KERNEL_DEFINITIONS} -march=z13 -mzvector"
+    set (KERNEL_DEFINITIONS "${KERNEL_DEFINITIONS} -march=z13 -mzvector")
 endif()
 if (${TARGET} STREQUAL Z14)
-    set (KERNEL_DEFINITIONS "${KERNEL_DEFINITIONS} -march=z14 -mzvector"
+    set (KERNEL_DEFINITIONS "${KERNEL_DEFINITIONS} -march=z14 -mzvector")
 endif()
 
 if (${TARGET} STREQUAL NEOVERSEV1)
