@@ -86,6 +86,11 @@ if (${CMAKE_C_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_C_COMPILER_ID} STREQUAL "LS
       set(BINARY_DEFINED 1)
     endif ()
 
+    if (ZARCH)
+	  set (BINARY64 1)
+      set (BINARY_DEFINED 1)
+	endif ()
+ 
     if (CMAKE_SYSTEM_NAME STREQUAL "AIX")
       set(BINARY_DEFINED 1)
     endif ()
