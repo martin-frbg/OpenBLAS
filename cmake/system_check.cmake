@@ -34,6 +34,7 @@ if(MINGW)
 endif()
 
 # Pretty thorough determination of arch. Add more if needed
+message (STATUS "CMake system processor variable is ${CMAKE_SYSTEM_PROCESSOR}")
 if(CMAKE_CL_64 OR MINGW64)
   if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*|arm64.*|ARM64.*)")
     set(ARM64 1)
