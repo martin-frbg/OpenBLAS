@@ -73,7 +73,7 @@ SBLAS3OBJS    = \
 		strsm.$(SUFFIX) ssyrk.$(SUFFIX) ssyr2k.$(SUFFIX) \
 		somatcopy.$(SUFFIX) simatcopy.$(SUFFIX)\
 		sgeadd.$(SUFFIX) sgemmt.$(SUFFIX) sgemmtr.$(SUFFIX) \
-		sgemm_batch.$(SUFFIX)
+		sgemm_batch.$(SUFFIX) sgemm_batch_strided.$(SUFFIX)
 
 ifeq ($(BUILD_BFLOAT16),1)
 BBLAS3OBJS     = bgemm.$(SUFFIX)
@@ -81,7 +81,7 @@ BBLAS2OBJS     = bgemv.$(SUFFIX)
 BBLAS1OBJS     = bscal.$(SUFFIX)
 SBBLAS1OBJS    = sbdot.$(SUFFIX)
 SBBLAS2OBJS    = sbgemv.$(SUFFIX)
-SBBLAS3OBJS    = sbgemm.$(SUFFIX) sbgemmt.$(SUFFIX) sbgemmtr.$(SUFFIX) sbgemm_batch.$(SUFFIX)
+SBBLAS3OBJS    = sbgemm.$(SUFFIX) sbgemmt.$(SUFFIX) sbgemmtr.$(SUFFIX) sbgemm_batch.$(SUFFIX) sbgemm_batch_strided.$(SUFFIX)
 SBEXTOBJS      = sbstobf16.$(SUFFIX) sbdtobf16.$(SUFFIX) sbf16tos.$(SUFFIX) dbf16tod.$(SUFFIX)
 endif
 
@@ -113,7 +113,7 @@ DBLAS3OBJS    = \
 		dtrsm.$(SUFFIX) dsyrk.$(SUFFIX) dsyr2k.$(SUFFIX) \
 		domatcopy.$(SUFFIX) dimatcopy.$(SUFFIX)\
 		dgeadd.$(SUFFIX) dgemmt.$(SUFFIX) dgemmtr.$(SUFFIX) \
-		dgemm_batch.$(SUFFIX)
+		dgemm_batch.$(SUFFIX) dgemm_batch_strided.$(SUFFIX)
 
 CBLAS1OBJS    = \
 		caxpy.$(SUFFIX) caxpyc.$(SUFFIX) cswap.$(SUFFIX) \
@@ -143,7 +143,7 @@ CBLAS3OBJS    = \
 	       	chemm.$(SUFFIX) cherk.$(SUFFIX) cher2k.$(SUFFIX) \
 		comatcopy.$(SUFFIX) cimatcopy.$(SUFFIX)\
 		cgeadd.$(SUFFIX) cgemmt.$(SUFFIX) cgemmtr.$(SUFFIX) \
-		cgemm_batch.$(SUFFIX)
+		cgemm_batch.$(SUFFIX) cgemm_batch_strided.$(SUFFIX)
 
 ZBLAS1OBJS    = \
 		zaxpy.$(SUFFIX) zaxpyc.$(SUFFIX) zswap.$(SUFFIX) \
@@ -173,7 +173,7 @@ ZBLAS3OBJS    = \
 	       	zhemm.$(SUFFIX) zherk.$(SUFFIX) zher2k.$(SUFFIX) \
 		zomatcopy.$(SUFFIX) zimatcopy.$(SUFFIX)\
 		zgeadd.$(SUFFIX) zgemmt.$(SUFFIX) zgemmtr.$(SUFFIX) \
-		zgemm_batch.$(SUFFIX)
+		zgemm_batch.$(SUFFIX) zgemm_batch_strided.$(SUFFIX)
 
 ifeq ($(SUPPORT_GEMM3M), 1)
 
@@ -321,7 +321,7 @@ CSBLAS2OBJS   = \
 CSBLAS3OBJS   = \
 	cblas_sgemm.$(SUFFIX) cblas_ssymm.$(SUFFIX) cblas_strmm.$(SUFFIX) cblas_strsm.$(SUFFIX) \
 	cblas_ssyrk.$(SUFFIX) cblas_ssyr2k.$(SUFFIX) cblas_somatcopy.$(SUFFIX)  cblas_simatcopy.$(SUFFIX)\
-	cblas_sgeadd.$(SUFFIX) cblas_sgemmt.$(SUFFIX) cblas_sgemmtr.$(SUFFIX) cblas_sgemm_batch.$(SUFFIX)
+	cblas_sgeadd.$(SUFFIX) cblas_sgemmt.$(SUFFIX) cblas_sgemmtr.$(SUFFIX) cblas_sgemm_batch.$(SUFFIX) cblas_sgemm_batch_strided.$(SUFFIX)
 
 ifeq ($(BUILD_BFLOAT16),1)
 CBBLAS3OBJS = cblas_bgemm.$(SUFFIX)
@@ -329,7 +329,7 @@ CBBLAS2OBJS = cblas_bgemv.$(SUFFIX)
 CBBLAS1OBJS = cblas_bscal.$(SUFFIX)
 CSBBLAS1OBJS = cblas_sbdot.$(SUFFIX)
 CSBBLAS2OBJS = cblas_sbgemv.$(SUFFIX)
-CSBBLAS3OBJS = cblas_sbgemm.$(SUFFIX) cblas_sbgemmt.$(SUFFIX) cblas_sbgemmtr.$(SUFFIX) cblas_sbgemm_batch.$(SUFFIX)
+CSBBLAS3OBJS = cblas_sbgemm.$(SUFFIX) cblas_sbgemmt.$(SUFFIX) cblas_sbgemmtr.$(SUFFIX) cblas_sbgemm_batch.$(SUFFIX) cblas_sbgemm_batch_strided.$(SUFFIX)
 CSBEXTOBJS   = cblas_sbstobf16.$(SUFFIX) cblas_sbdtobf16.$(SUFFIX) cblas_sbf16tos.$(SUFFIX) cblas_dbf16tod.$(SUFFIX)
 ifeq ($(ONLY_CBLAS),1)
 CSBEXTOBJS    += sbstobf16.$(SUFFIX) sbdtobf16.$(SUFFIX) sbf16tos.$(SUFFIX) dbf16tod.$(SUFFIX)
@@ -357,7 +357,7 @@ CDBLAS2OBJS   = \
 CDBLAS3OBJS   += \
 	cblas_dgemm.$(SUFFIX) cblas_dsymm.$(SUFFIX) cblas_dtrmm.$(SUFFIX) cblas_dtrsm.$(SUFFIX) \
 	cblas_dsyrk.$(SUFFIX) cblas_dsyr2k.$(SUFFIX) cblas_domatcopy.$(SUFFIX)  cblas_dimatcopy.$(SUFFIX) \
-        cblas_dgeadd.$(SUFFIX) cblas_dgemmt.$(SUFFIX) cblas_dgemmtr.$(SUFFIX) cblas_dgemm_batch.$(SUFFIX)
+        cblas_dgeadd.$(SUFFIX) cblas_dgemmt.$(SUFFIX) cblas_dgemmtr.$(SUFFIX) cblas_dgemm_batch.$(SUFFIX) cblas_dgemm_batch_strided.$(SUFFIX)
 
 CCBLAS1OBJS   = \
 	cblas_icamax.$(SUFFIX) cblas_icamin.$(SUFFIX) cblas_scasum.$(SUFFIX)  cblas_caxpy.$(SUFFIX) \
@@ -382,7 +382,7 @@ CCBLAS3OBJS   = \
 	cblas_csyrk.$(SUFFIX) cblas_csyr2k.$(SUFFIX) \
 	cblas_chemm.$(SUFFIX) cblas_cherk.$(SUFFIX) cblas_cher2k.$(SUFFIX) \
 	cblas_comatcopy.$(SUFFIX) cblas_cimatcopy.$(SUFFIX)\
-	cblas_cgeadd.$(SUFFIX) cblas_cgemmt.$(SUFFIX) cblas_cgemmtr.$(SUFFIX) cblas_cgemm_batch.$(SUFFIX)
+	cblas_cgeadd.$(SUFFIX) cblas_cgemmt.$(SUFFIX) cblas_cgemmtr.$(SUFFIX) cblas_cgemm_batch.$(SUFFIX) cblas_cgemm_batch_strided.$(SUFFIX)
 	
 CXERBLAOBJ = \
 	cblas_xerbla.$(SUFFIX)
@@ -413,7 +413,7 @@ CZBLAS3OBJS   = \
 	cblas_zsyrk.$(SUFFIX) cblas_zsyr2k.$(SUFFIX) \
 	cblas_zhemm.$(SUFFIX) cblas_zherk.$(SUFFIX) cblas_zher2k.$(SUFFIX)\
 	cblas_zomatcopy.$(SUFFIX) cblas_zimatcopy.$(SUFFIX) \
-	cblas_zgeadd.$(SUFFIX) cblas_zgemmt.$(SUFFIX) cblas_zgemmtr.$(SUFFIX) cblas_zgemm_batch.$(SUFFIX)
+	cblas_zgeadd.$(SUFFIX) cblas_zgemmt.$(SUFFIX) cblas_zgemmtr.$(SUFFIX) cblas_zgemm_batch.$(SUFFIX) cblas_zgemm_batch_strided.$(SUFFIX)
 
 
 ifeq ($(SUPPORT_GEMM3M), 1)
@@ -2544,6 +2544,21 @@ cblas_cgemm_batch.$(SUFFIX) cblas_cgemm_batch.$(PSUFFIX) : gemm_batch.c ../param
 cblas_zgemm_batch.$(SUFFIX) cblas_zgemm_batch.$(PSUFFIX) : gemm_batch.c ../param.h
 	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
 
+cblas_sbgemm_batch_strided.$(SUFFIX) cblas_sbgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
+
+cblas_sgemm_batch_strided.$(SUFFIX) cblas_sgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
+
+cblas_dgemm_batch_strided.$(SUFFIX) cblas_dgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
+
+cblas_cgemm_batch_strided.$(SUFFIX) cblas_cgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
+
+cblas_zgemm_batch_strided.$(SUFFIX) cblas_zgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
+
 sbgemm_batch.$(SUFFIX) sbgemm_batch.$(PSUFFIX) : gemm_batch.c ../param.h
 	$(CC) -c $(CFLAGS) -UCBLAS $< -o $(@F)
 
@@ -2559,3 +2574,17 @@ cgemm_batch.$(SUFFIX) cgemm_batch.$(PSUFFIX) : gemm_batch.c ../param.h
 zgemm_batch.$(SUFFIX) zgemm_batch.$(PSUFFIX) : gemm_batch.c ../param.h
 	$(CC) -c $(CFLAGS) -UCBLAS $< -o $(@F)
 
+sbgemm_batch_strided.$(SUFFIX) sbgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -UCBLAS $< -o $(@F)
+
+sgemm_batch_strided.$(SUFFIX) sgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -UCBLAS $< -o $(@F)
+
+dgemm_batch_strided.$(SUFFIX) dgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -UCBLAS $< -o $(@F)
+
+cgemm_batch_strided.$(SUFFIX) cgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -UCBLAS $< -o $(@F)
+
+zgemm_batch_strided.$(SUFFIX) zgemm_batch_strided.$(PSUFFIX) : gemm_batch_strided.c ../param.h
+	$(CC) -c $(CFLAGS) -UCBLAS $< -o $(@F)
