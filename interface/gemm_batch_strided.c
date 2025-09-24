@@ -139,7 +139,7 @@ void NAME(char *transa, char *transb,
 	   blasint ldc=*Ldc;
 #else
 
-void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE *  transa, enum CBLAS_TRANSPOSE * transb,
+void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE transa, enum CBLAS_TRANSPOSE transb,
 	   blasint m, blasint n, blasint k,
 #ifndef COMPLEX
 	   FLOAT * alpha,
