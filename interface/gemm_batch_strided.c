@@ -117,12 +117,12 @@ static size_t zgemm_small_kernel_b0[] = {
 #ifndef CBLAS
 void NAME(char *transa, char *transb,
 	   blasint * M, blasint * N, blasint * K,
-	   FLOAT * alpha,
+	   FLOAT * Alpha,
 	   IFLOAT * a, blasint * Lda,
 	   blasint * stride_a,
 	   IFLOAT *b, blasint * Ldb,
 	   blasint * stride_b,
-	   FLOAT * beta,
+	   FLOAT * Beta,
 	   FLOAT * c, blasint * Ldc, blasint * stride_c, blasint * matcount) {
  	  
            char ta = *transa;
@@ -137,15 +137,22 @@ void NAME(char *transa, char *transb,
 	   blasint lda=*Lda;
 	   blasint ldb=*Ldb;
 	   blasint ldc=*Ldc;
+#if !defined(COMPLEX)	   
+	   FLOAT alpha=*Alpha;
+	   FLOAT beta=*Beta;
+#else
+	   FLOAT *alpha=Alpha;
+	   FLOAT *beta=Beta;
+#endif
 #else
 
 void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE transa, enum CBLAS_TRANSPOSE transb,
 	   blasint m, blasint n, blasint k,
 #ifndef COMPLEX
-	   FLOAT * alpha,
+	   FLOAT alpha,
 	   IFLOAT * a, blasint lda, blasint stridea,
 	   IFLOAT * b, blasint ldb, blasint strideb,
-	   FLOAT * beta,
+	   FLOAT beta,
 	   FLOAT * c, blasint ldc, blasint stridec, blasint count) {
 #else
 	   void * valpha,
@@ -352,7 +359,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE transa, enum CBLAS_TRANS
     if (MNK <= 100.0*100.0*100.0){
       group_routine=NULL;
 #if !defined(COMPLEX)
-      if(*(FLOAT *)(beta) == 0.0){
+      if(beta == 0.0){
 	group_mode=mode | BLAS_SMALL_B0_OPT;
 	group_small_matrix_opt_routine=(void *)(gemm_small_kernel_b0[(group_transb<<2)|group_transa]);
       }else{
@@ -360,7 +367,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE transa, enum CBLAS_TRANS
 	group_small_matrix_opt_routine=(void *)(gemm_small_kernel[(group_transb<<2)|group_transa]);
       }
 #else
-      if(((FLOAT *)(beta))[0] == 0.0 && ((FLOAT *)(beta))[1] == 0.0){
+      if(beta[0] == 0.0 && beta[1] == 0.0){
 	group_mode=mode | BLAS_SMALL_B0_OPT;
 	group_small_matrix_opt_routine=(void *)(zgemm_small_kernel_b0[(group_transb<<2)|group_transa]);
       }else{
@@ -384,8 +391,8 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE transa, enum CBLAS_TRANS
       args_array[i].lda=group_lda;
       args_array[i].ldb=group_ldb;
       args_array[i].ldc=group_ldc;
-      args_array[i].alpha=alpha;
-      args_array[i].beta=beta;
+      args_array[i].alpha=&alpha;
+      args_array[i].beta=&beta;
 
 #if defined(CBLAS)
       if (order == CblasColMajor) {      
