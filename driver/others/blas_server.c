@@ -146,8 +146,8 @@ typedef struct {
 } thread_status_t;
 
 #ifdef HAVE_C11
-#define	atomic_load_queue(p)		__atomic_load_n(p, __ATOMIC_ACQUIRE)
-#define	atomic_store_queue(p, v)	__atomic_store_n(p, v, __ATOMIC_RELEASE)
+#define	atomic_load_queue(p)		__atomic_load_n(p, __ATOMIC_ACQ_REL)
+#define	atomic_store_queue(p, v)	__atomic_store_n(p, v, __ATOMIC_ACQ_REL)
 #else
 #define	atomic_load_queue(p)		(blas_queue_t*)(*(volatile blas_queue_t**)(p))
 #define	atomic_store_queue(p, v)	(*(volatile blas_queue_t* volatile*)(p) = (v))
