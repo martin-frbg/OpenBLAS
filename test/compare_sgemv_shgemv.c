@@ -26,6 +26,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 #include <stdio.h>
 #include <stdint.h>
+#include <time.h>
 #include "../common.h"
 
 #include "test_helpers.h"
