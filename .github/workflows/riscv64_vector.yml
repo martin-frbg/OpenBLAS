@@ -17,7 +17,7 @@ jobs:
       triple: riscv64-unknown-linux-gnu
       riscv_gnu_toolchain: https://github.com/riscv-collab/riscv-gnu-toolchain
       riscv_gnu_toolchain_version: 13.2.0
-      riscv_gnu_toolchain_nightly_download_path: /releases/download/2025.08.29/riscv64-glibc-ubuntu-22.04-llvm-nightly-2025.08.29-nightly.tar.xz
+      riscv_gnu_toolchain_nightly_download_path: /releases/download/2025.09.28/riscv64-glibc-ubuntu-22.04-llvm-nightly-2025.08.29-nightly.tar.xz
     strategy:
       fail-fast: false
       matrix:
@@ -26,7 +26,7 @@ jobs:
             opts: TARGET=RISCV64_ZVL128B BINARY=64 ARCH=riscv64
             qemu_cpu: rv64,g=true,c=true,v=true,vext_spec=v1.0,vlen=128,elen=64
           - target: RISCV64_ZVL256B
-            opts: TARGET=RISCV64_ZVL256B BINARY=64 ARCH=riscv64
+            opts: TARGET=RISCV64_ZVL256B BINARY=64 ARCH=riscv64 BUILD_BFLOAT16=1 BUILD_HFLOAT16=1
             qemu_cpu: rv64,g=true,c=true,v=true,vext_spec=v1.0,vlen=256,elen=64
           - target: DYNAMIC_ARCH=1
             opts: TARGET=RISCV64_GENERIC BINARY=64 ARCH=riscv64 DYNAMIC_ARCH=1
