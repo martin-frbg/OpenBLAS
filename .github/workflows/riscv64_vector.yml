@@ -40,7 +40,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install autoconf automake autotools-dev ninja-build make \
-          libgomp1-riscv64-cross ccache qemu-kvm qemu-user
+          libgomp1-riscv64-cross ccache qemu-kvm qemu-user libc6-riscv64-cross
           wget ${riscv_gnu_toolchain}/${riscv_gnu_toolchain_nightly_download_path}
           tar -xvf $(basename ${riscv_gnu_toolchain_nightly_download_path}) -C /opt
 
