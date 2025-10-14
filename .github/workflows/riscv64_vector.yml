@@ -99,7 +99,7 @@ jobs:
         run: |
           export PATH="/opt/riscv/bin:$PATH"
           export LD_LIBRARY_PATH=/opt/riscv/sysroot/lib
-          ln -s /opt/riscv/sysroot/lib/ld-linux-riscv64-lp64d.so.1 /lib
+          sudo ln -s /opt/riscv/sysroot/lib/ld-linux-riscv64-lp64d.so.1 /lib
           export QEMU_CPU=${{ matrix.qemu_cpu }}
           rm -rf ./test_out
           mkdir -p ./test_out
