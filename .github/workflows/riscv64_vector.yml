@@ -136,6 +136,11 @@ jobs:
           wait
           while IFS= read -r -d $'\0' LOG; do cat $LOG ; FAILURES=1 ; done < <(grep -lZ FAIL ./test_out/*)
           if [[ ! -z $FAILURES ]]; then echo "==========" ; echo "== FAIL ==" ; echo "==========" ; echo ; exit 1 ; fi
+          if [ "${{matrix.target}}" == "RISCV64_ZVL256B" ]; then
+          run_test test test_sbgemm &
+          run_test test test_shgemm 
+          fi
+
 
       - name: netlib tests
         shell: bash
