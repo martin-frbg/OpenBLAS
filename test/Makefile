@@ -234,6 +234,9 @@ ifeq ($(BUILD_BFLOAT16),1)
 BF3= test_bgemm
 B3 = test_sbgemm
 endif
+ifeq ($(BUILD_HFLOAT16),1)
+H3 = test_shgemm
+endif
 ifeq ($(BUILD_SINGLE),1)
 S3=sblat3
 endif
@@ -257,9 +260,9 @@ endif
 
 
 ifeq ($(SUPPORT_GEMM3M),1)
-level3: $(BF3) $(B3) $(S3) $(D3) $(C3) $(Z3) level3_3m
+level3: $(BF3) $(B3) $(H3) $(S3) $(D3) $(C3) $(Z3) level3_3m
 else
-level3: $(BF3) $(B3) $(S3) $(D3) $(C3) $(Z3)
+level3: $(BF3) $(B3) $(H3) $(S3) $(D3) $(C3) $(Z3)
 endif
 
 ifneq ($(CROSS), 1)
@@ -454,6 +457,9 @@ test_sbgemv : compare_sgemv_sbgemv.c ../$(LIBNAME)
 endif
 
 ifeq ($(BUILD_HFLOAT16),1)
+test_shgemm : compare_sgemm_shgemm.c test_helpers.h ../$(LIBNAME)
+	$(CC) $(CLDFLAGS) -DIHFLOAT16 -o test_shgemm compare_sgemm_shgemm.c ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+
 test_shgemv : compare_sgemv_shgemv.c ../$(LIBNAME)
 	$(CC) $(CLDFLAGS) -o test_shgemv compare_sgemv_shgemv.c ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 endif
@@ -475,7 +481,7 @@ clean:
 	@rm -f *.$(SUFFIX) *.$(PSUFFIX) gmon.$(SUFFIX)ut *.SUMM *.cxml *.exe *.pdb *.dwf \
 	sblat1 dblat1 cblat1 zblat1 \
 	sblat2 dblat2 cblat2 zblat2 \
-	test_bgemm test_bgemv test_sbgemm test_sbgemv test_shgemv sblat3 dblat3 cblat3 zblat3 \
+	test_bgemm test_bgemv test_sbgemm test_sbgemv test_shgemm test_shgemv sblat3 dblat3 cblat3 zblat3 \
 	sblat1p dblat1p cblat1p zblat1p \
 	sblat2p dblat2p cblat2p zblat2p \
 	sblat3p dblat3p cblat3p zblat3p \
