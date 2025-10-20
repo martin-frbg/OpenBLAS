@@ -44,6 +44,7 @@ jobs:
           wget ${riscv_gnu_toolchain}/${riscv_gnu_toolchain_nightly_download_path}
           tar -xvf $(basename ${riscv_gnu_toolchain_nightly_download_path}) -C /opt
           wget https://gist.github.com/martin-frbg/bb630e0de34978e578eeb496b1538d4e/raw/7fd8d971f327f7a517b8f5f7989479ff2b36f71f/qemu-riscv64-10.1-ubuntu24 -P /opt/riscv/bin -o riscv64-qemu
+          ls -latr /opt/riscv/bin
           mv /opt/riscv/bin/bb630e0de34978e578eeb496b1538d4e /opt/riscv/bin/qemu-riscv64
           chmod +x /opt/riscv/bin/qemu-riscv64
           
