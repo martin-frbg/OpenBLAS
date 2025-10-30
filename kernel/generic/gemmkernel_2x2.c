@@ -27,7 +27,8 @@
  * *****************************************************************************/
 
 #include "common.h"
-#include "bf16_macros.h"
+
+#include "conversion_macros.h"
 
 int CNAME(BLASLONG bm,BLASLONG bn,BLASLONG bk,FLOAT alpha,IFLOAT* ba,IFLOAT* bb,FLOAT* C,BLASLONG ldc
 #ifdef TRMMKERNEL
@@ -60,36 +61,36 @@ int CNAME(BLASLONG bm,BLASLONG bn,BLASLONG bk,FLOAT alpha,IFLOAT* ba,IFLOAT* bb,
                {
                   load0 = ptrba[2*0+0];
                   load1 = ptrbb[2*0+0];
-                  res0 = res0+BF16TOF32(load0)*BF16TOF32(load1);
+                  res0 = res0+TO_F32(load0)*TO_F32(load1);
                   load2 = ptrba[2*0+1];
-                  res1 = res1+BF16TOF32(load2)*BF16TOF32(load1);
+                  res1 = res1+TO_F32(load2)*TO_F32(load1);
                   load3 = ptrbb[2*0+1];
-                  res2 = res2+BF16TOF32(load0)*BF16TOF32(load3);
-                  res3 = res3+BF16TOF32(load2)*BF16TOF32(load3);
+                  res2 = res2+TO_F32(load0)*TO_F32(load3);
+                  res3 = res3+TO_F32(load2)*TO_F32(load3);
                   load4 = ptrba[2*1+0];
                   load5 = ptrbb[2*1+0];
-                  res0 = res0+BF16TOF32(load4)*BF16TOF32(load5);
+                  res0 = res0+TO_F32(load4)*TO_F32(load5);
                   load6 = ptrba[2*1+1];
-                  res1 = res1+BF16TOF32(load6)*BF16TOF32(load5);
+                  res1 = res1+TO_F32(load6)*TO_F32(load5);
                   load7 = ptrbb[2*1+1];
-                  res2 = res2+BF16TOF32(load4)*BF16TOF32(load7);
-                  res3 = res3+BF16TOF32(load6)*BF16TOF32(load7);
+                  res2 = res2+TO_F32(load4)*TO_F32(load7);
+                  res3 = res3+TO_F32(load6)*TO_F32(load7);
                   load0 = ptrba[2*2+0];
                   load1 = ptrbb[2*2+0];
-                  res0 = res0+BF16TOF32(load0)*BF16TOF32(load1);
+                  res0 = res0+TO_F32(load0)*TO_F32(load1);
                   load2 = ptrba[2*2+1];
-                  res1 = res1+BF16TOF32(load2)*BF16TOF32(load1);
+                  res1 = res1+TO_F32(load2)*TO_F32(load1);
                   load3 = ptrbb[2*2+1];
-                  res2 = res2+BF16TOF32(load0)*BF16TOF32(load3);
-                  res3 = res3+BF16TOF32(load2)*BF16TOF32(load3);
+                  res2 = res2+TO_F32(load0)*TO_F32(load3);
+                  res3 = res3+TO_F32(load2)*TO_F32(load3);
                   load4 = ptrba[2*3+0];
                   load5 = ptrbb[2*3+0];
-                  res0 = res0+BF16TOF32(load4)*BF16TOF32(load5);
+                  res0 = res0+TO_F32(load4)*TO_F32(load5);
                   load6 = ptrba[2*3+1];
-                  res1 = res1+BF16TOF32(load6)*BF16TOF32(load5);
+                  res1 = res1+TO_F32(load6)*TO_F32(load5);
                   load7 = ptrbb[2*3+1];
-                  res2 = res2+BF16TOF32(load4)*BF16TOF32(load7);
-                  res3 = res3+BF16TOF32(load6)*BF16TOF32(load7);
+                  res2 = res2+TO_F32(load4)*TO_F32(load7);
+                  res3 = res3+TO_F32(load6)*TO_F32(load7);
                   ptrba = ptrba+8;
                   ptrbb = ptrbb+8;
                }
@@ -97,23 +98,23 @@ int CNAME(BLASLONG bm,BLASLONG bn,BLASLONG bk,FLOAT alpha,IFLOAT* ba,IFLOAT* bb,
                {
                   load0 = ptrba[2*0+0];
                   load1 = ptrbb[2*0+0];
-                  res0 = res0+BF16TOF32(load0)*BF16TOF32(load1);
+                  res0 = res0+TO_F32(load0)*TO_F32(load1);
                   load2 = ptrba[2*0+1];
-                  res1 = res1+BF16TOF32(load2)*BF16TOF32(load1);
+                  res1 = res1+TO_F32(load2)*TO_F32(load1);
                   load3 = ptrbb[2*0+1];
-                  res2 = res2+BF16TOF32(load0)*BF16TOF32(load3);
-                  res3 = res3+BF16TOF32(load2)*BF16TOF32(load3);
+                  res2 = res2+TO_F32(load0)*TO_F32(load3);
+                  res3 = res3+TO_F32(load2)*TO_F32(load3);
                   ptrba = ptrba+2;
                   ptrbb = ptrbb+2;
                }
              res0 = res0*ALPHA;
-             C0[0] = F32TOBF16(BF16TOF32(C0[0])+res0);
+             C0[0] = TO_OUTPUT(TO_F32(C0[0])+res0);
              res1 = res1*ALPHA;
-             C0[1] = F32TOBF16(BF16TOF32(C0[1])+res1);
+             C0[1] = TO_OUTPUT(TO_F32(C0[1])+res1);
              res2 = res2*ALPHA;
-             C1[0] = F32TOBF16(BF16TOF32(C1[0])+res2);
+             C1[0] = TO_OUTPUT(TO_F32(C1[0])+res2);
              res3 = res3*ALPHA;
-             C1[1] = F32TOBF16(BF16TOF32(C1[1])+res3);
+             C1[1] = TO_OUTPUT(TO_F32(C1[1])+res3);
              C0 = C0+2;
              C1 = C1+2;
           }
@@ -126,16 +127,16 @@ int CNAME(BLASLONG bm,BLASLONG bn,BLASLONG bk,FLOAT alpha,IFLOAT* ba,IFLOAT* bb,
                {
                   load0 = ptrba[0+0];
                   load1 = ptrbb[2*0+0];
-                  res0 = res0+BF16TOF32(load0)*BF16TOF32(load1);
+                  res0 = res0+TO_F32(load0)*TO_F32(load1);
                   load2 = ptrbb[2*0+1];
-                  res1 = res1+BF16TOF32(load0)*BF16TOF32(load2);
+                  res1 = res1+TO_F32(load0)*TO_F32(load2);
                   ptrba = ptrba+1;
                   ptrbb = ptrbb+2;
                }
              res0 = res0*ALPHA;
-             C0[0] = F32TOBF16(BF16TOF32(C0[0])+res0);
+             C0[0] = TO_OUTPUT(TO_F32(C0[0])+res0);
              res1 = res1*ALPHA;
-             C1[0] = F32TOBF16(BF16TOF32(C1[0])+res1);
+             C1[0] = TO_OUTPUT(TO_F32(C1[0])+res1);
              C0 = C0+1;
              C1 = C1+1;
           }
@@ -157,16 +158,16 @@ int CNAME(BLASLONG bm,BLASLONG bn,BLASLONG bk,FLOAT alpha,IFLOAT* ba,IFLOAT* bb,
                {
                   load0 = ptrba[2*0+0];
                   load1 = ptrbb[0+0];
-                  res0 = res0+BF16TOF32(load0)*BF16TOF32(load1);
+                  res0 = res0+TO_F32(load0)*TO_F32(load1);
                   load2 = ptrba[2*0+1];
-                  res1 = res1+BF16TOF32(load2)*BF16TOF32(load1);
+                  res1 = res1+TO_F32(load2)*TO_F32(load1);
                   ptrba = ptrba+2;
                   ptrbb = ptrbb+1;
                }
              res0 = res0*ALPHA;
-             C0[0] = F32TOBF16(BF16TOF32(C0[0])+res0);
+             C0[0] = TO_OUTPUT(TO_F32(C0[0])+res0);
              res1 = res1*ALPHA;
-             C0[1] = F32TOBF16(BF16TOF32(C0[1])+res1);
+             C0[1] = TO_OUTPUT(TO_F32(C0[1])+res1);
              C0 = C0+2;
           }
         for (i=0; i<(bm&1); i+=1)
@@ -177,12 +178,12 @@ int CNAME(BLASLONG bm,BLASLONG bn,BLASLONG bk,FLOAT alpha,IFLOAT* ba,IFLOAT* bb,
                {
                   load0 = ptrba[0+0];
                   load1 = ptrbb[0+0];
-                  res0 = res0+BF16TOF32(load0)*BF16TOF32(load1);
+                  res0 = res0+TO_F32(load0)*TO_F32(load1);
                   ptrba = ptrba+1;
                   ptrbb = ptrbb+1;
                }
              res0 = res0*ALPHA;
-             C0[0] = F32TOBF16(BF16TOF32(C0[0])+res0);
+             C0[0] = TO_OUTPUT(TO_F32(C0[0])+res0);
              C0 = C0+1;
           }
         k = (bk<<0);

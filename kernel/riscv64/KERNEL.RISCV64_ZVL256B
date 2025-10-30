@@ -256,6 +256,8 @@ SHGEMMOTCOPYOBJ =  shgemm_otcopy$(TSUFFIX).$(SUFFIX)
 ifndef SHGEMM_BETA
 SHGEMM_BETA =  gemm_beta_rvv.c
 endif
+SHGEMVNKERNEL = sbgemv_n_vector.c
+SHGEMVTKERNEL = sbgemv_t_vector.c
 endif
 
 ifeq ($(BUILD_BFLOAT16), 1)
@@ -283,6 +285,8 @@ SBGEMMOTCOPYOBJ =  sbgemm_otcopy$(TSUFFIX).$(SUFFIX)
 ifndef SBGEMM_BETA
 SBGEMM_BETA =  gemm_beta_rvv.c
 endif
+SBGEMVNKERNEL = sbgemv_n_vector.c
+SBGEMVTKERNEL = sbgemv_t_vector.c
 endif
 
 SAXPBYKERNEL  = axpby_vector_v2.c

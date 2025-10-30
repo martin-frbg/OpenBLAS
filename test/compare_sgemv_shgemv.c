@@ -31,8 +31,8 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "test_helpers.h"
 
 #define SGEMV   BLASFUNC(sgemv)
-#define SBGEMV   BLASFUNC(sbgemv)
-#define SBGEMV_LARGEST  256
+#define SHGEMV   BLASFUNC(shgemv)
+#define SHGEMV_LARGEST  256
 
 int
 main (int argc, char *argv[])
@@ -41,7 +41,7 @@ main (int argc, char *argv[])
   int i, j, l;
   blasint x, y;
   int ret = 0;
-  int loop = SBGEMV_LARGEST;
+  int loop = SHGEMV_LARGEST;
   char transA = 'N';
   float alpha = 1.0, beta = 0.0;
 
@@ -54,24 +54,23 @@ main (int argc, char *argv[])
     float *A = (float *)malloc_safe(x * x * sizeof(FLOAT));
     float *B = (float *)malloc_safe(x * sizeof(FLOAT) << l);
     float *C = (float *)malloc_safe(x * sizeof(FLOAT) << l);
-    bfloat16 *AA = (bfloat16 *)malloc_safe(x * x * sizeof(bfloat16));
-    bfloat16 *BB = (bfloat16 *)malloc_safe(x * sizeof(bfloat16) << l);
+    hfloat16 *AA = (hfloat16 *)malloc_safe(x * x * sizeof(hfloat16));
+    hfloat16 *BB = (hfloat16 *)malloc_safe(x * sizeof(hfloat16) << l);
     float *CC = (float *)malloc_safe(x * sizeof(FLOAT) << l);
     float *DD = (float *)malloc_safe(x * sizeof(FLOAT));
     if ((A == NULL) || (B == NULL) || (C == NULL) || (AA == NULL) || (BB == NULL) ||
         (DD == NULL) || (CC == NULL))
       return 1;
-    blasint one = 1;
 
     for (j = 0; j < x; j++)
     {
       for (i = 0; i < x; i++)
       {
         A[j * x + i] = ((FLOAT) rand () / (FLOAT) RAND_MAX) + 0.5;
-        sbstobf16_(&one, &A[j*x+i], &one, &AA[j * x + i], &one);
+        AA[j * x + i] = (_Float16)A[j * x + i];
       }
       B[j << l] = ((FLOAT) rand () / (FLOAT) RAND_MAX) + 0.5;
-      sbstobf16_(&one, &B[j << l], &one, &BB[j << l], &one);
+      BB[j << l]= (_Float16)B[j << l];
       
       CC[j << l] = C[j << l] = ((FLOAT) rand () / (FLOAT) RAND_MAX) + 0.5;
     }
@@ -89,16 +88,16 @@ main (int argc, char *argv[])
       memset(C, 0, x * sizeof(FLOAT) << l);
 
       SGEMV (&transA, &x, &x, &alpha, A, &x, B, &k, &beta, C, &k);
-      SBGEMV (&transA, &x, &x, &alpha, (bfloat16*) AA, &x, (bfloat16*) BB, &k, &beta, CC, &k);
+      SHGEMV (&transA, &x, &x, &alpha, (hfloat16*) AA, &x, (hfloat16*) BB, &k, &beta, CC, &k);
 
       for (int i = 0; i < x; i ++) DD[i] *= beta;
 
       for (j = 0; j < x; j++)
         for (i = 0; i < x; i++)
           if (transA == 'N') {
-            DD[i] += alpha * float16to32 (AA[j * x + i]) * float16to32 (BB[j << l]);
+            DD[i] += alpha * (float)(AA[j * x + i]) * (float)(BB[j << l]);
           } else if (transA == 'T') {
-            DD[j] += alpha * float16to32 (AA[j * x + i]) * float16to32 (BB[i << l]);
+            DD[j] += alpha * (float)(AA[j * x + i]) * (float)(BB[i << l]);
           }
 
       for (j = 0; j < x; j++) {
@@ -123,7 +122,7 @@ main (int argc, char *argv[])
   } // beta
 
   if (ret != 0) {
-    fprintf(stderr, "SBGEMV FAILURES: %d\n", ret);
+    fprintf (stderr, "SHGEMV FAILURES: %d\n", ret);
     return 1;
   }
 

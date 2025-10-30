@@ -51,7 +51,8 @@
 #ifdef ALPHA_ONE
 #define UPDATE_C(PG16, PG32, PTR, SRC)                                    \
   do {                                                                    \
-    tmp32 = svreinterpret_f32_u32(svld1uh_u32((PG16), (uint16_t*)PTR));   \
+    tmp16 = svld1_bf16((PG16), (PTR));                                    \
+    tmp32 = svreinterpret_f32(svzip1_bf16(zeros, tmp16));                 \
     tmp32 = svadd_z((PG32), SRC, tmp32);                                  \
     tmp16 = svcvt_bf16_f32_z((PG32), tmp32);                              \
     tmp16 = svuzp1_bf16(tmp16, tmp16);                                    \
@@ -60,7 +61,8 @@
 #else
 #define UPDATE_C(PG16, PG32, PTR, SRC)                                     \
   do {                                                                     \
-    tmp32 = svreinterpret_f32_u32(svld1uh_u32((PG16), (uint16_t*)PTR));    \
+    tmp16 = svld1_bf16((PG16), (PTR));                                     \
+    tmp32 = svreinterpret_f32(svzip1_bf16(zeros, tmp16));                  \
     tmp32 = svmad_z((PG32), svalpha, SRC, tmp32);                          \
     tmp16 = svcvt_bf16_f32_z((PG32), tmp32);                               \
     tmp16 = svuzp1_bf16(tmp16, tmp16);                                     \
@@ -121,6 +123,7 @@ static int gemm_kernel_neoversen2_alpha(BLASLONG m, BLASLONG n, BLASLONG k, FLOA
 #ifdef BGEMM
   svbool_t pg16_first_2 = svdupq_b16(1, 1, 0, 0, 0, 0, 0, 0);
   svbool_t pg16_first_1 = svdupq_b16(1, 0, 0, 0, 0, 0, 0, 0);
+  svbfloat16_t zeros = svdup_n_bf16(vcvth_bf16_f32(0.0));
 #endif
 
   bfloat16_t *ptr_a = (bfloat16_t *)A;

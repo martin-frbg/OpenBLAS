@@ -53,6 +53,7 @@ ifeq ($(ARCH), arm64)
 USE_TRMM = 1
 USE_DIRECT_SGEMM = 1
 USE_DIRECT_SSYMM = 1
+USE_DIRECT_STRMM = 1
 endif
 
 ifeq ($(ARCH), riscv64)
@@ -149,6 +150,18 @@ endif
 endif
 endif
 
+ifdef USE_DIRECT_STRMM
+ifndef STRMMDIRECTKERNEL
+ifeq ($(ARCH), arm64)
+ifeq ($(TARGET_CORE), ARMV9SME)
+HAVE_SME = 1
+endif
+STRMMDIRECTKERNEL = strmm_direct_arm64_sme1.c
+endif
+endif
+endif
+
+
 ifeq ($(BUILD_BFLOAT16), 1)
 ifndef BGEMMKERNEL
 BGEMM_BETA = ../generic/gemm_beta.c
@@ -237,6 +250,14 @@ ifeq ($(ARCH), arm64)
 SKERNELOBJS += \
 	ssymm_direct_alpha_betaLU$(TSUFFIX).$(SUFFIX) \
 	ssymm_direct_alpha_betaLL$(TSUFFIX).$(SUFFIX)
+endif
+endif
+
+ifdef USE_DIRECT_STRMM
+ifeq ($(ARCH), arm64)
+SKERNELOBJS += \
+	strmm_direct_LNUN$(TSUFFIX).$(SUFFIX) strmm_direct_LNLN$(TSUFFIX).$(SUFFIX) \
+	strmm_direct_LTUN$(TSUFFIX).$(SUFFIX) strmm_direct_LTLN$(TSUFFIX).$(SUFFIX)
 endif
 endif
 
@@ -1177,6 +1198,23 @@ ifeq ($(OS), AIX)
 	rm strmm_kernel_rt.s strmm_kernel_rt_nomacros.s
 else
 	$(CC) $(CFLAGS) -c -DTRMMKERNEL -UDOUBLE -UCOMPLEX -ULEFT -DTRANSA $< -o $@
+endif
+
+
+ifdef USE_DIRECT_STRMM
+ifeq ($(ARCH), arm64)
+$(KDIR)strmm_direct_LNUN$(TSUFFIX).$(SUFFIX) : $(KERNELDIR)/$(STRMMDIRECTKERNEL)
+	$(CC) $(CFLAGS) -c -UDOUBLE -UCOMPLEX -UTRANSA -DUPPER $< -o $@
+
+$(KDIR)strmm_direct_LNLN$(TSUFFIX).$(SUFFIX) : $(KERNELDIR)/$(STRMMDIRECTKERNEL)
+	$(CC) $(CFLAGS) -c -UDOUBLE -UCOMPLEX -UTRANSA -UUPPER $< -o $@
+
+$(KDIR)strmm_direct_LTUN$(TSUFFIX).$(SUFFIX) : $(KERNELDIR)/$(STRMMDIRECTKERNEL)
+	$(CC) $(CFLAGS) -c -UDOUBLE -UCOMPLEX -DTRANSA -DUPPER $< -o $@
+
+$(KDIR)strmm_direct_LTLN$(TSUFFIX).$(SUFFIX) : $(KERNELDIR)/$(STRMMDIRECTKERNEL)
+	$(CC) $(CFLAGS) -c -UDOUBLE -UCOMPLEX -DTRANSA -UUPPER $< -o $@
+endif
 endif
 
 $(KDIR)dtrmm_kernel_LN$(TSUFFIX).$(SUFFIX) : $(KERNELDIR)/$(DTRMMKERNEL)

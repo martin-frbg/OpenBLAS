@@ -101,6 +101,16 @@ SBGEMVTKERNEL = ../x86_64/sbgemv_t.c
 endif
 endif
 
+ifeq ($(BUILD_HFLOAT16),1)
+ifndef SHGEMVNKERNEL
+SHGEMVNKERNEL = ../generic/gemv_n.c
+endif
+
+ifndef SHGEMVTKERNEL
+SHGEMVTKERNEL = ../generic/gemv_t.c
+endif
+endif
+
 ### GER ###
 
 ifndef SGERKERNEL
@@ -297,6 +307,12 @@ BBLASOBJS     += \
 SBBLASOBJS     += \
         sbgemv_n$(TSUFFIX).$(SUFFIX) \
         sbgemv_t$(TSUFFIX).$(SUFFIX)
+endif
+
+ifeq ($(BUILD_HFLOAT16),1)
+SHBLASOBJS     += \
+        shgemv_n$(TSUFFIX).$(SUFFIX) \
+        shgemv_t$(TSUFFIX).$(SUFFIX)
 endif
 
 ifneq "$(or $(BUILD_SINGLE), $(BUILD_DOUBLE), $(BUILD_COMPLEX))" ""
@@ -556,5 +572,12 @@ $(KDIR)bgemv_n$(TSUFFIX).$(SUFFIX) $(KDIR)bgemv_n$(TPSUFFIX).$(PSUFFIX) : $(KERN
 	$(CC) -c $(CFLAGS) -DBGEMM -UCOMPLEX $< -o $@
 $(KDIR)bgemv_t$(TSUFFIX).$(SUFFIX) $(KDIR)bgemv_t$(TPSUFFIX).$(PSUFFIX) : $(KERNELDIR)/$(BGEMVTKERNEL)
 	$(CC) -c $(CFLAGS) -DBGEMM -UCOMPLEX $< -o $@
+endif
+
+ifeq ($(BUILD_HFLOAT16),1)
+$(KDIR)shgemv_n$(TSUFFIX).$(SUFFIX) $(KDIR)shgemv_n$(TPSUFFIX).$(PSUFFIX) : $(KERNELDIR)/$(SHGEMVNKERNEL)
+	$(CC) -c $(CFLAGS) -UCOMPLEX $< -o $@
+$(KDIR)shgemv_t$(TSUFFIX).$(SUFFIX) $(KDIR)shgemv_t$(TPSUFFIX).$(PSUFFIX) : $(KERNELDIR)/$(SHGEMVTKERNEL)
+	$(CC) -c $(CFLAGS) -UCOMPLEX $< -o $@
 endif
 

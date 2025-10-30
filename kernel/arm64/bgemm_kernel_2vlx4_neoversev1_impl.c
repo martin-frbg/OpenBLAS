@@ -40,7 +40,8 @@
 
 #define UPDATE_C(PG, PTR, DST, SRC)                                            \
   do {                                                                         \
-    DST = svreinterpret_f32_u32(svld1uh_u32((pghalf), (uint16_t*)PTR));        \
+    svtmp16 = svld1_bf16((pghalf), (PTR));                                     \
+    DST = svreinterpret_f32(svzip1_bf16(zeros, svtmp16));                      \
     DST = svadd_z((PG), SRC, DST);                                             \
     svtmp16 = svcvt_bf16_f32_z((PG), DST);                                     \
     svtmp16 = svuzp1_bf16(svtmp16, svtmp16);                                   \
@@ -55,7 +56,8 @@
 
 #define UPDATE_C(PG, PTR, DST, SRC)                                            \
   do {                                                                         \
-    DST = svreinterpret_f32_u32(svld1uh_u32((pghalf), (uint16_t*)PTR));        \
+    svtmp16 = svld1_bf16((pghalf), (PTR));                                     \
+    DST = svreinterpret_f32(svzip1_bf16(zeros, svtmp16));                      \
     DST = svmad_z((PG), svalpha, SRC, DST);                                    \
     svtmp16 = svcvt_bf16_f32_z((PG), DST);                                     \
     svtmp16 = svuzp1_bf16(svtmp16, svtmp16);                                   \
@@ -133,6 +135,7 @@ static int bgemm_kernel_neoversev1_alpha(BLASLONG m, BLASLONG n, BLASLONG k,
     OUTPUT_FLOAT *ptr_c0, *ptr_c1, *ptr_c2, *ptr_c3;
     svfloat32_t tmp0, tmp1, tmp2, tmp3;
 #ifdef BGEMM
+    svbfloat16_t zeros = svdup_n_bf16(TO16(0.0));
     svbfloat16_t svtmp16;
 #else
     float32x2_t tmp4, tmp5, tmp6, tmp7;

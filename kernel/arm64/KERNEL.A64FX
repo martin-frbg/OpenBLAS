@@ -10,3 +10,6 @@ SDOTKERNEL   = dot_sve_v8.c
 
 SAXPYKERNEL  = axpy_sve.c
 DAXPYKERNEL  = axpy_sve.c
+
+SGERKERNEL   = ger_sve_v1x3.c
+DGERKERNEL   = ger_sve_v1x3.c

@@ -450,6 +450,12 @@ XBLASOBJS   += \
 	xtbmv_thread_CUU.$(SUFFIX)	xtbmv_thread_CUN.$(SUFFIX) \
 	xtbmv_thread_CLU.$(SUFFIX)	xtbmv_thread_CLN.$(SUFFIX)
 
+
+ifeq ($(BUILD_HFLOAT16),1)
+SHBLASOBJS     += \
+        shgemv_thread_n$(TSUFFIX).$(SUFFIX) \
+        shgemv_thread_t$(TSUFFIX).$(SUFFIX)
+endif
 ifeq ($(BUILD_BFLOAT16),1)
 BBLASOBJS      += \
         bgemv_thread_n$(TSUFFIX).$(SUFFIX) \
@@ -3736,6 +3742,13 @@ xtrsv_CUU.$(SUFFIX)  xtrsv_CUU.$(PSUFFIX)  : ztrsv_L.c ../../param.h
 
 xtrsv_CUN.$(SUFFIX)  xtrsv_CUN.$(PSUFFIX)  : ztrsv_L.c ../../param.h
 	$(CC) -c $(CFLAGS) -DXDOUBLE -DCOMPLEX -DTRANSA=4 -UUNIT $< -o $(@F)
+
+ifeq ($(BUILD_HFLOAT16),1)
+shgemv_thread_n.$(SUFFIX) shgemv_thread_n.$(PSUFFIX) : sbgemv_thread.c ../../common.h
+	$(CC) -c $(CFLAGS) -UCOMPLEX -UDOUBLE  -UTRANSA -UCONJ -UXCONJ $< -o $(@F)
+shgemv_thread_t.$(SUFFIX) shgemv_thread_t.$(PSUFFIX) : sbgemv_thread.c ../../common.h
+	$(CC) -c $(CFLAGS) -UCOMPLEX -UDOUBLE  -DTRANSA -UCONJ -UXCONJ $< -o $(@F)
+endif
 
 ifeq ($(BUILD_BFLOAT16),1)
 bgemv_thread_n.$(SUFFIX) bgemv_thread_n.$(PSUFFIX) : sbgemv_thread.c ../../common.h

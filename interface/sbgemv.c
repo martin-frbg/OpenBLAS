@@ -48,6 +48,10 @@
 #define GEMV_THREAD_N bgemv_thread_n
 #define GEMV_THREAD_T bgemv_thread_t
 #define ERROR_NAME "BGEMV "
+#elif defined(HFLOAT16)
+#define GEMV_THREAD_N shgemv_thread_n
+#define GEMV_THREAD_T shgemv_thread_t
+#define ERROR_NAME "SHGEMV "
 #else
 #define GEMV_THREAD_N sbgemv_thread_n
 #define GEMV_THREAD_T sbgemv_thread_t

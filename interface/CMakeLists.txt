@@ -166,6 +166,7 @@ if (BUILD_BFLOAT16)
 endif ()
 if (BUILD_HFLOAT16)
   GenerateNamedObjects("gemm.c" "" "shgemm" ${CBLAS_FLAG} "" "" true "HFLOAT16")
+  GenerateNamedObjects("sbgemv.c" "" "shgemv" ${CBLAS_FLAG} "" "" true "HFLOAT16")
 endif ()
 
 # complex-specific sources

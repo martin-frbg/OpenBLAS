@@ -147,7 +147,10 @@ int main(int argc, char *argv[])
     } // alpha
   } // beta
 
-  if (ret != 0)
-    fprintf(stderr, "FATAL ERROR BGEMV - Return code: %d\n", ret);
+  if (ret != 0) {
+    fprintf(stderr, "BGEMV FAILURES: %d\n", ret);
+    return 1;
+  }
+
   return ret;
 }

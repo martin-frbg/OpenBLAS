@@ -189,7 +189,11 @@ static void ssymm_direct_sme1_preprocessLL(uint64_t nbr, uint64_t nbc,
     }
   }
 }
-
+#else
+static void ssymm_direct_sme1_preprocessLU(uint64_t nbr, uint64_t nbc,
+                const float *restrict a, float *restrict a_mod){}
+static void ssymm_direct_sme1_preprocessLL(uint64_t nbr, uint64_t nbc,
+                const float *restrict a, float *restrict a_mod){}
 #endif
 
 //

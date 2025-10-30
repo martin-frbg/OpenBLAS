@@ -70,3 +70,6 @@ SBGEMVNKERNEL = sbgemv_n_neon.c
 SBGEMVTKERNEL = sbgemv_t_bfdot.c
 
 endif
+
+SGERKERNEL   = ger_sve_v1x3.c
+DGERKERNEL   = ger_sve_v1x3.c

@@ -56,6 +56,24 @@ gotoblas_t TABLE_NAME = {
 
   GEMM_DEFAULT_OFFSET_A, GEMM_DEFAULT_OFFSET_B, GEMM_DEFAULT_ALIGN,
 
+#ifdef BUILD_HFLOAT16
+  0, 0, 0,
+  SHGEMM_DEFAULT_UNROLL_M, SHGEMM_DEFAULT_UNROLL_N,
+#ifdef SHGEMM_DEFAULT_UNROLL_MN
+ SHGEMM_DEFAULT_UNROLL_MN,
+#else
+ MAX(SHGEMM_DEFAULT_UNROLL_M, SHGEMM_DEFAULT_UNROLL_N),
+#endif
+  shgemm_kernelTS, shgemm_betaTS,
+#if SHGEMM_DEFAULT_UNROLL_M != SHGEMM_DEFAULT_UNROLL_N
+  shgemm_incopyTS, shgemm_itcopyTS,
+#else
+  shgemm_oncopyTS, shgemm_otcopyTS,
+#endif
+  shgemm_oncopyTS, shgemm_otcopyTS,
+  shgemv_nTS, shgemv_tTS,
+#endif
+
 #ifdef BUILD_BFLOAT16
   0, 0, 0,
   BGEMM_DEFAULT_UNROLL_M, BGEMM_DEFAULT_UNROLL_N,
@@ -142,23 +160,6 @@ gotoblas_t TABLE_NAME = {
 #endif
 #endif
 
-#ifdef BUILD_HFLOAT16
-  0, 0, 0,
-  SHGEMM_DEFAULT_UNROLL_M, SHGEMM_DEFAULT_UNROLL_N,
-#ifdef SHGEMM_DEFAULT_UNROLL_MN
- SHGEMM_DEFAULT_UNROLL_MN,
-#else
- MAX(SHGEMM_DEFAULT_UNROLL_M, SHGEMM_DEFAULT_UNROLL_N),
-#endif
-  shgemm_kernelTS, shgemm_betaTS,
-#if SHGEMM_DEFAULT_UNROLL_M != SHGEMM_DEFAULT_UNROLL_N
-  shgemm_incopyTS, shgemm_itcopyTS,
-#else
-  shgemm_oncopyTS, shgemm_otcopyTS,
-#endif
-  shgemm_oncopyTS, shgemm_otcopyTS,
-#endif
-
 #if ( BUILD_SINGLE==1) || (BUILD_DOUBLE==1) || (BUILD_COMPLEX==1) || (BUILD_COMPLEX16==1)
   0, 0, 0,
   SGEMM_DEFAULT_UNROLL_M, SGEMM_DEFAULT_UNROLL_N,
@@ -218,6 +219,10 @@ gotoblas_t TABLE_NAME = {
   sgemm_direct_alpha_betaTS,
   ssymm_direct_alpha_betaLUTS,
   ssymm_direct_alpha_betaLLTS,
+  strmm_direct_LNUNTS,
+  strmm_direct_LNLNTS,
+  strmm_direct_LTUNTS,
+  strmm_direct_LTLNTS,
 #endif
 
   sgemm_kernelTS, sgemm_betaTS,

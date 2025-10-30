@@ -27,6 +27,7 @@
  * *****************************************************************************/
 
 #if defined(BFLOAT16) && defined(BFLOAT16CONVERSION)
+
 static float
 bfloat16tof32 (bfloat16 value)
 {
@@ -48,17 +49,34 @@ static bfloat16 f32tobfloat16(float value) {
 #ifdef BGEMM
 #define ALPHA bfloat16tof32(alpha)
 #define BETA bfloat16tof32(beta)
-#define BF16TOF32(x) (bfloat16tof32(x))
-#define F32TOBF16(x) (f32tobfloat16(x))
+#define TO_F32(x) (bfloat16tof32(x))
+#define TO_OUTPUT(x) (f32tobfloat16(x))
 #else
 #define ALPHA alpha
 #define BETA beta
-#define BF16TOF32(x) (bfloat16tof32(x))
-#define F32TOBF16(x) x
+#define TO_F32(x) (bfloat16tof32(x))
+#define TO_OUTPUT(x) x
 #endif
+
+#elif defined(HFLOAT16)
+
+#ifdef HGEMM
+#define ALPHA (float)(alpha)
+#define BETA (float)(beta)
+#define TO_F32(x) ((float)(x))
+#define TO_OUTPUT(x) ((_Float16)(x))
 #else
 #define ALPHA alpha
 #define BETA beta
-#define BF16TOF32(x) x
-#define F32TOBF16(x) x
+#define TO_F32(x) ((float)(x))
+#define TO_OUTPUT(x) x
+#endif
+
+#else
+
+#define ALPHA alpha
+#define BETA beta
+#define TO_F32(x) x
+#define TO_OUTPUT(x) x
+
 #endif

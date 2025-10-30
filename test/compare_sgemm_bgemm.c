@@ -44,7 +44,7 @@ main (int argc, char *argv[])
   int ret = 0;
   int loop = BGEMM_LARGEST;
   char transA = 'N', transB = 'N';
-  float alpha = 1.0, beta = 0.0;
+  float alpha = 1.0, beta = 1.0;
   bfloat16 alpha_bf16;
   sbstobf16_(&one, &alpha, &one, &alpha_bf16, &one);
   bfloat16 beta_bf16;
@@ -94,9 +94,15 @@ main (int argc, char *argv[])
         transB = 'T';
       }
 
-      memset(CC, 0, m * n * sizeof(bfloat16));
-      memset(DD, 0, m * n * sizeof(FLOAT));
-      memset(C, 0, m * n * sizeof(FLOAT));
+      for (j = 0; j < m; j++)
+      {
+        for (i = 0; i < n; i++)
+        {
+          C[j * n + i] = 100.0;
+          DD[j * n + i] = 100.0;
+          sbstobf16_(&one, &C[j * n + i], &one, &CC[j * n + i], &one);
+        }
+      }
 
       SGEMM (&transA, &transB, &m, &n, &k, &alpha, A,
         &m, B, &k, &beta, C, &m);
@@ -152,7 +158,8 @@ main (int argc, char *argv[])
   }
 
   if (ret != 0) {
-    fprintf (stderr, "FATAL ERROR BGEMM - Return code: %d\n", ret);
+    fprintf(stderr, "BGEMM FAILURES: %d\n", ret);
+    return 1;
   }
 
   return ret;

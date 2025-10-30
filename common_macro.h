@@ -703,6 +703,9 @@
 #define GEMM_THREAD_RC   SHGEMM_THREAD_NT
 #define GEMM_THREAD_RR   SHGEMM_THREAD_NN
 
+#define SCAL_K        SSCAL_K
+#define GEMV_N        SHGEMV_N_K
+#define GEMV_T        SHGEMV_T_K
 
 #elif defined(BFLOAT16) && defined(BGEMM)
 #define SCAL_K        BSCAL_K

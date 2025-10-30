@@ -26,7 +26,7 @@ jobs:
             opts: TARGET=RISCV64_ZVL128B BINARY=64 ARCH=riscv64
             qemu_cpu: rv64,g=true,c=true,v=true,vext_spec=v1.0,vlen=128,elen=64
           - target: RISCV64_ZVL256B
-            opts: TARGET=RISCV64_ZVL256B BINARY=64 ARCH=riscv64
+            opts: TARGET=RISCV64_ZVL256B BINARY=64 ARCH=riscv64 BUILD_BFLOAT16=1 BUILD_HFLOAT16=1
             qemu_cpu: rv64,g=true,c=true,v=true,vext_spec=v1.0,vlen=256,elen=64
           - target: DYNAMIC_ARCH=1
             opts: TARGET=RISCV64_GENERIC BINARY=64 ARCH=riscv64 DYNAMIC_ARCH=1
@@ -40,7 +40,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install autoconf automake autotools-dev ninja-build make \
-          libgomp1-riscv64-cross ccache
+          libgomp1-riscv64-cross ccache qemu-kvm
           wget ${riscv_gnu_toolchain}/${riscv_gnu_toolchain_nightly_download_path}
           tar -xvf $(basename ${riscv_gnu_toolchain_nightly_download_path}) -C /opt
 

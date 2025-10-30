@@ -261,6 +261,8 @@ void BLASFUNC(bgemv)(char *, blasint *, blasint *, bfloat16  *, bfloat16 *, blas
             bfloat16  *, blasint *, bfloat16  *, bfloat16  *, blasint *);
 void BLASFUNC(sbgemv)(char *, blasint *, blasint *, float  *, bfloat16 *, blasint *,
             bfloat16  *, blasint *, float  *, float  *, blasint *);
+void BLASFUNC(shgemv)(char *, blasint *, blasint *, float  *, hfloat16 *, blasint *,
+            hfloat16  *, blasint *, float  *, float  *, blasint *);
 void BLASFUNC(sgemv)(char *, blasint *, blasint *, float  *, float  *, blasint *,
 		    float  *, blasint *, float  *, float  *, blasint *);
 void BLASFUNC(dgemv)(char *, blasint *, blasint *, double *, double *, blasint *,

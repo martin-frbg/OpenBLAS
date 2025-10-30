@@ -26,15 +26,14 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
 #include "common.h"
-#include "bf16_macros.h"
+
+#include "conversion_macros.h"
 
 int CNAME(BLASLONG m, BLASLONG n, FLOAT alpha, IFLOAT *a, BLASLONG lda, IFLOAT *x, BLASLONG inc_x, FLOAT beta, FLOAT *y, BLASLONG inc_y)
 {
-    BLASLONG i;
     BLASLONG ix, iy;
-    BLASLONG j;
-    FLOAT *a_ptr;
-#ifdef BGEMM
+    IFLOAT *a_ptr;
+#if defined(BGEMM) || defined(HGEMM)
     float temp;
 #else
     FLOAT temp;
@@ -49,18 +48,18 @@ int CNAME(BLASLONG m, BLASLONG n, FLOAT alpha, IFLOAT *a, BLASLONG lda, IFLOAT *
         a_ptr = a;
         for (BLASLONG j = 0; j < n; j++)
         {
-            temp += BF16TOF32(a_ptr[i]) * BF16TOF32(x[ix]);
+            temp += TO_F32(a_ptr[i]) * TO_F32(x[ix]);
             ix += inc_x;
             a_ptr += lda;
         }
 
         if (BETA == ZERO)
         {
-            y[iy] = F32TOBF16(ALPHA * temp);
+            y[iy] = TO_OUTPUT(ALPHA * temp);
         }
         else
         {
-            y[iy] = F32TOBF16(ALPHA * temp + BETA * BF16TOF32(y[iy]));
+            y[iy] = TO_OUTPUT(ALPHA * temp + BETA * TO_F32(y[iy]));
         }
 
         iy += inc_y;
