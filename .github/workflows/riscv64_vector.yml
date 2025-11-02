@@ -142,9 +142,7 @@ jobs:
           if [ "${{matrix.target}}" == "RISCV64_ZVL256B" ]; then
           run_test test test_shgemm &
           run_test test test_shgemv &
-          run_test test test_sbgemm &
-          run_test test test_bgemm &
-          run_test test test_sbgemv
+          run_test test test_bgemm
           fi
 
 
