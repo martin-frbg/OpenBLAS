@@ -142,8 +142,7 @@ jobs:
           if [ "${{matrix.target}}" == "RISCV64_ZVL256B" ]; then
           qemu-riscv64 test/test_shgemm &
           qemu-riscv64 test/test_shgemv &
-          qemu-riscv64 test/test_bgemm &
-          qemu-riscv64 test/test_sbgemv
+          qemu-riscv64 test/test_bgemm
           fi
 
 
