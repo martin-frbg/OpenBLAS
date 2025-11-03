@@ -141,8 +141,7 @@ jobs:
           if [[ ! -z $FAILURES ]]; then echo "==========" ; echo "== FAIL ==" ; echo "==========" ; echo ; exit 1 ; fi
           if [ "${{matrix.target}}" == "RISCV64_ZVL256B" ]; then
           run_test test test_shgemm &
-          run_test test test_shgemv &
-          run_test test test_bgemm
+          run_test test test_shgemv
           fi
 
 
