@@ -13,9 +13,9 @@ met:
       notice, this list of conditions and the following disclaimer in
       the documentation and/or other materials provided with the
       distribution.
-   3. Neither the name of the OpenBLAS project nor the names of 
-      its contributors may be used to endorse or promote products 
-      derived from this software without specific prior written 
+   3. Neither the name of the OpenBLAS project nor the names of
+      its contributors may be used to endorse or promote products
+      derived from this software without specific prior written
       permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -52,96 +52,93 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG dummy1, FLOAT alpha, FLOAT *a,
           BLASLONG lda, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y,
           FLOAT *buffer)
 {
-  BLASLONG i, j;
-  BLASLONG ix = 0;
-  BLASLONG iy;
-  FLOAT *a_ptr = a;
+  BLASLONG i;
+  BLASLONG ix, iy;
+  BLASLONG j;
+  FLOAT *a_ptr;
   FLOAT temp;
 
+  a_ptr = a;
+  ix = 0;
+
   if (inc_y == 1) {
-    BLASLONG width = n / 3; // Only process full 3-column blocks
     BLASLONG sve_size = SV_COUNT();
-    svbool_t pg_full = SV_TRUE();
-    svbool_t pg_tail = SV_WHILE(0, m % sve_size);
+    svbool_t pg_true = SV_TRUE();
 
-    FLOAT *a0_ptr = a_ptr + lda * width * 0;
-    FLOAT *a1_ptr = a_ptr + lda * width * 1;
-    FLOAT *a2_ptr = a_ptr + lda * width * 2;
+    /* Process 3 consecutive columns at a time: (j, j+1, j+2) */
+    for (j = 0; j + 2 < n; j += 3) {
+      SV_TYPE temp0_vec = SV_DUP(alpha * x[ix]);
+      SV_TYPE temp1_vec = SV_DUP(alpha * x[ix + inc_x]);
+      SV_TYPE temp2_vec = SV_DUP(alpha * x[ix + inc_x * 2]);
 
-    FLOAT *x0_ptr = x + inc_x * width * 0;
-    FLOAT *x1_ptr = x + inc_x * width * 1;
-    FLOAT *x2_ptr = x + inc_x * width * 2;
-
-    for (j = 0; j < width; j++) {
-      SV_TYPE temp0_vec = SV_DUP(alpha * x0_ptr[ix]);
-      SV_TYPE temp1_vec = SV_DUP(alpha * x1_ptr[ix]);
-      SV_TYPE temp2_vec = SV_DUP(alpha * x2_ptr[ix]);
+      FLOAT *a0 = a_ptr;
+      FLOAT *a1 = a_ptr + lda;
+      FLOAT *a2 = a_ptr + lda * 2;
 
       i = 0;
       while ((i + sve_size - 1) < m) {
-        SV_TYPE y0_vec = svld1(pg_full, y + i);
+        SV_TYPE y0_vec = svld1(pg_true, y + i);
 
-        SV_TYPE a00_vec = svld1(pg_full, a0_ptr + i);
-        SV_TYPE a01_vec = svld1(pg_full, a1_ptr + i);
-        SV_TYPE a02_vec = svld1(pg_full, a2_ptr + i);
+        SV_TYPE a00_vec = svld1(pg_true, a0 + i);
+        SV_TYPE a01_vec = svld1(pg_true, a1 + i);
+        SV_TYPE a02_vec = svld1(pg_true, a2 + i);
 
-        y0_vec = svmla_x(pg_full, y0_vec, temp0_vec, a00_vec);
-        y0_vec = svmla_x(pg_full, y0_vec, temp1_vec, a01_vec);
-        y0_vec = svmla_x(pg_full, y0_vec, temp2_vec, a02_vec);
+        y0_vec = svmla_m(pg_true, y0_vec, temp0_vec, a00_vec);
+        y0_vec = svmla_m(pg_true, y0_vec, temp1_vec, a01_vec);
+        y0_vec = svmla_m(pg_true, y0_vec, temp2_vec, a02_vec);
 
-        svst1(pg_full, y + i, y0_vec);
+        svst1(pg_true, y + i, y0_vec);
         i += sve_size;
       }
 
       if (i < m) {
-        SV_TYPE y0_vec = svld1(pg_tail, y + i);
+        svbool_t pg = SV_WHILE(i, m);
 
-        SV_TYPE a00_vec = svld1(pg_tail, a0_ptr + i);
-        SV_TYPE a01_vec = svld1(pg_tail, a1_ptr + i);
-        SV_TYPE a02_vec = svld1(pg_tail, a2_ptr + i);
+        SV_TYPE y0_vec = svld1(pg, y + i);
 
-        y0_vec = svmla_m(pg_tail, y0_vec, temp0_vec, a00_vec);
-        y0_vec = svmla_m(pg_tail, y0_vec, temp1_vec, a01_vec);
-        y0_vec = svmla_m(pg_tail, y0_vec, temp2_vec, a02_vec);
+        SV_TYPE a00_vec = svld1(pg, a0 + i);
+        SV_TYPE a01_vec = svld1(pg, a1 + i);
+        SV_TYPE a02_vec = svld1(pg, a2 + i);
 
-        svst1(pg_tail, y + i, y0_vec);
+        y0_vec = svmla_m(pg, y0_vec, temp0_vec, a00_vec);
+        y0_vec = svmla_m(pg, y0_vec, temp1_vec, a01_vec);
+        y0_vec = svmla_m(pg, y0_vec, temp2_vec, a02_vec);
+
+        svst1(pg, y + i, y0_vec);
       }
-      a0_ptr += lda;
-      a1_ptr += lda;
-      a2_ptr += lda;
+
+      a_ptr += lda * 3;
+      ix += inc_x * 3;
+    }
+
+    /* Cleanup: remaining 1 or 2 columns */
+    for (; j < n; j++) {
+      SV_TYPE temp_vec = SV_DUP(alpha * x[ix]);
+
+      i = 0;
+      while ((i + sve_size - 1) < m) {
+        SV_TYPE y_vec = svld1(pg_true, y + i);
+        SV_TYPE a_vec = svld1(pg_true, a_ptr + i);
+        y_vec = svmla_m(pg_true, y_vec, temp_vec, a_vec);
+        svst1(pg_true, y + i, y_vec);
+        i += sve_size;
+      }
+
+      if (i < m) {
+        svbool_t pg = SV_WHILE(i, m);
+        SV_TYPE y_vec = svld1(pg, y + i);
+        SV_TYPE a_vec = svld1(pg, a_ptr + i);
+        y_vec = svmla_m(pg, y_vec, temp_vec, a_vec);
+        svst1(pg, y + i, y_vec);
+      }
+
+      a_ptr += lda;
       ix += inc_x;
     }
-    // Handle remaining n % 3 columns
-    for (j = width * 3; j < n; j++) {
-      FLOAT *a_col = a + j * lda;
-      temp = alpha * x[j * inc_x];
-      SV_TYPE temp_vec = SV_DUP(temp);
 
-      i = 0;
-      while ((i + sve_size - 1) < m) {
-        SV_TYPE y_vec = svld1(pg_full, y + i);
-
-        SV_TYPE a_vec = svld1(pg_full, a_col + i);
-
-        y_vec = svmla_x(pg_full, y_vec, temp_vec, a_vec);
-
-        svst1(pg_full, y + i, y_vec);
-        i += sve_size;
-      }
-      if (i < m) {
-        SV_TYPE y_vec = svld1(pg_tail, y + i);
-
-        SV_TYPE a_vec = svld1(pg_tail, a_col + i);
-
-        y_vec = svmla_m(pg_tail, y_vec, temp_vec, a_vec);
-
-        svst1(pg_tail, y + i, y_vec);
-      }
-    }
-    return(0);
+    return (0);
   }
 
-  // Fallback scalar loop
   for (j = 0; j < n; j++) {
     temp = alpha * x[ix];
     iy = 0;
@@ -154,3 +151,4 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG dummy1, FLOAT alpha, FLOAT *a,
   }
   return (0);
 }
+
