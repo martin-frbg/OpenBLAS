@@ -97,7 +97,7 @@ task:
   - export ANDROID_NDK_HOME="/opt/homebrew/share/android-ndk"
   - export CC=/opt/homebrew/share/android-ndk/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi23-clang
   - export RANLIB=touch
-  - make TARGET=ARMV7 ARM_SOFTFP_ABI=1 NUM_THREADS=32 HOSTCC=clang NOFORTRAN=1 RANLIB="ls -l"
+  - make TARGET=ARMV7 ARM_SOFTFP_ABI=1 NUM_THREADS=32 HOSTCC=clang NOFORTRAN=1
   always:
     config_artifacts:
       path: "*conf*"
