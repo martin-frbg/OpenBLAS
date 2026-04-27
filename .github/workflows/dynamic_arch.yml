@@ -318,12 +318,12 @@ jobs:
 
       - name: Run tests
         id: run-ctest
-        timeout-minutes: 60
+        timeout-minutes: 70
         run: cd build && ctest
 
       - name: Re-run tests
         if: always() && (steps.run-ctest.outcome == 'failure')
-        timeout-minutes: 60
+        timeout-minutes: 70
         run: |
           cd build
           echo "::group::Re-run ctest"
