@@ -319,7 +319,7 @@ jobs:
       - name: Run tests
         id: run-ctest
         timeout-minutes: 70
-        run: cd build && ctest
+        run: cd build && OPENBLAS_VERBOSE=2 ctest
 
       - name: Re-run tests
         if: always() && (steps.run-ctest.outcome == 'failure')
