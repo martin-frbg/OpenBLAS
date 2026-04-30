@@ -319,7 +319,7 @@ jobs:
       - name: Run tests
         id: run-ctest
         timeout-minutes: 70
-        run: cd build && OPENBLAS_VERBOSE=2 ctest
+        run: cd build && OPENBLAS_VERBOSE=2 ctest -V
 
       - name: Re-run tests
         if: always() && (steps.run-ctest.outcome == 'failure')
@@ -327,7 +327,7 @@ jobs:
         run: |
           cd build
           echo "::group::Re-run ctest"
-          ctest --rerun-failed --output-on-failure || true
+          OPENBLAS_VERBOSE=2 ctest -VV --rerun-failed --output-on-failure || true
           echo "::endgroup::"
           echo "::group::Log from these tests"
           [ ! -f Testing/Temporary/LastTest.log ] || cat Testing/Temporary/LastTest.log
