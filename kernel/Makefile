@@ -97,7 +97,7 @@ else ifeq ($(TARGET_CORE), ZEN)
  override CFLAGS += -DBUILD_KERNEL -DTABLE_NAME=gotoblas_$(TARGET_CORE) $(AVX2OPT)
 else ifeq ($(TARGET_CORE), LOONGSON3R4)
  override CFLAGS += -DBUILD_KERNEL -DTABLE_NAME=gotoblas_$(TARGET_CORE) $(MSA_FLAGS)
-else ifneq ($(filter NEOVERSEN2 NEOVERSEV1 ARMV8SVE, $(TARGET_CORE)),)
+else ifneq ($(filter NEOVERSEN2 NEOVERSEV1 ARMV8SVE A64FX, $(TARGET_CORE)),)
  ifeq ($(C_COMPILER), PGI)
   override CFLAGS += -DBUILD_KERNEL -DTABLE_NAME=gotoblas_$(TARGET_CORE) -Msve_intrinsics
  else
