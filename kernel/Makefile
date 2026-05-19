@@ -101,7 +101,7 @@ else ifneq ($(filter NEOVERSEN2 NEOVERSEV1, $(TARGET_CORE)),)
  ifeq ($(C_COMPILER), PGI)
   override CFLAGS += -DBUILD_KERNEL -DTABLE_NAME=gotoblas_$(TARGET_CORE) -Msve_intrinsics
  else
-  override CFLAGS += -DBUILD_KERNEL -DTABLE_NAME=gotoblas_$(TARGET_CORE)
+  override CFLAGS += -DBUILD_KERNEL -DTABLE_NAME=gotoblas_$(TARGET_CORE) -march=armv8-a+sve
  endif
 else
  override CFLAGS += -DBUILD_KERNEL -DTABLE_NAME=gotoblas_$(TARGET_CORE)
