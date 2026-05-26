@@ -406,7 +406,7 @@
 	addpd	%xmm1, %xmm0
 	addpd	%xmm3, %xmm2
 	addpd	%xmm2, %xmm0
-#ifndef DOUBLE
+
 #ifndef HAVE_SSE3
 	movapd	%xmm0, %xmm1
 	unpckhpd	%xmm0, %xmm0
@@ -414,7 +414,7 @@
 #else
 	haddpd	%xmm0, %xmm0
 #endif
-#endif
+
 	ALIGN_4
 
 .L999:
