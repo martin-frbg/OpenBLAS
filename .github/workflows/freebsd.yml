@@ -57,7 +57,6 @@ jobs:
         run: |
           freebsd-version
           sysctl hw.ncpu
-          pkg info | grep gcc
           pkg install -y gmake gcc15
           gmake CC=gcc15 FC=gfortran15 BINARY=32
           
