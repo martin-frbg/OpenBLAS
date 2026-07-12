@@ -57,7 +57,8 @@ jobs:
         run: |
           freebsd-version
           sysctl hw.ncpu
-          pkg install -y gmake gcc15
+          pkg install -y gmake
+          pkg -y -o ABI="i386" install gcc15
           fetch https://download.freebsd.org/releases/amd64/15.1-RELEASE/lib32.txz
           tar Jxpvf lib32.txz -C /
           ldconfig -32 -m /usr/lib32
