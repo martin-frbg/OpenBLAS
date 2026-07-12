@@ -58,5 +58,7 @@ jobs:
           freebsd-version
           sysctl hw.ncpu
           pkg install -y gmake gcc15
-          gmake CC=gcc15 FC=gfortran15 BINARY=32
+          fetch https://download.freebsd.org/releases/amd64/15.1-RELEASE/lib32.txz
+          tar Jxpvf lib32.txz -C /
+          gmake CC=gcc15 FC=gfortran15 FFLAGS="-B/usr/lib32" BINARY=32
           
