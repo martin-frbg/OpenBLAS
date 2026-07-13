@@ -53,6 +53,7 @@ jobs:
        id: freebsd_x86
        uses: vmactions/freebsd-vm@v1
        with:
+        release: "14.1"
         usesh: true
         run: |
           freebsd-version
