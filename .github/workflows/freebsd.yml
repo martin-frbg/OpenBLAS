@@ -53,13 +53,13 @@ jobs:
        id: freebsd_x86
        uses: vmactions/freebsd-vm@v1
        with:
-        release: "14.1"
+        release: "14.0"
         usesh: true
         run: |
           freebsd-version
           sysctl hw.ncpu
           pkg install -y gmake
-          pkg -o ABI="i386" install -y gcc15
+          pkg -o ABI=FreeBSD:14:i386 install -y gcc15
           fetch https://download.freebsd.org/releases/amd64/15.1-RELEASE/lib32.txz
           tar Jxpf lib32.txz -C /
           ldconfig -32 -m /usr/lib32
