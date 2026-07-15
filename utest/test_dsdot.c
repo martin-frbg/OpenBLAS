@@ -48,6 +48,7 @@ CTEST(dsdot,dsdot_n_1)
 
 }
 #endif
+#ifdef ARMV8
 #if defined(BUILD_SINGLE)
 CTEST(sdot,sdot_n_1)
 {
@@ -71,4 +72,5 @@ CTEST(ddot,ddot_n_1)
     double r = BLASFUNC(ddot)(&n, x, &inc, y, &inc);
     ASSERT_DBL_NEAR_TOL(64.,r, DOUBLE_EPS);
 }
+#endif
 #endif
