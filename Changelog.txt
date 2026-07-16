@@ -1,7 +1,7 @@
 OpenBLAS ChangeLog
 ====================================================================
 Version 0.3.34
-9-Jul-2026
+16-Jul-2026
 
 general:
  - Fixed potential race conditions between concurrent calls to level3 BLAS
@@ -9,7 +9,11 @@ general:
  - Fixed potential race condition in GETRF
  - Added or improved multithreading thresholds in SPR,SPR2,SYR,SYR2,TBMV,TPMV
  - Added multithreading thresholds to GETRS, LAED3, LASWP, LAUUM, TRTRS, ZTRTRI 
+ - Added a BLAS extension for overriding the default error handler (XERBLA) function
+ - Reimplemented the BLAS extension GEADD to support independent transposition of
+   both matrices (unlike the previous, ATLAS-like implementation)
  - Guarded against spurious NaN values in the reimplemented ?LAED3
+ - Fixed compilation of the BLAS extension tests with CMake
  - Fixed spurious and conflicting setting of job numbers in gmake builds
  - Fixed a potential linking issue with the fortran runtime in the BLAS tests
  - Fixed potential access to unrelated memory in the C fallback versions of LAPACK
@@ -20,6 +24,7 @@ general:
  - Imported recent updates from Reference-LAPACK to realign with its upcoming 3.13.0 release:
    - Added non-trivial terminating case to ?LARFT calculation (Reference-LAPACK PR 1163)
    - Fixed workspace calculation for CUNMLQ with K=0 (Reference-LAPACK PR 1225)
+   - Rearranged computations in C/ZLARTG to avoid large intermediates (PR 1245)
    - Fixed wrong Y increment used in ?ORDB3/?UNBDB3 (Reference-LAPACK PR 1265)
    - Fixed wrong name reported in XERBLA call of ZLA_SYRFSX_EXTENDED (PR 1268)
    - Fixed wrong JOBA type in SGESVJ call of SGEJSV (Reference-LAPACK PR 1269)
@@ -34,13 +39,17 @@ general:
    - Fixed premature return before fallback code in BDSQR (Reference-LAPACK PR 1285)
    - Increased tolerance in LASD2 to improve BDSDC stability (Reference-LAPACK PR 1286)
    - Fixed row-major A dimension for SIDE=R in LAPACKE_?TPRFB_WORK (PR 1287)
+   - Fixed seed advancement in SLARUV/DLARUV (Reference-LAPACK PR 1288)
+   - Fixed workspace queries for TZRZF/UNMRZ in GELSY (Reference-LAPACK PRs 1289/1325)
    - Avoid immediate overflows in ?LARFGP (Reference-LAPACK PR 1290) 
    - Added handling of degenerate cases in OR/UNCSD2BY1 (Reference-LAPACK PR 1291)
    - Fixed workspace for tiny inputs in ORM/UNM-L/R-Q and -Q-L/R (PR 1292)
    - Scaled convergence thresholds in ?BBCSD to improve accuracy (PR 1293)
    - Fixed integer overflow in the LAPACKE nancheck helpers (Reference-LAPACK PR 1294)
    - Relaxed eigenvalue consistency checks in testsuite (Reference-LAPACK PR 1297)
-   - Switched to QR algorithm in ?BDSDC for bidiagonal SVD with vectors (PR 1300) 
+   - Fixed test failures in ?CHKLQ with NB=1 and M=N (Reference-LAPACK PR 1298)
+   - Switched to QR algorithm in ?BDSDC for bidiagonal SVD with vectors (PR 1300)
+   - Replaced HUGE intrinsic in ?TGSJA with parameter for consistency (PR 1305)
    - Corrected description of QMAX parameter in ?LASQ3 (Reference-LAPACK PR 1307)
    - Fixed bad scaling in ?LARFF that slowed down DSYEVR/ZHEEVR (PR 1309)
    - Fixed handling of negative increments in ?LARF/?LARF1F/?LARF1L (PR 1315)
@@ -52,6 +61,7 @@ arm:
 
 arm64:
  - Added optimized kernels for OMATCOPY_CT and OMATCOPY_RT on all targets
+ - Fixed SDOT/DDOT on non-SVE-capable cpus not initializing the result correctly
  - Fixed miscompilation of CGETF2/ZGETF2 by LLVM on Apple M
  - Fixed SSYRK miscalculation on Apple M systems bigger than the Mac mini
  - Fixed remaining cases of CMake build failure due to long argument lists on OSX
@@ -71,6 +81,7 @@ arm64:
 
 loongarch64:
  - Corrected generation of the LSX/LASX status flags in the configuration files
+ - Fixed potential reads of memory beyond the array bounds in the LA464 SGEMM kernel
  - Added optimized SDOT, ICAMIN/IZAMIN and ZGEMM kernels for 2K3000
 
 power:
@@ -87,12 +98,17 @@ riscv64:
  - Improved the x280 S/DROTM kernel and enabled it on ZVL128B/ZVL256B
  - Added optimized STRSM kernels for ZVL128B/ZVL256B
  - Added optimized D/C/ZTRSM kernels (RN and RT cases) for ZVL128B/ZVL256B
+ - Added a dedicated target for the SiFive U74 with optimized SGEMM and DGEMM kernels
+ - Made L2 cache size available at runtime for scaling GEMM block sizes
 
 x86_64:
  - Fixed remaining cases of CMake build failure due to long argument lists on OSX
  - Improved cpu capability check for recent Zhaoxin cpus
  - Fixed wrong TRSM results on AMD Barcelona (and Ryzen systems in 32bit builds) 
  - Added autodetection support for the fake Opteron-like CPUID used by QEMU on AMD hardware
+ - Fixed automatic setting of the BINARY=32 option when building with 32bit toolchains
+ - Fixed miscompilation of GEMM,SYR2K and TPMV kernels with gcc15/gcc16 on 32bit FreeBSD
+
 ====================================================================
 Version 0.3.33
 23-Apr-2026
