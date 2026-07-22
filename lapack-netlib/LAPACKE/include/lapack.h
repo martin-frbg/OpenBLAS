@@ -1553,7 +1553,7 @@ void LAPACK_zgecon_base(
     #define LAPACK_zgecon(...) LAPACK_zgecon_base(__VA_ARGS__)
 #endif
 
-#define LAPACK_cgecxx_base LAPACK_GLOBAL_SUFFIX(cgecxx,CGECXX)
+#define LAPACK_cgecxx_base LAPACK_GLOBAL(cgecxx,CGECXX)
 void LAPACK_cgecxx_base(
     char const* fact,
     char const* usesd,
@@ -1589,7 +1589,7 @@ void LAPACK_cgecxx_base(
     #define LAPACK_cgecxx(...) LAPACK_cgecxx_base(__VA_ARGS__)
 #endif
 
-#define LAPACK_dgecxx_base LAPACK_GLOBAL_SUFFIX(dgecxx,DGECXX)
+#define LAPACK_dgecxx_base LAPACK_GLOBAL(dgecxx,DGECXX)
 void LAPACK_dgecxx_base(
     char const* fact,
     char const* usesd,
@@ -1624,7 +1624,7 @@ void LAPACK_dgecxx_base(
     #define LAPACK_dgecxx(...) LAPACK_dgecxx_base(__VA_ARGS__)
 #endif
 
-#define LAPACK_sgecxx_base LAPACK_GLOBAL_SUFFIX(sgecxx,SGECXX)
+#define LAPACK_sgecxx_base LAPACK_GLOBAL(sgecxx,SGECXX)
 void LAPACK_sgecxx_base(
     char const* fact,
     char const* usesd,
@@ -1659,7 +1659,7 @@ void LAPACK_sgecxx_base(
     #define LAPACK_sgecxx(...) LAPACK_sgecxx_base(__VA_ARGS__)
 #endif
 
-#define LAPACK_zgecxx_base LAPACK_GLOBAL_SUFFIX(zgecxx,ZGECXX)
+#define LAPACK_zgecxx_base LAPACK_GLOBAL(zgecxx,ZGECXX)
 void LAPACK_zgecxx_base(
     char const* fact,
     char const* usesd,
