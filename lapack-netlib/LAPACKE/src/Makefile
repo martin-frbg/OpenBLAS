@@ -39,7 +39,7 @@ include $(TOPSRCDIR)/make.inc
 
 .SUFFIXES: .c .o
 .c.o:
-	$(CC) $(CFLAGS) -I../include -c -o $@ $<
+	$(CC) $(filter-out -fvisibility=hidden, $(CFLAGS)) -I../include -c -o $@ $<
 
 OBJ = \
 lapacke_ilaver.o \
