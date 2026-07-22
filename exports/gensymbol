@@ -917,6 +917,7 @@ lapackobjs2c="$lapackobjs2c
     clatrs3
     crscl
     ctrsyl3
+    cgecxx
     "
 #    claqz0
 #    claqz1
@@ -932,6 +933,7 @@ lapackobjs2d="$lapackobjs2d
     dlarmm
     dlatrs3
     dtrsyl3
+    dgecxx
     "
 #    dlaqz0
 #    dlaqz1
@@ -947,6 +949,7 @@ lapackobjs2s="$lapackobjs2s
     slarmm
     slatrs3
     strsyl3
+    sgecxx
     "
 
 lapackobjs2z="$lapackobjs2z
@@ -957,6 +960,7 @@ lapackobjs2z="$lapackobjs2z
     zlatrs3
     zrscl
     ztrsyl3
+    zgecxx
     "
 #    zlaqz0
 #    zlaqz1
@@ -1142,6 +1146,8 @@ lapackeobjsc="
     LAPACKE_cgedmd_work
     LAPACKE_cgedmdq
     LAPACKE_cgedmdq_work
+    LAPACKE_cgecxx
+    LAPACKE_cgecxx_work
     LAPACKE_cgeequ
     LAPACKE_cgeequ_work
     LAPACKE_cgeequb
@@ -1813,6 +1819,8 @@ lapackeobjsd="
     LAPACKE_dgedmd_work
     LAPACKE_dgedmdq
     LAPACKE_dgedmdq_work
+    LAPACKE_dgecxx
+    LAPACKE_dgecxx_work
     LAPACKE_dgeequ
     LAPACKE_dgeequ_work
     LAPACKE_dgeequb
@@ -2438,6 +2446,8 @@ lapackeobjss="
     LAPACKE_sgedmd_work
     LAPACKE_sgedmdq
     LAPACKE_sgedmdq_work
+    LAPACKE_sgecxx
+    LAPACKE_sgecxx_work
     LAPACKE_sgeequ
     LAPACKE_sgeequ_work
     LAPACKE_sgeequb
@@ -3059,6 +3069,8 @@ lapackeobjsz="
     LAPACKE_zgedmd_work
     LAPACKE_zgedmdq
     LAPACKE_zgedmdq_work
+    LAPACKE_zgecxx
+    LAPACKE_zgecxx_work
     LAPACKE_zgeequ
     LAPACKE_zgeequ_work
     LAPACKE_zgeequb
