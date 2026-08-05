@@ -65,7 +65,11 @@ static size_t openblas_xerbla_name_length(const char *message,
 static void openblas_xerbla_default(const char *message, const blasint *info,
                                     size_t length) {
   int precision = length > INT_MAX ? INT_MAX : (int)length;
-
+  
+ if (*info == 999) {
+    printf(" ** OpenBLAS ran out of thread buffers - terminating\n");
+    exit(1)
+  }
   printf(MSGFMT, precision, message == NULL ? "" : message,
          (long long)*info);
 }
