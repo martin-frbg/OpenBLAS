@@ -2765,7 +2765,7 @@ static int memory_overflowed = 0;
 void *blas_memory_alloc(int procpos){
 
   int i;
-
+  int buffer_fault = 999;
   int position;
 #if defined(WHEREAMI) && !defined(USE_OPENMP)
   int mypos = 0;
@@ -3163,7 +3163,8 @@ terminate:
   printf("a sufficiently small number. This error typically occurs when the software that relies on\n");
   printf("OpenBLAS calls BLAS functions from many threads in parallel, or when your computer has more\n");
   printf("cpu cores than what OpenBLAS was configured to handle.\n");
-  return NULL;
+  BLASFUNC(xerbla)("OpenBLAS",&buffer_fault,8);
+	return NULL;
 }
 
 void blas_memory_free(void *free_area){
