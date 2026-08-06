@@ -68,7 +68,7 @@ static void openblas_xerbla_default(const char *message, const blasint *info,
   
  if (*info == 999) {
     printf(" ** OpenBLAS ran out of thread buffers - terminating\n");
-    exit(1)
+    exit(1);
   }
   printf(MSGFMT, precision, message == NULL ? "" : message,
          (long long)*info);
