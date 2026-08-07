@@ -211,6 +211,14 @@ static __inline int blas_quickdivide(blasint x, blasint y){
 	.proc	07; \
 REALNAME:;
 
+#define PROLOGUE_EXPORT \
+	.section	".text"; \
+	.align 32; \
+	.global REALNAME;\
+	.type	REALNAME, #function; \
+	.proc	07; \
+REALNAME:;
+
 #if defined(__linux__) && defined(__ELF__)
 #define GNUSTACK .section .note.GNU-stack,"",@progbits
 #else

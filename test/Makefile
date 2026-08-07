@@ -37,6 +37,16 @@ endif
 # override CFLAGS += -std=c11 -Wall -Werror
 
 SUPPORT_GEMM3M = 0
+XERBLA_TEST = xerbla_test.$(SUFFIX)
+
+define CHECK_TEST_SUMMARY
+@status=0; $(GREP) -q -e FATAL -e FAILED "$(1)" || status=$$?; \
+case $$status in \
+  0) cat "$(1)"; exit 1 ;; \
+  1) ;; \
+  *) echo "Unable to read test summary: $(1)"; exit $$status ;; \
+esac
+endef
 
 ifeq ($(ARCH), x86)
 SUPPORT_GEMM3M = 1
@@ -146,85 +156,85 @@ ifneq ($(CROSS), 1)
 	rm -f ?BLAT2.SUMM
 ifeq ($(BUILD_BFLOAT16),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./test_bgemv$(EXE) > BBLAT2.SUMM
-	@$(GREP) -q FATAL BBLAT2.SUMM && cat BBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,BBLAT2.SUMM)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./test_sbgemv$(EXE) > SBBLAT2.SUMM
-	@$(GREP) -q FATAL SBBLAT2.SUMM && cat SBBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBBLAT2.SUMM)
 endif
 ifeq ($(BUILD_HFLOAT16),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./test_shgemv$(EXE) > SHBLAT2.SUMM
-	@$(GREP) -q FATAL SHBLAT2.SUMM && cat SHBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SHBLAT2.SUMM)
 endif
 ifeq ($(BUILD_SINGLE),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./sblat2$(EXE) < ./sblat2.dat
-	@$(GREP) -q FATAL SBLAT2.SUMM && cat SBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBLAT2.SUMM)
 endif
 ifeq ($(BUILD_DOUBLE),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./dblat2$(EXE) < ./dblat2.dat
-	@$(GREP) -q FATAL DBLAT2.SUMM && cat DBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,DBLAT2.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./cblat2$(EXE) < ./cblat2.dat
-	@$(GREP) -q FATAL CBLAT2.SUMM && cat CBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT2.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./zblat2$(EXE) < ./zblat2.dat
-	@$(GREP) -q FATAL ZBLAT2.SUMM && cat ZBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT2.SUMM)
 endif
 ifdef SMP
 	rm -f ?BLAT2.SUMM
 ifeq ($(USE_OPENMP), 1)
 ifeq ($(BUILD_BFLOAT16),1)
 	OMP_NUM_THREADS=2 ./test_bgemv$(EXE) > BBLAT2.SUMM
-	@$(GREP) -q FATAL BBLAT2.SUMM && cat BBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,BBLAT2.SUMM)
 	OMP_NUM_THREADS=2 ./test_sbgemv$(EXE) > SBBLAT2.SUMM
-	@$(GREP) -q FATAL SBBLAT2.SUMM && cat SBBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBBLAT2.SUMM)
 endif
 ifeq ($(BUILD_HFLOAT16),1)
 	OMP_NUM_THREADS=2 ./test_shgemv$(EXE) > SHBLAT2.SUMM
-	@$(GREP) -q FATAL SHBLAT2.SUMM && cat SHBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SHBLAT2.SUMM)
 endif
 ifeq ($(BUILD_SINGLE),1)
 	OMP_NUM_THREADS=2 ./sblat2$(EXE) < ./sblat2.dat
-	@$(GREP) -q FATAL SBLAT2.SUMM && cat SBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBLAT2.SUMM)
 endif
 ifeq ($(BUILD_DOUBLE),1)
 	OMP_NUM_THREADS=2 ./dblat2$(EXE) < ./dblat2.dat
-	@$(GREP) -q FATAL DBLAT2.SUMM && cat DBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,DBLAT2.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX),1)
 	OMP_NUM_THREADS=2 ./cblat2$(EXE) < ./cblat2.dat
-	@$(GREP) -q FATAL CBLAT2.SUMM && cat CBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT2.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OMP_NUM_THREADS=2 ./zblat2$(EXE) < ./zblat2.dat
-	@$(GREP) -q FATAL ZBLAT2.SUMM && cat ZBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT2.SUMM)
 endif
 else
 ifeq ($(BUILD_BFLOAT16),1)
 	OMP_NUM_THREADS=2 ./test_bgemv$(EXE) > BBLAT2.SUMM
-	@$(GREP) -q FATAL BBLAT2.SUMM && cat BBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,BBLAT2.SUMM)
 	OMP_NUM_THREADS=2 ./test_sbgemv$(EXE) > SBBLAT2.SUMM
-	@$(GREP) -q FATAL SBBLAT2.SUMM && cat SBBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBBLAT2.SUMM)
 endif
 ifeq ($(BUILD_HFLOAT16),1)
 	OMP_NUM_THREADS=2 ./test_shgemv$(EXE) > SHBLAT2.SUMM
-	@$(GREP) -q FATAL SHBLAT2.SUMM && cat SHBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SHBLAT2.SUMM)
 endif
 ifeq ($(BUILD_SINGLE),1)
 	OPENBLAS_NUM_THREADS=2 ./sblat2$(EXE) < ./sblat2.dat
-	@$(GREP) -q FATAL SBLAT2.SUMM && cat SBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBLAT2.SUMM)
 endif
 ifeq ($(BUILD_DOUBLE),1)
 	OPENBLAS_NUM_THREADS=2 ./dblat2$(EXE) < ./dblat2.dat
-	@$(GREP) -q FATAL DBLAT2.SUMM && cat DBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,DBLAT2.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX),1)
 	OPENBLAS_NUM_THREADS=2 ./cblat2$(EXE) < ./cblat2.dat
-	@$(GREP) -q FATAL CBLAT2.SUMM && cat CBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT2.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OPENBLAS_NUM_THREADS=2 ./zblat2$(EXE) < ./zblat2.dat
-	@$(GREP) -q FATAL ZBLAT2.SUMM && cat ZBLAT2.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT2.SUMM)
 endif
 endif
 endif
@@ -273,86 +283,86 @@ ifneq ($(CROSS), 1)
 	rm -f ?BLAT3.SUMM
 ifeq ($(BUILD_BFLOAT16),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./test_sbgemm$(EXE) > SBBLAT3.SUMM
-	@$(GREP) -q FATAL SBBLAT3.SUMM && cat SBBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBBLAT3.SUMM)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./test_bgemm$(EXE) > BBLAT3.SUMM
-	@$(GREP) -q FATAL BBLAT3.SUMM && cat BBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,BBLAT3.SUMM)
 endif
 ifeq ($(BUILD_HFLOAT16),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./test_shgemm > SHBLAT3.SUMM
-	@$(GREP) -q FATAL SHBLAT3.SUMM && cat SHBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SHBLAT3.SUMM)
 endif
 ifeq ($(BUILD_SINGLE),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./sblat3$(EXE) < ./sblat3.dat
-	@$(GREP) -q FATAL SBLAT3.SUMM && cat SBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBLAT3.SUMM)
 endif
 ifeq ($(BUILD_DOUBLE),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./dblat3$(EXE) < ./dblat3.dat
-	@$(GREP) -q FATAL DBLAT3.SUMM && cat DBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,DBLAT3.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./cblat3$(EXE) < ./cblat3.dat
-	@$(GREP) -q FATAL CBLAT3.SUMM && cat CBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT3.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./zblat3$(EXE) < ./zblat3.dat
-	@$(GREP) -q FATAL ZBLAT3.SUMM && cat ZBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT3.SUMM)
 endif
 ifdef SMP
 	rm -f ?BLAT3.SUMM
 ifeq ($(USE_OPENMP), 1)
 ifeq ($(BUILD_BFLOAT16),1)
 	OMP_NUM_THREADS=2 ./test_sbgemm$(EXE) > SBBLAT3.SUMM
-	@$(GREP) -q FATAL SBBLAT3.SUMM && cat SBBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBBLAT3.SUMM)
 	OMP_NUM_THREADS=2 ./test_bgemm$(EXE) > BBLAT3.SUMM
-	@$(GREP) -q FATAL BBLAT3.SUMM && cat BBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,BBLAT3.SUMM)
 endif
 ifeq ($(BUILD_HFLOAT16),1)
 	OMP_NUM_THREADS=2 ./test_shgemm > SHBLAT3.SUMM
-	@$(GREP) -q FATAL SHBLAT3.SUMM && cat SHBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SHBLAT3.SUMM)
 endif
 
 ifeq ($(BUILD_SINGLE),1)
 	OMP_NUM_THREADS=2 ./sblat3$(EXE) < ./sblat3.dat
-	@$(GREP) -q FATAL SBLAT3.SUMM && cat SBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBLAT3.SUMM)
 endif
 ifeq ($(BUILD_DOUBLE),1)
 	OMP_NUM_THREADS=2 ./dblat3$(EXE) < ./dblat3.dat
-	@$(GREP) -q FATAL DBLAT3.SUMM && cat DBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,DBLAT3.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX),1)
 	OMP_NUM_THREADS=2 ./cblat3$(EXE) < ./cblat3.dat
-	@$(GREP) -q FATAL CBLAT3.SUMM && cat CBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT3.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OMP_NUM_THREADS=2 ./zblat3$(EXE) < ./zblat3.dat
-	@$(GREP) -q FATAL ZBLAT3.SUMM && cat ZBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT3.SUMM)
 endif
 else
 ifeq ($(BUILD_BFLOAT16),1)
 	OPENBLAS_NUM_THREADS=2 ./test_sbgemm$(EXE) > SBBLAT3.SUMM
-	@$(GREP) -q FATAL SBBLAT3.SUMM && cat SBBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBBLAT3.SUMM)
 	OPENBLAS_NUM_THREADS=2 ./test_bgemm$(EXE) > BBLAT3.SUMM
-	@$(GREP) -q FATAL BBLAT3.SUMM && cat BBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,BBLAT3.SUMM)
 endif
 ifeq ($(BUILD_HFLOAT16),1)
 	OPENBLAS_NUM_THREADS=2 ./test_shgemm > SHBLAT3.SUMM
-	@$(GREP) -q FATAL SHBLAT3.SUMM && cat SHBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SHBLAT3.SUMM)
 endif
 ifeq ($(BUILD_SINGLE),1)
 	OPENBLAS_NUM_THREADS=2 ./sblat3$(EXE) < ./sblat3.dat
-	@$(GREP) -q FATAL SBLAT3.SUMM && cat SBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,SBLAT3.SUMM)
 endif
 ifeq ($(BUILD_DOUBLE),1)
 	OPENBLAS_NUM_THREADS=2 ./dblat3$(EXE) < ./dblat3.dat
-	@$(GREP) -q FATAL DBLAT3.SUMM && cat DBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,DBLAT3.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX),1)
 	OPENBLAS_NUM_THREADS=2 ./cblat3$(EXE) < ./cblat3.dat
-	@$(GREP) -q FATAL CBLAT3.SUMM && cat CBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT3.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OPENBLAS_NUM_THREADS=2 ./zblat3$(EXE) < ./zblat3.dat
-	@$(GREP) -q FATAL ZBLAT3.SUMM && cat ZBLAT3.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT3.SUMM)
 endif
 endif
 endif
@@ -364,31 +374,31 @@ ifneq ($(CROSS), 1)
 	rm -f ?BLAT3_3M.SUMM
 ifeq ($(BUILD_COMPLEX),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./cblat3_3m$(EXE) < ./cblat3_3m.dat
-	@$(GREP) -q FATAL CBLAT3_3M.SUMM && cat CBLAT3_3M.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT3_3M.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ./zblat3_3m$(EXE) < ./zblat3_3m.dat
-	@$(GREP) -q FATAL ZBLAT3_3M.SUMM && cat ZBLAT3_3M.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT3_3M.SUMM)
 endif
 ifdef SMP
 	rm -f ?BLAT3_3M.SUMM
 ifeq ($(USE_OPENMP), 1)
 ifeq ($(BUILD_COMPLEX),1)
 	OMP_NUM_THREADS=2 ./cblat3_3m$(EXE) < ./cblat3_3m.dat
-	@$(GREP) -q FATAL CBLAT3_3M.SUMM && cat CBLAT3_3M.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT3_3M.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OMP_NUM_THREADS=2 ./zblat3_3m$(EXE) < ./zblat3_3m.dat
-	@$(GREP) -q FATAL ZBLAT3_3M.SUMM && cat ZBLAT3_3M.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT3_3M.SUMM)
 endif
 else
 ifeq ($(BUILD_COMPLEX),1)
 	OPENBLAS_NUM_THREADS=2 ./cblat3_3m$(EXE) < ./cblat3_3m.dat
-	@$(GREP) -q FATAL CBLAT3_3M.SUMM && cat CBLAT3_3M.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,CBLAT3_3M.SUMM)
 endif
 ifeq ($(BUILD_COMPLEX16),1)
 	OPENBLAS_NUM_THREADS=2 ./zblat3_3m$(EXE) < ./zblat3_3m.dat
-	@$(GREP) -q FATAL ZBLAT3_3M.SUMM && cat ZBLAT3_3M.SUMM || exit 0
+	$(call CHECK_TEST_SUMMARY,ZBLAT3_3M.SUMM)
 endif
 endif
 endif
@@ -420,26 +430,29 @@ endif
 endif
 endif
 
+$(XERBLA_TEST): xerbla_test.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 ifeq ($(BUILD_SINGLE),1)
 sblat1$(EXE) : sblat1.$(SUFFIX) ../$(LIBNAME)
 	$(FC) $(FLDFLAGS) -o $@ sblat1.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-sblat2$(EXE) : sblat2.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ sblat2.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+sblat2$(EXE) : sblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ sblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-sblat3$(EXE) : sblat3.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ sblat3.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+sblat3$(EXE) : sblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ sblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 endif
 
 ifeq ($(BUILD_DOUBLE),1)
 dblat1$(EXE) : dblat1.$(SUFFIX) ../$(LIBNAME)
 	$(FC) $(FLDFLAGS) -o $@ dblat1.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-dblat2$(EXE) : dblat2.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ dblat2.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+dblat2$(EXE) : dblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ dblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-dblat3$(EXE) : dblat3.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ dblat3.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+dblat3$(EXE) : dblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ dblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 else
 dblat2$(EXE):
 dblat3$(EXE):
@@ -453,22 +466,22 @@ ifeq ($(BUILD_COMPLEX),1)
 cblat1$(EXE) : cblat1.$(SUFFIX) ../$(LIBNAME)
 	$(FC) $(FLDFLAGS) -o $@ cblat1.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-cblat2$(EXE) : cblat2.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ cblat2.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+cblat2$(EXE) : cblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ cblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-cblat3$(EXE) : cblat3.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ cblat3.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+cblat3$(EXE) : cblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ cblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 endif
 
 ifeq ($(BUILD_COMPLEX16),1)
 zblat1$(EXE) : zblat1.$(SUFFIX) ../$(LIBNAME)
 	$(FC) $(FLDFLAGS) -o $@ zblat1.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-zblat2$(EXE) : zblat2.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ zblat2.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+zblat2$(EXE) : zblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ zblat2.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 
-zblat3$(EXE) : zblat3.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ zblat3.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+zblat3$(EXE) : zblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ zblat3.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 endif
 
 ifeq ($(BUILD_BFLOAT16),1)
@@ -495,13 +508,13 @@ endif
 
 
 ifeq ($(BUILD_COMPLEX),1)
-cblat3_3m$(EXE) : cblat3_3m.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ cblat3_3m.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+cblat3_3m$(EXE) : cblat3_3m.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ cblat3_3m.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 endif
 
 ifeq ($(BUILD_COMPLEX16),1)
-zblat3_3m$(EXE) : zblat3_3m.$(SUFFIX) ../$(LIBNAME)
-	$(FC) $(FLDFLAGS) -o $@ zblat3_3m.$(SUFFIX) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
+zblat3_3m$(EXE) : zblat3_3m.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME)
+	$(FC) $(FLDFLAGS) -o $@ zblat3_3m.$(SUFFIX) $(XERBLA_TEST) ../$(LIBNAME) $(EXTRALIB) $(CEXTRALIB)
 endif
 
 

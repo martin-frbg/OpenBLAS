@@ -57,6 +57,7 @@ extern "C" {
 #define __USE_SVID
 #endif
 
+#include "exports.h"
 #ifdef BUILD_KERNEL
 #include "config_kernel.h"
 #else
@@ -80,7 +81,7 @@ extern "C" {
 #endif
 
 #ifndef ASSEMBLER
-#ifdef HAVE_C11
+#if defined(HAVE_C11) && !defined(__cplusplus)
 #if defined(C_GCC) && ( __GNUC__ < 7)
 // workaround for GCC bug 65467
 #ifndef _Atomic
@@ -209,8 +210,10 @@ extern "C" {
 
 #ifdef NEEDBUNDERSCORE
 #define BLASFUNC(FUNC) FUNC##_
+#define OPENBLAS_API(FUNC) OPENBLAS_EXPORT FUNC##_
 #else
 #define BLASFUNC(FUNC) FUNC
+#define OPENBLAS_API(FUNC) OPENBLAS_EXPORT FUNC
 #endif
 
 #undef	USE_PTHREAD_LOCK
@@ -447,7 +450,7 @@ please https://github.com/xianyi/OpenBLAS/issues/246
 #endif
 
 #ifndef ASSEMBLER
-#ifdef HAVE_C11
+#if defined(HAVE_C11) && !defined(__cplusplus)
 #define BLAS_LOCK_DEFINED
 #endif
 #endif
@@ -579,7 +582,7 @@ static __inline void blas_lock(volatile BLASULONG *address){
 #define BLAS_LOCK_DEFINED
 #endif
 
-#ifdef HAVE_C11
+#if defined(HAVE_C11) && !defined(__cplusplus)
 static __inline void blas_lock(volatile BLASULONG *address) {
   BLASULONG expected = 0;
   while (!atomic_compare_exchange_strong((volatile _Atomic BLASULONG *)address,
@@ -591,7 +594,7 @@ static __inline void blas_lock(volatile BLASULONG *address) {
 #endif
 
 static __inline void blas_unlock(volatile BLASULONG *address){
-#ifdef HAVE_C11
+#if defined(HAVE_C11) && !defined(__cplusplus)
   atomic_store((volatile _Atomic BLASULONG *)address, (BLASULONG)0);
 #else
   MB;
@@ -761,7 +764,18 @@ int get_num_proc   (int);
 int get_node_equal (void);
 #endif
 
-void goto_set_num_threads(int);
+OPENBLAS_EXPORT void goto_set_num_threads(int);
+
+/* Cooperative cancellation of in-flight operations
+ * (implemented in driver/others/openblas_cancel.c).  These symbols are
+ * exported without SYMBOLPREFIX/SYMBOLSUFFIX decoration. */
+size_t *openblas_cancel_token(void);
+OPENBLAS_EXPORT void openblas_cancel(size_t *token, size_t loaded_token);
+
+/* Internal helpers for the instrumented compute drivers. */
+size_t  openblas_cancel_begin(void);
+size_t *openblas_cancel_self(void);
+int     openblas_cancel_poll(size_t *slot, size_t gen);
 
 void gotoblas_affinity_init(void);
 void gotoblas_affinity_quit(void);
@@ -880,6 +894,26 @@ typedef struct {
 #endif
 
 #include "common_interface.h"
+
+/* Internal declaration of the public C XERBLA callback API. Keep this out of
+ * common_interface.h, whose contents are copied verbatim into f77blas.h and
+ * are not adjusted for SYMBOLPREFIX/SYMBOLSUFFIX by the CMake build. */
+#ifndef ASSEMBLER
+#ifdef __cplusplus
+extern "C" {
+#endif
+#ifndef OPENBLAS_XERBLA_HANDLER_DEFINED
+#define OPENBLAS_XERBLA_HANDLER_DEFINED
+typedef void (*openblas_xerbla_handler)(const char *name,
+                                        const blasint *info,
+                                        size_t name_length);
+#endif
+OPENBLAS_EXPORT openblas_xerbla_handler openblas_set_xerbla(openblas_xerbla_handler handler);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
 #ifdef SANITY_CHECK
 #include "common_reference.h"
 #endif

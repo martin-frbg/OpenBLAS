@@ -73,7 +73,10 @@ install : 	lib.grd
 
 ifneq ($(NO_CBLAS),1)
 	@echo Generating cblas.h in $(DESTDIR)$(OPENBLAS_INCLUDE_DIR)
-	@cp cblas.h cblas.tmp
+	@sed -e 's/openblas_dojob_callback/OPENBLAS_DOJOB_CALLBACK_TYPE/g' \
+	     -e 's/openblas_threads_callback/OPENBLAS_THREADS_CALLBACK_TYPE/g' \
+	     -e 's/openblas_xerbla_handler/OPENBLAS_XERBLA_HANDLER_TYPE/g' \
+	     cblas.h > cblas.tmp
 ifdef SYMBOLPREFIX
 	@sed 's/cblas[^() ]*/$(SYMBOLPREFIX)&/g' cblas.tmp > cblas.tmp2
 	@sed 's/openblas[^() ]*/$(SYMBOLPREFIX)&/g'  cblas.tmp2 > cblas.tmp
@@ -88,7 +91,16 @@ ifdef SYMBOLSUFFIX
 	@sed 's/\(openblas_complex_\)\([^ ]*\)$(SYMBOLSUFFIX)/\1\2 /g'  cblas.tmp > cblas.tmp2
 	@sed 's/goto[^() ]*/&$(SYMBOLSUFFIX)/g'  cblas.tmp2 > cblas.tmp
 endif
-	@sed 's/common/openblas_config/g' cblas.tmp > "$(DESTDIR)$(OPENBLAS_INCLUDE_DIR)/cblas.h"
+
+	@sed 's/OPENBLAS_EXPORT //'  cblas.tmp > cblas.tmp2
+	@sed 's/common/openblas_config/g' cblas.tmp2 > cblas.tmp
+
+	@sed -e 's/OPENBLAS_DOJOB_CALLBACK_TYPE/openblas_dojob_callback/g' \
+	     -e 's/OPENBLAS_THREADS_CALLBACK_TYPE/openblas_threads_callback/g' \
+	     -e 's/OPENBLAS_XERBLA_HANDLER_TYPE/openblas_xerbla_handler/g' \
+	     -e 's/common/openblas_config/g' \
+	     cblas.tmp > "$(DESTDIR)$(OPENBLAS_INCLUDE_DIR)/cblas.h"
+
 endif
 
 ifneq ($(OSNAME), AIX)

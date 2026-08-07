@@ -285,7 +285,7 @@ GEMM_GEMV_FORWARD = 1
 SBGEMM_GEMV_FORWARD = 1
 BGEMM_GEMV_FORWARD = 1
 endif
-ifeq ($(ARCH), riscv)
+ifeq ($(ARCH), riscv64)
 GEMM_GEMV_FORWARD = 1
 endif
 ifeq ($(ARCH), power)
@@ -600,11 +600,13 @@ ifeq ($(F_COMPILER), GFORTRAN)
 ifeq ($(C_COMPILER), $(filter $(C_COMPILER),GCC LSB))
 EXPRECISION	= 1
 CCOMMON_OPT	+= -DEXPRECISION -m128bit-long-double
+CCOMMON_OPT	+= -fvisibility=hidden
 FCOMMON_OPT	+= -m128bit-long-double
 endif
 ifeq ($(C_COMPILER), CLANG)
 EXPRECISION	= 1
 CCOMMON_OPT	+= -DEXPRECISION
+CCOMMON_OPT	+= -fvisibility=hidden
 FCOMMON_OPT	+= -m128bit-long-double
 endif
 endif
@@ -623,11 +625,13 @@ ifeq ($(F_COMPILER), GFORTRAN)
 ifeq ($(C_COMPILER), $(filter $(C_COMPILER),GCC LSB))
 EXPRECISION	= 1
 CCOMMON_OPT	+= -DEXPRECISION -m128bit-long-double
+CCOMMON_OPT	+= -fvisibility=hidden
 FCOMMON_OPT	+= -m128bit-long-double
 endif
 ifeq ($(C_COMPILER), CLANG)
 EXPRECISION	= 1
 CCOMMON_OPT	+= -DEXPRECISION
+CCOMMON_OPT	+= -fvisibility=hidden
 FCOMMON_OPT	+= -m128bit-long-double
 endif
 endif

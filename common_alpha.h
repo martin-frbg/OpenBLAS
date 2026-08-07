@@ -145,6 +145,16 @@ static __inline int blas_quickdivide(unsigned int x, unsigned int y){
 	.ent REALNAME; \
 REALNAME:
 
+#define PROLOGUE_EXPORT \
+	.arch ev6; \
+	.set noat; \
+	.set noreorder; \
+.text; \
+	.align 5; \
+	.globl REALNAME; \
+	.ent REALNAME; \
+REALNAME:
+
 #ifdef PROFILE
 #define PROFCODE \
 	ldgp	$gp, 0($27); \

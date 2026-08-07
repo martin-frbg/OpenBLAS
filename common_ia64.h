@@ -371,6 +371,13 @@ static __inline int blas_quickdivide(unsigned int x, unsigned int y){
 	.proc REALNAME; \
 REALNAME:
 
+#define PROLOGUE_EXPORT \
+	.explicit; \
+	.text; \
+	.align 128; \
+	.global REALNAME; \
+	.proc REALNAME; \
+REALNAME:
 
 #ifdef PROFILE
 #define PROFCODE \

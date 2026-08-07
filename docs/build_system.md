@@ -143,9 +143,8 @@ ensures that there are a sufficient number of buffer sets available.
   no symbolic linking to variant names (default is `0`)
 - `LIBNAMEPREFIX`: prefix that, if given, will be inserted in the library name
   before `openblas` (e.g., `xxx` will result in `libxxxopenblas.so`)
-- `LIBNAMESUFFIX`: suffix that, if given, will be inserted in the library name
-  after `openblas`, separated by an underscore (e.g., `yyy` will result in
-  `libopenblas_yyy.so`)
+- `LIBNAMESUFFIX`: suffix that, if given, will be appended to the library name
+  after `openblas` (e.g., `_yyy` will result in `libopenblas_yyy.so`)
 - `SYMBOLPREFIX`: prefix that, if given, will be added to all symbol names
   *and* to the library name
 - `SYMBOLSUFFIX`: suffix that, if given, will be added to all symbol names

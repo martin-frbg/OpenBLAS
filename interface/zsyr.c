@@ -73,6 +73,7 @@ static int (*syr_thread[])(BLASLONG, FLOAT *, FLOAT *, BLASLONG, FLOAT *, BLASLO
 };
 #endif
 
+OPENBLAS_EXPORT
 
 #ifndef CBLAS
 

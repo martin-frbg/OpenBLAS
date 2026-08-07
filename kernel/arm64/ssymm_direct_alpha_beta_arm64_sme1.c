@@ -251,5 +251,5 @@ void CNAME(BLASLONG M, BLASLONG N, float alpha, float *__restrict A,
 void CNAME (BLASLONG M, BLASLONG N, float alpha, float * __restrict A,\
             BLASLONG strideA, float * __restrict B, BLASLONG strideB ,\
             float beta, float * __restrict R, BLASLONG strideR){}
- 
+
 #endif
