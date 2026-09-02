@@ -108,7 +108,7 @@ static inline int get_gemv_optimal_nthreads(BLASLONG MN) {
   int ncpu = num_cpu_avail(3);
 #if defined(_WIN64) && defined(_M_ARM64)
   if (MN > 100000000L)
-    return num_cpu_avail(4);
+    return ncpu;
   return 1;
 #endif
 #if defined(NEOVERSEV1) && !defined(COMPLEX) && !defined(BFLOAT16)
@@ -127,7 +127,7 @@ static inline int get_gemv_optimal_nthreads(BLASLONG MN) {
   if ( MN < 115200L * GEMM_MULTITHREAD_THRESHOLD )
     return 1;
   else
-    return num_cpu_avail(2);
+    return ncpu;
 }
 #endif
 
