@@ -188,7 +188,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE transa, enum CBLAS_TRANS
   void * group_small_matrix_opt_routine=NULL;
 #endif
   
-#if defined (SMP) || defined(SMALL_MATRIX_OPT)
+#if defined(SMALL_MATRIX_OPT)
   double MNK;
 #endif
 
@@ -356,7 +356,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE transa, enum CBLAS_TRANS
 
     group_mode=mode;
 
-#if defined(SMP) || defined(SMALL_MATRIX_OPT)
+#if defined(SMALL_MATRIX_OPT)
     MNK = (double) group_m * (double) group_n * (double) group_k;
 #endif
 
