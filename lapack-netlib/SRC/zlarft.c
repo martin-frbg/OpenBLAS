@@ -690,7 +690,7 @@ f"> */
 /* > \endverbatim */
 /* > */
 /*  ===================================================================== */
-/* Subroutine */ int zlarft_(char *direct, char *storev, integer *n, integer *
+/* Subroutine */ void zlarft_(char *direct, char *storev, integer *n, integer *
 	k, doublecomplex *v, integer *ldv, doublecomplex *tau, doublecomplex *
 	t, integer *ldt)
 {
@@ -704,12 +704,12 @@ f"> */
     integer i__, j, l;
     logical lq, ql, qr;
     integer nx;
-    extern /* Subroutine */ int zlarft_lvl2__(char *, char *, integer *, 
+    extern /* Subroutine */ void zlarft_lvl2__(char *, char *, integer *, 
 	    integer *, doublecomplex *, integer *, doublecomplex *, 
 	    doublecomplex *, integer *);
     logical dirf, colv;
     extern logical lsame_(char *, char *);
-    extern /* Subroutine */ int zgemm_(char *, char *, integer *, integer *, 
+    extern /* Subroutine */ void zgemm_(char *, char *, integer *, integer *, 
 	    integer *, doublecomplex *, doublecomplex *, integer *, 
 	    doublecomplex *, integer *, doublecomplex *, doublecomplex *, 
 	    integer *), ztrmm_(char *, char *, char *, char *,
@@ -717,7 +717,7 @@ f"> */
 	    , doublecomplex *, integer *);
     extern integer ilaenv_(integer *, char *, char *, integer *, integer *, 
 	    integer *, integer *, ftnlen, ftnlen);
-    extern /* Subroutine */ int zlacpy_(char *, integer *, integer *, 
+    extern /* Subroutine */ void zlacpy_(char *, integer *, integer *, 
 	    doublecomplex *, integer *, doublecomplex *, integer *);
 
 
@@ -756,7 +756,7 @@ f"> */
 
     /* Function Body */
     if (*n == 0 || *k == 0) {
-	return 0;
+	return;
     }
 
 /*     Base case */
@@ -764,7 +764,7 @@ f"> */
     if (*n == 1 || *k == 1) {
 	i__1 = t_dim1 + 1;
 	t[i__1].r = tau[1].r, t[i__1].i = tau[1].i;
-	return 0;
+	return;
     }
 
 /*     Determine when to cross over into the level 2 based implementation */
@@ -778,7 +778,7 @@ f"> */
     if (*k < nx) {
 	zlarft_lvl2__(direct, storev, n, k, &v[v_offset], ldv, &tau[1], &t[
 		t_offset], ldt);
-	return 0;
+	return;
     }
 
 /*     Beginning of executable statements */
@@ -1226,6 +1226,6 @@ f"> */
 	ztrmm_("Right", "Lower", "No tranpose", "Non-unit", &l, &i__1, &c_b1, 
 		&t[t_offset], ldt, &t[*k - l + 1 + t_dim1], ldt);
     }
-    return 0;
+    return;
 } /* zlarft_ */
 

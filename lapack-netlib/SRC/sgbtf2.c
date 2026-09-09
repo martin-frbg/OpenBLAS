@@ -385,7 +385,7 @@ f"> */
     extern /* Subroutine */ void sscal_(integer *, real *, real *, integer *), 
 	    sswap_(integer *, real *, integer *, real *, integer *);
     integer km, jp, ju, kv;
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     extern integer isamax_(integer *, real *, integer *);
 
 

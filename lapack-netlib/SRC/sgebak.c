@@ -368,7 +368,7 @@ f"> */
     extern /* Subroutine */ void sswap_(integer *, real *, integer *, real *, 
 	    integer *);
     integer ii;
-    extern /* Subroutine */ int xerbla_(char *, integer *,ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *,ftnlen);
     logical rightv;
 
 

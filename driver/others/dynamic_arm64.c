@@ -541,7 +541,10 @@ static gotoblas_t *get_coretype(void) {
 
 #if !defined(NO_SME)
   if (support_sme1()) {
-    return &gotoblas_ARMV9SME;
+	if ((getauxval(AT_HWCAP) & HWCAP_SVE))
+      return &gotoblas_ARMV9SME;
+	else
+	  return &gotoblas_VORTEXM4;
   }
 #endif
 

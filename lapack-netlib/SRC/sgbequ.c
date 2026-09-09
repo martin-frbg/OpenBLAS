@@ -179,8 +179,6 @@ typedef struct Namelist Namelist;
 #define d_asin(x) (asin(*(x)))
 #define d_atan(x) (atan(*(x)))
 #define d_atn2(x, y) (atan2(*(x),*(y)))
-#define d_cnjg(R, Z) { pCd(R) = conj(Cd(Z)); }
-#define r_cnjg(R, Z) { pCf(R) = conjf(Cf(Z)); }
 #define d_cos(x) (cos(*(x)))
 #define d_cosh(x) (cosh(*(x)))
 #define d_dim(__a, __b) ( *(__a) > *(__b) ? *(__a) - *(__b) : 0.0 )
@@ -391,7 +389,7 @@ f"> */
     real rcmin, rcmax;
     integer kd;
     extern real slamch_(char *);
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     real bignum, smlnum;
 
 

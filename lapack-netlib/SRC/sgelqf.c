@@ -387,7 +387,7 @@ f"> */
     extern /* Subroutine */ void slarfb_(char *, char *, char *, char *, 
 	    integer *, integer *, integer *, real *, integer *, real *, 
 	    integer *, real *, integer *, real *, integer *);
-    extern int xerbla_(char *, integer *, ftnlen);
+    extern void xerbla_(char *, integer *, ftnlen);
     extern integer ilaenv_(integer *, char *, char *, integer *, integer *, 
 	    integer *, integer *, ftnlen, ftnlen);
     extern /* Subroutine */ void slarft_(char *, char *, integer *, integer *, 

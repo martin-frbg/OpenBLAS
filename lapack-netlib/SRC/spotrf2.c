@@ -348,7 +348,7 @@ static real c_b11 = -1.f;
 	    ), ssyrk_(char *, char *, integer 
 	    *, integer *, real *, real *, integer *, real *, real *, integer *
 	    );
-    extern int xerbla_(char *, integer *, ftnlen);
+    extern void xerbla_(char *, integer *, ftnlen);
     extern logical sisnan_(real *);
 
 

@@ -456,7 +456,7 @@ f"> */
 	    *, integer *, real *, real *, real *, real *, real *, integer *, 
 	    real *, integer *);
     integer ws;
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     extern integer ilaenv_(integer *, char *, char *, integer *, integer *, 
 	    integer *, integer *, ftnlen, ftnlen);
     integer ldwrkx, ldwrky, lwkopt;

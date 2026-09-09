@@ -437,7 +437,7 @@ f"> */
     real ra, rb, rc;
     integer kk, ml, mn, nr, mu;
     real rs;
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     extern void slaset_(
 	    char *, integer *, integer *, real *, real *, real *, integer *), slartg_(real *, real *, real *, real *, real *);
     integer kb1;

@@ -462,7 +462,7 @@ f"> */
     extern real slamch_(char *);
     integer nz;
     real safmin;
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     logical notran;
     extern /* Subroutine */ void sgbtrs_(char *, integer *, integer *, integer 
 	    *, integer *, real *, integer *, integer *, real *, integer *, 

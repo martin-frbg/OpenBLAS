@@ -373,7 +373,7 @@ f"> */
     integer i__, j;
     real rcmin, rcmax;
     extern real slamch_(char *);
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     real bignum, smlnum;
 
 

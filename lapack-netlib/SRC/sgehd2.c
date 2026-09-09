@@ -385,7 +385,7 @@ f"> */
     integer i__;
     extern /* Subroutine */ void slarf_(char *, integer *, integer *, real *, 
 	    integer *, real *, real *, integer *, real *);
-    extern int xerbla_(char *, integer *, ftnlen);
+    extern void xerbla_(char *, integer *, ftnlen);
     extern void slarfg_(integer *, real *, real *, integer *, real *);
     real aii;
 

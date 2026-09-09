@@ -683,7 +683,7 @@ f"> */
 /* > \endverbatim */
 /* > */
 /*  ===================================================================== */
-/* Subroutine */ int clarft_lvl2__(char *direct, char *storev, integer *n, 
+/* Subroutine */ void clarft_lvl2__(char *direct, char *storev, integer *n, 
 	integer *k, complex *v, integer *ldv, complex *tau, complex *t, 
 	integer *ldt)
 {
@@ -693,14 +693,14 @@ f"> */
 
     /* Local variables */
     integer i__, j, prevlastv;
-    extern /* Subroutine */ int cgemm_(char *, char *, integer *, integer *, 
+    extern /* Subroutine */ void cgemm_(char *, char *, integer *, integer *, 
 	    integer *, complex *, complex *, integer *, complex *, integer *, 
 	    complex *, complex *, integer *), cgemv_(char *, 
 	    integer *, integer *, complex *, complex *, integer *, complex *, 
 	    integer *, complex *, complex *, integer *);
     extern logical lsame_(char *, char *);
     integer lastv;
-    extern /* Subroutine */ int ctrmv_(char *, char *, char *, integer *, 
+    extern /* Subroutine */ void ctrmv_(char *, char *, char *, integer *, 
 	    complex *, integer *, complex *, integer *), mecago_();
 
 
@@ -725,7 +725,7 @@ f"> */
 
     /* Function Body */
     if (*n == 0) {
-	return 0;
+	return;
     }
 
     if (lsame_(direct, "F")) {
@@ -927,7 +927,7 @@ f"> */
 	    }
 	}
     }
-    return 0;
+    return;
 
 /*     End of CLARFT_LVL2 */
 

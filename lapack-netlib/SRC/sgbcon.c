@@ -394,7 +394,7 @@ f"> */
 	    integer *);
     integer kd, lm, jp, ix;
     extern real slamch_(char *);
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     extern integer isamax_(integer *, real *, integer *);
     real ainvnm;
     extern /* Subroutine */ void slatbs_(char *, char *, char *, char *, 

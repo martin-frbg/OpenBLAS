@@ -690,7 +690,7 @@ f"> */
 /* > \endverbatim */
 /* > */
 /*  ===================================================================== */
-/* Subroutine */ int clarft_(char *direct, char *storev, integer *n, integer *
+/* Subroutine */ void clarft_(char *direct, char *storev, integer *n, integer *
 	k, complex *v, integer *ldv, complex *tau, complex *t, integer *ldt)
 {
     /* System generated locals */
@@ -703,14 +703,14 @@ f"> */
     integer i__, j, l;
     logical lq, ql, qr;
     integer nx;
-    extern /* Subroutine */ int clarft_lvl2__(char *, char *, integer *, 
+    extern /* Subroutine */ void clarft_lvl2__(char *, char *, integer *, 
 	    integer *, complex *, integer *, complex *, complex *, integer *);
     logical dirf, colv;
-    extern /* Subroutine */ int cgemm_(char *, char *, integer *, integer *, 
+    extern /* Subroutine */ void cgemm_(char *, char *, integer *, integer *, 
 	    integer *, complex *, complex *, integer *, complex *, integer *, 
 	    complex *, complex *, integer *);
     extern logical lsame_(char *, char *);
-    extern /* Subroutine */ int ctrmm_(char *, char *, char *, char *, 
+    extern /* Subroutine */ void ctrmm_(char *, char *, char *, char *, 
 	    integer *, integer *, complex *, complex *, integer *, complex *, 
 	    integer *), clacpy_(char *, 
 	    integer *, integer *, complex *, integer *, complex *, integer *);
@@ -753,7 +753,7 @@ f"> */
 
     /* Function Body */
     if (*n == 0 || *k == 0) {
-	return 0;
+	return;
     }
 
 /*     Base case */
@@ -761,7 +761,7 @@ f"> */
     if (*n == 1 || *k == 1) {
 	i__1 = t_dim1 + 1;
 	t[i__1].r = tau[1].r, t[i__1].i = tau[1].i;
-	return 0;
+	return;
     }
 
 /*     Determine when to cross over into the level 2 based implementation */
@@ -775,7 +775,7 @@ f"> */
     if (*k < nx) {
 	clarft_lvl2__(direct, storev, n, k, &v[v_offset], ldv, &tau[1], &t[
 		t_offset], ldt);
-	return 0;
+	return;
     }
 
 /*     Beginning of executable statements */
@@ -1223,6 +1223,6 @@ f"> */
 	ctrmm_("Right", "Lower", "No tranpose", "Non-unit", &l, &i__1, &c_b1, 
 		&t[t_offset], ldt, &t[*k - l + 1 + t_dim1], ldt);
     }
-    return 0;
+    return;
 } /* clarft_ */
 

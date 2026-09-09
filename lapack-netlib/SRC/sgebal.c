@@ -405,7 +405,7 @@ f"> */
 	    sswap_(integer *, real *, integer *, real *, integer *);
     real sfmin1, sfmin2, sfmax1, sfmax2, ca, ra;
     extern real slamch_(char *);
-    extern /* Subroutine */ int xerbla_(char *, integer *,ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *,ftnlen);
     extern integer isamax_(integer *, real *, integer *);
     extern logical sisnan_(real *);
     logical noconv;

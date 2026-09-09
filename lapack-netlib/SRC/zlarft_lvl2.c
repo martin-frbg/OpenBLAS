@@ -688,7 +688,7 @@ f"> */
 /* > \endverbatim */
 /* > */
 /*  ===================================================================== */
-/* Subroutine */ int zlarft_lvl2__(char *direct, char *storev, integer *n, 
+/* Subroutine */ void zlarft_lvl2__(char *direct, char *storev, integer *n, 
 	integer *k, doublecomplex *v, integer *ldv, doublecomplex *tau, 
 	doublecomplex *t, integer *ldt)
 {
@@ -699,14 +699,14 @@ f"> */
     /* Local variables */
     integer i__, j, prevlastv;
     extern logical lsame_(char *, char *);
-    extern /* Subroutine */ int zgemm_(char *, char *, integer *, integer *, 
+    extern /* Subroutine */ void zgemm_(char *, char *, integer *, integer *, 
 	    integer *, doublecomplex *, doublecomplex *, integer *, 
 	    doublecomplex *, integer *, doublecomplex *, doublecomplex *, 
 	    integer *), zgemv_(char *, integer *, integer *, 
 	    doublecomplex *, doublecomplex *, integer *, doublecomplex *, 
 	    integer *, doublecomplex *, doublecomplex *, integer *);
     integer lastv;
-    extern /* Subroutine */ int ztrmv_(char *, char *, char *, integer *, 
+    extern /* Subroutine */ void ztrmv_(char *, char *, char *, integer *, 
 	    doublecomplex *, integer *, doublecomplex *, integer *), mecago_();
 
 
@@ -731,7 +731,7 @@ f"> */
 
     /* Function Body */
     if (*n == 0) {
-	return 0;
+	return;
     }
 
     if (lsame_(direct, "F")) {
@@ -933,7 +933,7 @@ f"> */
 	    }
 	}
     }
-    return 0;
+    return;
 
 /*     End of ZLARFT_LVL2 */
 

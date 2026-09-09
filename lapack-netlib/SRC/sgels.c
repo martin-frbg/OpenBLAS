@@ -432,7 +432,7 @@ static integer c__0 = 0;
     integer mn;
     extern real slamch_(char *), slange_(char *, integer *, integer *,
 	     real *, integer *, real *);
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     extern integer ilaenv_(integer *, char *, char *, integer *, integer *, 
 	    integer *, integer *, ftnlen, ftnlen);
     integer scllen;

@@ -369,7 +369,7 @@ f"> */
     integer ix;
     extern real slamch_(char *);
     real su;
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     extern integer isamax_(integer *, real *, integer *);
     real ainvnm;
     logical onenrm;

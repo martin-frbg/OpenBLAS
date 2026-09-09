@@ -624,7 +624,7 @@ f"> */
     extern /* Subroutine */ void sgbcon_(char *, integer *, integer *, integer 
 	    *, real *, integer *, integer *, real *, real *, real *, integer *
 	    , integer *);
-    extern int xerbla_(char *, integer *, ftnlen);
+    extern void xerbla_(char *, integer *, ftnlen);
     real bignum;
     extern real slantb_(char *, char *, char *, integer *, integer *, real *, 
 	    integer *, real *);

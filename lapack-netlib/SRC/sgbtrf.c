@@ -398,11 +398,11 @@ f"> */
 	    real *, real *, integer *, real *, integer *), sgbtf2_(integer *, integer *, integer *, integer 
 	    *, real *, integer *, integer *, integer *);
     integer jb, nb, ii, jj, jm, ip, jp, km, ju, kv, nw;
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     extern integer ilaenv_(integer *, char *, char *, integer *, integer *, 
 	    integer *, integer *, ftnlen, ftnlen), isamax_(integer *, real *, 
 	    integer *);
-    extern /* Subroutine */ int slaswp_(integer *, real *, integer *, integer 
+    extern /* Subroutine */ void slaswp_(integer *, real *, integer *, integer 
 	    *, integer *, integer *, integer *);
 
 

@@ -569,7 +569,7 @@ f"> */
 	     real *, integer *, real *);
     extern /* Subroutine */ void sgehrd_(integer *, integer *, integer *, real 
 	    *, integer *, real *, real *, integer *, integer *);
-    extern int xerbla_(char *, integer *, ftnlen);
+    extern void xerbla_(char *, integer *, ftnlen);
     extern integer ilaenv_(integer *, char *, char *, integer *, integer *, 
 	    integer *, integer *, ftnlen, ftnlen);
     logical select[1];

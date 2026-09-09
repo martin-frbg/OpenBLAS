@@ -2108,7 +2108,8 @@ static void init_parameter(void) {
 #ifdef EXPRECISION
   TABLE_NAME.xgemm3m_p = TABLE_NAME.qgemm_p;
 #endif
-
+	
+#ifndef NO_AVX512
 {
     int l3_kb = get_l3_size();
     int l2_kb = get_l2_size();
@@ -2141,6 +2142,7 @@ static void init_parameter(void) {
         }
     }
 }
+#endif
 
 #if BUILD_SINGLE == 1
   TABLE_NAME.sgemm_p = ((TABLE_NAME.sgemm_p + SGEMM_DEFAULT_UNROLL_M - 1)/SGEMM_DEFAULT_UNROLL_M) * SGEMM_DEFAULT_UNROLL_M;

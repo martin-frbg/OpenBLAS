@@ -385,7 +385,7 @@ f"> */
 	    integer *), stbsv_(char *, char *, char *, integer *, integer *, 
 	    real *, integer *, real *, integer *);
     integer kd, lm;
-    extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+    extern /* Subroutine */ void xerbla_(char *, integer *, ftnlen);
     logical notran;
 
 
