@@ -33,6 +33,9 @@ CTEST(kernel_regress,skx_avx)
 
     info = LAPACKE_dgesvd( LAPACK_ROW_MAJOR, 'A', 'A', DATASIZE, DATASIZE, m, DATASIZE,
                         s, u, DATASIZE, vt, DATASIZE, superb);
+    if (info != 0) {
+      CTEST_ERR("%s:%d lapacke_DGESVD returned info != 0", __FILE__, __LINE__);
+    }
 
 	for (i = 0; i < DATASIZE; i++) {
 	    for (j = 0; j < DATASIZE; j++) {
