@@ -77,7 +77,10 @@ exit(0);
 exit(0);
 #else
     blasint n = 100;
-    int i, nthreads_omp;
+    int i;
+#ifdef USE_OPENMP
+	int nthreads_omp;
+#endif
 
     double *a, *b, *c, *d;
     size_t n_bytes;
