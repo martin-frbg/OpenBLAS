@@ -179,14 +179,12 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG k, FLOAT dummy1,
 
   FLOAT *aa, *cc;
   BLASLONG  kk;
-  BLASLONG i, j, jj;
+  BLASLONG i, j;
 
 #if 0
   fprintf(stderr, "TRSM KERNEL LT : m = %3ld  n = %3ld  k = %3ld offset = %3ld\n",
 	  m, n, k, offset);
 #endif
-
-  jj = 0;
 
   j = (n >> GEMM_UNROLL_N_SHIFT);
 
@@ -246,7 +244,6 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG k, FLOAT dummy1,
     b += GEMM_UNROLL_N * k   * COMPSIZE;
     c += GEMM_UNROLL_N * ldc * COMPSIZE;
     j --;
-    jj += GEMM_UNROLL_M;
   }
 
   if (n & (GEMM_UNROLL_N - 1)) {
